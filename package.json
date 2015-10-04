@@ -1,0 +1,36 @@
+{
+  "name": "media-center",
+  "version": "0.0.0",
+  "description": "Media center for raspberry pi",
+  "main": "lib/index.js",
+  "bin": "cli.js",
+  "scripts": {
+    "start": "node cli.js",
+    "test": "mocha --require babel/register",
+    "test:watch": "mocha -w --require babel/register"
+  },
+  "preferGlobal": "true",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ewnd9/media-center.git"
+  },
+  "keywords": [
+    "media center",
+    "omxplayer"
+  ],
+  "author": "ewnd9 <ewndnine@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "babel": "^5.8.21",
+    "bluebird": "^2.10.2",
+    "inquirer-question": "^1.1.1",
+    "keypress": "^0.2.1",
+    "omxplayer": "0.0.1",
+    "pw3": "^0.6.1",
+    "superagent": "^1.4.0"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5"
+  }
+}
