@@ -27,5 +27,7 @@ export default () => {
 			result.imdb = imdbResult.imdb;
 			return result;
 		});
+	}).catch((err) => {
+		console.log(err);
 	});
 };

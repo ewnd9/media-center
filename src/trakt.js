@@ -1,7 +1,19 @@
 import request from 'superagent';
+import storage, { OPEN_MEDIA, PLAY_MEDIA, PAUSE_MEDIA } from './storage';
 
 let token = null;
 export let setToken = (_token) => token = _token;
+
+let currMedia = null;
+storage.on(OPEN_MEDIA, (data) => {
+	currMedia = data;
+});
+storage.on(PLAY_MEDIA, (progress) => {
+	startScrobble(getData({ ...currMedia, progress }));
+});
+storage.on(PAUSE_MEDIA, (progress) => {
+	stopScrobble(getData({ ...currMedia, progress }));
+});
 
 export let method = (url, data, cb) => {
 	request.post(url)
@@ -26,17 +38,38 @@ export let stopScrobble = (data) => {
 	});
 };
 
-export let getShowData = (imdb, s, ep, progress) => {
+export let getData = (data) => {
+	console.log(data);
+
+	if (data.type === 'show') {
+		return getShowData(data);
+	} else if (data.type === 'movie') {
+		return getMovieData(data);
+	}
+};
+
+export let getShowData = (data) => {
 	return {
 	  show: {
 	    ids: {
-	      imdb: imdb
+	      imdb: data.imdb
 	    }
 	  },
 	  episode: {
-	    season: s,
-	    number: ep
+	    season: data.s,
+	    number: data.ep
 	  },
-	  progress: progress
+	  progress: data.progress
+	};
+};
+
+export let getMovieData = (data) => {
+	return {
+		movie: {
+			ids: {
+				imdb: data.imdb
+			}
+		},
+		progress: data.progress
 	};
 };

@@ -1,4 +1,5 @@
-import * as player from './player';
+// import * as player from './player';
+import player from './vlc-player';
 import prompt from './prompt';
 
 import Promise from 'bluebird';
@@ -7,7 +8,7 @@ import fs from 'fs';
 import inquirerCredentials from 'inquirer-credentials';
 
 import { setToken } from './trakt';
-
+import storage, { OPEN_MEDIA } from './storage';
 
 var token = {
   name: 'token',
@@ -37,6 +38,7 @@ inquirerCredentials('.media-center-npm', [token]).then((credentials) => {
 	}
 
 	dataPromise.then((result) => {
-		player.run(file, result.imdb, result.s, result.ep);
+    storage.emit(OPEN_MEDIA, result);
+		player(file);
 	});
 });
