@@ -1,6 +1,6 @@
 {
   "name": "media-center",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Media center for raspberry pi",
   "main": "lib/index.js",
   "bin": "cli.js",
