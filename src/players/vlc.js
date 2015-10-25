@@ -1,5 +1,5 @@
 import mpris from 'mpris';
-import storage, { PLAY_MEDIA, PAUSE_MEDIA } from './storage';
+import storage, { PLAY_MEDIA, PAUSE_MEDIA } from './../storage';
 
 export default (file) => {
   let duration = null;

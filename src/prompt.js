@@ -1,5 +1,5 @@
 import inquirer from 'inquirer-question';
-import selectImdb from 'pw3/src/helpers/select-imdb-task';
+import selectImdb from 'pw3/lib/helpers/select-imdb-task';
 
 export default () => {
 	return inquirer.prompt([{

@@ -1,20 +1,16 @@
 import OMXPlayer from 'omxplayer';
-import { startScrobble, stopScrobble, getShowData } from './trakt';
+import storage, { PLAY_MEDIA, PAUSE_MEDIA } from './../storage';
 
-export let run = (file, imdb, s, ep) => {
+export default (file) => {
 	var configuration = {};
 	var omxplayer = new OMXPlayer(configuration);
-
-	var getData = () => {
-		return getShowData(imdb, s, ep, position / duration * 100);
-	};
 
 	var duration = 0;
 	var position = 0;
 
 	omxplayer.start(file, function(error) {
 		setTimeout(() => {
-			startScrobble(getData());
+			storage.emit(PLAY_MEDIA, position / duration * 100);
 		}, 1000);
 	});
 
@@ -28,9 +24,9 @@ export let run = (file, imdb, s, ep) => {
 
 	omxplayer.on('prop:PlaybackStatus', (status) => {
 		if (status === 'Playing') {
-			startScrobble(getData());
+			storage.emit(PLAY_MEDIA, position / duration * 100);
 		} else if (status === 'Paused') {
-			stopScrobble(getData());
+			storage.emit(PAUSE_MEDIA, position / duration * 100);
 		}
 	});
 
@@ -41,6 +37,6 @@ export let run = (file, imdb, s, ep) => {
 		process.stdin.setRawMode(false);
 		process.stdin.unpipe();
 
-		stopScrobble(getData());
+		storage.emit(PAUSE_MEDIA, position / duration * 100);
 	});
 };

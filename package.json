@@ -6,6 +6,9 @@
   "bin": "cli.js",
   "scripts": {
     "start": "node cli.js",
+    "build": "babel -d lib src",
+    "prepublish": "npm run build",
+    "postpublish": "rm -rf lib",
     "test": "mocha --require babel/register",
     "test:watch": "mocha -w --require babel/register"
   },
@@ -21,19 +24,22 @@
   "author": "ewnd9 <ewndnine@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "babel": "^5.8.21",
     "bluebird": "^2.10.2",
     "dot-file-config": "^0.5.0",
     "inquirer-credentials": "^1.2.0",
     "inquirer-question": "^1.1.1",
     "keypress": "^0.2.1",
-    "mpris": "0.0.2",
+    "meow": "^3.4.1",
     "omxplayer": "0.0.1",
-    "pw3": "^0.6.1",
-    "superagent": "^1.4.0",
+    "pw3": "^0.6.3",
+    "superagent": "^1.4.0"
+  },
+  "optionalDependencies": {
+    "mpris": "0.0.2",
     "vlc": "0.0.4"
   },
   "devDependencies": {
+    "babel": "^5.8.21",
     "chai": "^3.2.0",
     "mocha": "^2.2.5"
   }

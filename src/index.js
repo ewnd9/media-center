@@ -1,11 +1,9 @@
-// import * as player from './player';
-import player from './vlc-player';
 import prompt from './prompt';
-
 import Promise from 'bluebird';
 import path from 'path';
 import fs from 'fs';
 import inquirerCredentials from 'inquirer-credentials';
+import meow from 'meow';
 
 import { setToken } from './trakt';
 import storage, { OPEN_MEDIA } from './storage';
@@ -16,9 +14,30 @@ var token = {
   env: 'TRAKT_TOKEN'
 };
 
+var cli = meow(`
+    Usage
+      $ media-center <file>
+
+    Options
+      -p player (vlc or omx)
+`, {
+  pkg: './../package.json'
+});
+
+var player = null;
+
+if (cli.flags.p === 'vlc') {
+  player = require('./players/vlc');
+} else if (cli.flags.p === 'omx') {
+  player = require('./players/omx');
+} else {
+  cli.showHelp();
+  process.exit(1);
+}
+
 inquirerCredentials('.media-center-npm', [token]).then((credentials) => {
   setToken(credentials.token);
-	var file = process.argv.slice(2).join(' ');
+	var file = cli.input.join(' ');
 
 	var fileDir = path.dirname(file);
 	var ext = path.extname(file);

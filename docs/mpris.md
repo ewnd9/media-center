@@ -1,3 +1,5 @@
+## `console.log` dump of mpris object 
+
 ```
 Previous: [Function],
 Next: [Function],

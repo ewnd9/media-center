@@ -1,6 +1,6 @@
 # media-center
 
-[WIP] Media center for raspberry pi
+[WIP] Media center for raspberry pi with seamless [trakt.tv](http://trakt.tv/) scrobbling
 
 ## Install
 
@@ -11,7 +11,7 @@ $ npm install -g media-center
 ## Usage
 
 ```
-$ media-center <file>
+$ media-center -p omx <file>
 ```
 
 ## License
