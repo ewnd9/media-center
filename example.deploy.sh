@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# npm run build:backend
+npm run build:backend
 # NODE_ENV=production webpack
 
 REMOTE=user@ip
