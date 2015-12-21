@@ -33,7 +33,6 @@
     "keypress": "^0.2.1",
     "meow": "^3.4.1",
     "omxplayer": "0.0.1",
-    "pw3": "^0.6.4",
     "source-map-support": "^0.4.0",
     "superagent": "^1.4.0"
   },

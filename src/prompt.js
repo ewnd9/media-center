@@ -1,8 +1,9 @@
 import inquirer from 'inquirer-question';
-import imdb from 'pw3/lib/api/imdb';
-import selectImdb from 'pw3/lib/prompts/select-media';
+import * as trakt from './trakt';
 
 export default () => {
+	const data = {};
+
 	return inquirer.prompt([{
 	  type: 'list',
 	  message: 'type',
@@ -21,15 +22,37 @@ export default () => {
 		message: 'ep',
 		name: 'ep'
 	}]).then((result) => {
-		result.s = parseInt(result.s);
-		result.ep = parseInt(result.ep);
+		data.s = parseInt(result.s);
+		data.ep = parseInt(result.ep);
+		data.type = result.type;
 
-    return imdb.search(result.title, result.type === 'show' ? 'TV' : 'M').then((data) => {
-      return selectImdb(data);
-    }).then((imdbResult) => {
-			result.imdb = imdbResult.imdb;
-			return result;
-    });
+    return trakt.search(result.title, result.type);
+	}).then((result) => {
+		const mapping = data.type === 'show' ? (item) => ({
+			name: `${item.show.title} (${item.show.year}) [${item.show.status}] ${item.show.ids.imdb}`,
+			value: {
+				show: item.show,
+				imdb: item.show.ids.imdb
+			}
+		}) : (item) => ({
+			name: `${item.movie.title} (${item.movie.year}) ${item.movie.ids.imdb}`,
+			value: {
+				movie: item.movie,
+				imdb: item.movie.ids.imdb
+			}
+		});
+
+		return inquirer.prompt({
+			type: 'list',
+			message: 'media',
+			name: 'imdb',
+			choices: result.map(mapping)
+		});
+	}).then((result) => {
+		return {
+			...data,
+			...result.imdb
+		};
 	}).catch((err) => {
 		console.log(err);
 	});
