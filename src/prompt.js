@@ -1,5 +1,6 @@
 import inquirer from 'inquirer-question';
-import selectImdb from 'pw3/lib/helpers/select-imdb-task';
+import imdb from 'pw3/lib/api/imdb';
+import selectImdb from 'pw3/lib/prompts/select-media';
 
 export default () => {
 	return inquirer.prompt([{
@@ -23,10 +24,12 @@ export default () => {
 		result.s = parseInt(result.s);
 		result.ep = parseInt(result.ep);
 
-		return selectImdb.run(result.title).then((imdbResult) => {
+    return imdb.search(result.title, result.type === 'show' ? 'TV' : 'M').then((data) => {
+      return selectImdb(data);
+    }).then((imdbResult) => {
 			result.imdb = imdbResult.imdb;
 			return result;
-		});
+    });
 	}).catch((err) => {
 		console.log(err);
 	});

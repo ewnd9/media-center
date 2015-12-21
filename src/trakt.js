@@ -73,3 +73,21 @@ export let getMovieData = (data) => {
 		progress: data.progress
 	};
 };
+
+export let search = (query, type) => {
+	return new Promise((resolve, reject) => {
+		request.get('https://api-v2launch.trakt.tv/search')
+					 .query({ query, type })
+					 .set('Content-Type', 'application/json')
+					 .set('Accept', 'application/json')
+					 .set('trakt-api-key', '412681ab85026009c32dc6e525ba6226ff063aad0c1a374def0c8ee171cf121f')
+					 .set('trakt-api-version', '2')
+					 .end((err, result) => {
+						 if (err) {
+							 reject(err);
+						 } else {
+							 resolve(result.body);
+						 }
+					 });
+	});
+};
