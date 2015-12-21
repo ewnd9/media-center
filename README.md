@@ -24,6 +24,7 @@ By [instruction](docs/raspberry-setup.md)
 
 ```
 $ cp example.deploy.sh deploy.sh # replace user@ip to yours
+$ cp example.ecosystem.json ecosystem.json # replace /home/user/media to yours
 $ chmod +x deploy.sh
 ```
 

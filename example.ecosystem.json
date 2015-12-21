@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name":   "media-center",
+      "script": "app.js",
+      "env": {
+        "MEDIA_PATH": "/home/user/media"
+      },
+      "env_production": {
+        "MEDIA_PATH": "/home/user/media"
+      }
+    }
+  ]
+}

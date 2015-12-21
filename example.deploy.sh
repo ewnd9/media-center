@@ -7,4 +7,4 @@ REMOTE=user@ip
 DEST=/home/pi/media-center
 rsync --exclude node_modules --exclude .git -av ./ $REMOTE:$DEST
 
-ssh $REMOTE "cd $DEST && time npm install --production"
+ssh $REMOTE "cd $DEST && time npm install --production && ~/.npm-packages/bin/pm2 startOrRestart $DEST/ecosystem.json --env production"

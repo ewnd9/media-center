@@ -7,3 +7,4 @@ play.js
 /lib
 /public/*
 !/public/.keep
+/ecosystem.json
