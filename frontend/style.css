@@ -6,3 +6,19 @@ html {
 	background-color: #0D47A1;
 	color: #E3F2FD;
 }
+
+.file-entry {
+	margin-bottom: 20px;
+}
+
+.title, .fullpath {
+	display: block;
+}
+
+.title {
+	font-size: 14pt;
+}
+
+.fullpath {
+	font-size: 10pt;
+}
