@@ -5,3 +5,5 @@ play.js
 /deploy.sh
 /test.sh
 /lib
+/public/*
+!/public/.keep

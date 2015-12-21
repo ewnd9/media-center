@@ -28,10 +28,13 @@
   "dependencies": {
     "bluebird": "^2.10.2",
     "dot-file-config": "^0.5.0",
+    "express": "^4.13.3",
+    "express-cors": "0.0.3",
     "inquirer-credentials": "^1.2.0",
     "inquirer-question": "^1.1.1",
     "keypress": "^0.2.1",
     "meow": "^3.4.1",
+    "morgan": "^1.6.1",
     "omxplayer": "0.0.1",
     "source-map-support": "^0.4.0",
     "superagent": "^1.4.0"
@@ -42,10 +45,14 @@
   },
   "devDependencies": {
     "babel": "^5.8.21",
+    "babel-loader": "^5.3.2",
+    "css-loader": "^0.23.0",
+    "file-loader": "^0.8.5",
     "chai": "^3.2.0",
     "mocha": "^2.2.5",
     "nodemon": "^1.8.1",
     "npm-run-all": "^1.4.0",
+    "style-loader": "^0.13.0",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0"
   }
