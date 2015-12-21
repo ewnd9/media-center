@@ -16,6 +16,10 @@ $ media-center -p omx <file>
 
 ## Development
 
+### Setup raspberry
+
+By [instruction](docs/raspberry-setup.md)
+
 ### Setup deploy to raspberry script
 
 ```
