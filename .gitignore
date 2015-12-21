@@ -2,5 +2,6 @@
 /dist/
 *.log
 play.js
-/*.sh
+/deploy.sh
+/test.sh
 /lib

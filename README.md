@@ -14,6 +14,15 @@ $ npm install -g media-center
 $ media-center -p omx <file>
 ```
 
+## Development
+
+### Setup deploy to raspberry script
+
+```
+$ cp example.deploy.sh deploy.sh # replace user@ip to yours
+$ chmod +x deploy.sh
+```
+
 ## License
 
 MIT © [ewnd9](http://ewnd9.com)
