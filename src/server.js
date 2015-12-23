@@ -7,7 +7,7 @@ import play from './players/omx';
 import * as trakt from './trakt';
 import storage, { OPEN_MEDIA } from './storage';
 
-const MEDIA_PATH = process.env.MEDIA_PATH;
+const MEDIA_PATH = process.env.MEDIA_PATH || '/home/ewnd9/Downloads';
 const PORT = process.env.PORT || 3000;
 const TRAKT_TOKEN = process.env.TRAKT_TOKEN;
 
@@ -35,8 +35,26 @@ app.get('/api/v1/files', (req, res) => {
 });
 
 app.post('/api/v1/playback/start', (req, res) => {
+	storage.emit(OPEN_MEDIA, req.body.media);
 	play(req.body.filename);
+	
 	res.json({ status: 'ok' });
+});
+
+const formatSuggestion = (media) => {
+	return {
+		value: media.ids.imdb,
+		label: `${media.title} (${media.year})`
+	};
+};
+
+app.get('/api/v1/suggestions', (req, res) => {
+	trakt
+		.search(req.query.title, req.query.type)
+		.then((data) => {
+			res.json(data.map(media => formatSuggestion(media[req.query.type])));
+		})
+		.catch(err => res.json(err));
 });
 
 var server = app.listen(PORT, () => {

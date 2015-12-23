@@ -1,54 +1,33 @@
-import fetch from 'isomorphic-fetch';
-
 import React from 'react';
+import Modal from 'react-modal';
 
-const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+import MediaList from './media-list';
+import MediaDialog from './media-dialog';
 
-const el = React.createClass({
-  getInitialState: () => ({ files: [] }),
-  getFiles: function() {
-    fetch(baseUrl + '/api/v1/files')
-      .then(response => response.json())
-      .then((files) => this.setState({ files }));
+export default React.createClass({
+  getInitialState: function() {
+    return { modalIsOpen: false };
   },
-  componentDidMount: function() {
-    this.getFiles();
-
+  openModal: function(file) {
+    this.setState({ modalIsOpen: true, file });
   },
-  handleClick: function(index) {
-    const file = this.state.files[index];
-
-    fetch(baseUrl + '/api/v1/playback/start', {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        filename: file
-      })
-    });
+  closeModal: function() {
+    this.setState({ modalIsOpen: false });
   },
   render: function() {
     return (
 			<div>
-				{this.state.files.map((file, index) => {
-					const data = file.split('/');
-					const title = data[data.length - 1];
+        <div className="container">
+          <h1>Media Center</h1>
+				  <MediaList openModal={this.openModal} />
+        </div>
 
-					return (
-						<div className="file-entry"
-								 key={file}
-								 tabIndex={index + 1}
-                 onClick={this.handleClick.bind(this, index)}>
-							<a className="title">{ title }</a>
-							<a className="fullpath">{ file }</a>
-						</div>
-					);
-				})}
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          onRequestClose={this.closeModal}>
+          <MediaDialog closeModal={this.closeModal} file={this.state.file} />
+        </Modal>
 			</div>
     );
 	}
 });
-
-export default el;

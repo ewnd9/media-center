@@ -2,7 +2,15 @@ a {
 	cursor: pointer;
 }
 
-html {
+html, body {
+	margin: 0;
+}
+
+.container {
+	height: 100%;
+	width: 100%;
+	padding: 20px;
+
 	background-color: #0D47A1;
 	color: #E3F2FD;
 }
@@ -21,4 +29,12 @@ html {
 
 .fullpath {
 	font-size: 10pt;
+}
+
+.MediaDialog {
+	width: 300px;
+}
+
+.MediaDialog .field-group {
+	margin: 10px;
 }
