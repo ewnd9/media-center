@@ -31,6 +31,7 @@
     "dot-file-config": "^0.5.0",
     "express": "^4.13.3",
     "express-cors": "0.0.3",
+    "fkill": "^3.1.0",
     "globby": "^4.0.0",
     "inquirer-credentials": "^1.2.0",
     "inquirer-question": "^1.1.1",
@@ -39,7 +40,8 @@
     "morgan": "^1.6.1",
     "omxplayer": "0.0.1",
     "source-map-support": "^0.4.0",
-    "superagent": "^1.4.0"
+    "superagent": "^1.4.0",
+    "x11": "^2.0.2"
   },
   "devDependencies": {
     "babel": "^5.8.21",

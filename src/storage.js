@@ -12,6 +12,10 @@ storage.on = emitter.on.bind(emitter);
 
 export const PLAY_MEDIA = 'PLAY_MEDIA';
 export const PAUSE_MEDIA = 'PAUSE_MEDIA';
+
+export const USER_PAUSE_MEDIA = 'USER_PAUSE_MEDIA';
+export const USER_CLOSE = 'USER_CLOSE';
+
 export const OPEN_MEDIA = 'OPEN_MEDIA';
 
 export default storage;

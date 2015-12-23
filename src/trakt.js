@@ -27,20 +27,20 @@ export let method = (url, data, cb) => {
 };
 
 export let startScrobble = (data) => {
+	console.log(JSON.stringify(data, null, 2));
+
 	method('https://api-v2launch.trakt.tv/scrobble/start', data, (err, res) => {
-		console.log('err', err != null);
+		console.log('err', err !== null);
 	});
 };
 
 export let stopScrobble = (data) => {
 	method('https://api-v2launch.trakt.tv/scrobble/stop', data, (err, res) => {
-		console.log('err', err != null);
+		console.log('err', err !== null);
 	});
 };
 
 export let getData = (data) => {
-	console.log(data);
-
 	if (data.type === 'show') {
 		return getShowData(data);
 	} else if (data.type === 'movie') {

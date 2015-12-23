@@ -4,10 +4,14 @@ import bodyParser from 'body-parser';
 import cors from 'express-cors';
 import globby from 'globby';
 import play from './players/omx';
+import * as trakt from './trakt';
+import storage, { OPEN_MEDIA } from './storage';
 
 const MEDIA_PATH = process.env.MEDIA_PATH;
 const PORT = process.env.PORT || 3000;
+const TRAKT_TOKEN = process.env.TRAKT_TOKEN;
 
+trakt.setToken(TRAKT_TOKEN);
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
