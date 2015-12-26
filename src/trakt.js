@@ -59,7 +59,7 @@ export let getShowData = (data) => {
 	    season: data.s,
 	    number: data.ep
 	  },
-	  progress: data.progress
+	  progress: data.progress || 0
 	};
 };
 
