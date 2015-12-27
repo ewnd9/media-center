@@ -7,7 +7,6 @@ html, body {
 }
 
 .container {
-	height: 100%;
 	padding: 20px;
 
 	color: #FFF;
@@ -22,6 +21,11 @@ html, body {
 
 .file-entry {
 	margin-bottom: 20px;
+}
+
+.children {
+	margin-top: 20px;
+	margin-left: 20px;
 }
 
 .title, .fullpath {

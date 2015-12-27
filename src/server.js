@@ -6,10 +6,15 @@ import globby from 'globby';
 import play from './players/omx';
 import * as trakt from './trakt';
 import storage, { OPEN_MEDIA } from './storage';
+import initDb from './db';
+import findFiles from './find-files';
 
 const MEDIA_PATH = process.env.MEDIA_PATH || '/home/ewnd9/Downloads';
 const PORT = process.env.PORT || 3000;
 const TRAKT_TOKEN = process.env.TRAKT_TOKEN;
+const DB_PATH = process.env.DB_PATH || '/home/ewnd9/media-center-db';
+
+const db = initDb(DB_PATH + '/' + 'db');
 
 trakt.setToken(TRAKT_TOKEN);
 const app = express();
@@ -29,15 +34,15 @@ app.use(cors({
 }));
 
 app.get('/api/v1/files', (req, res) => {
-	globby(['**/*.mkv'], { cwd: MEDIA_PATH, realpath: true }).then((paths) => {
-		res.json(paths);
-	});
+	findFiles(db, MEDIA_PATH)
+		.then(_ => res.json(_))
+		.catch(err => res.json(err));
 });
 
 app.post('/api/v1/playback/start', (req, res) => {
 	storage.emit(OPEN_MEDIA, req.body.media);
 	play(req.body.filename);
-	
+
 	res.json({ status: 'ok' });
 });
 

@@ -4,9 +4,20 @@ import Modal from 'react-modal';
 import MediaList from './media-list';
 import MediaDialog from './media-dialog';
 
+import * as api from './../api';
+
 export default React.createClass({
   getInitialState: function() {
-    return { modalIsOpen: false };
+    return {
+      modalIsOpen: false,
+      files: []
+    };
+  },
+  getFiles: function() {
+    api.findFiles().then((files) => this.setState({ files }));
+  },
+  componentDidMount: function() {
+    this.getFiles();
   },
   openModal: function(file) {
     this.setState({ modalIsOpen: true, file });
@@ -18,8 +29,7 @@ export default React.createClass({
     return (
 			<div>
         <div className="container">
-          <h1>Media Center</h1>
-				  <MediaList openModal={this.openModal} />
+				  <MediaList openModal={this.openModal} files={this.state.files} />
         </div>
 
         <Modal

@@ -4,6 +4,28 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 import split from 'split-torrent-release';
 
+const loadRecognition = (db, item) => {
+	item.recognition = split(item.filename || item.dirname);
+
+	if (!item.recognition) {
+		return item;
+	} else {
+		return db
+			.getPrefix(item.recognition.title)
+			.then((res) => {
+				item.recognition = {
+					...item.recognition,
+					...res
+				};
+			}, (err) => {
+				if (err.status !== 404) {
+					throw err;
+				}
+			})
+			.then(() => item);
+	}
+};
+
 const loadFile = (db, item) => {
 	return db
 		.getFile(item.file).then((res) => res, (err) => {
@@ -14,21 +36,7 @@ const loadFile = (db, item) => {
 			return undefined;
 		}).then((res) => {
 			item.db = res;
-			item.recognition = split(item.filename);
-
-			return db
-				.getPrefix(item.recognition.title)
-				.then((res) => {
-					item.recognition = {
-						...item.recognition,
-						...res
-					};
-				}, (err) => {
-					if (err.status !== 404) {
-						throw err;
-					}
-				})
-				.then(() => item);
+			return loadRecognition(db, item);
 		});
 };
 
@@ -42,7 +50,8 @@ export default (db, dir) => {
 				return {
 					dir,
 					file: item,
-					filename: data[data.length - 1]
+					filename: data[data.length - 1],
+					dirname: data[data.length - 2]
 				};
 			});
 
@@ -52,7 +61,7 @@ export default (db, dir) => {
 			const result = Promise.reduce(combined, (result, { curr, dir }) => {
 				if (curr.length === 1) {
 					const item = curr[0];
-					item.birthtime = fs.statSync(curr[0].dir).birthtime;
+					item.birthtime = fs.statSync(item.dir).birthtime;
 
 					return loadFile(db, item)
 						.then((res) => {
@@ -63,14 +72,17 @@ export default (db, dir) => {
 					return Promise
 						.map(curr, (item) => loadFile(db, item))
 						.then((res) => {
-							result.push({
+							const item = {
 								dir,
+								dirname: curr[0].dirname,
 								contents: res,
 								birthtime: fs.statSync(dir).birthtime
-							});
+							};
 
-							return result;
-						});
+							result.push(item);
+							return loadRecognition(db, item);
+						})
+						.then(() => result);
 				}
 
 				return result;
