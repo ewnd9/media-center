@@ -33,7 +33,8 @@ export default React.createClass({
   openModal: function(file) {
     this.setState({ modalIsOpen: true, file });
   },
-  closeModal: function() {
+  closeModal: function(event) {
+    event.preventDefault();
     this.setState({ modalIsOpen: false });
   },
   render: function() {
