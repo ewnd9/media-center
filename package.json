@@ -57,10 +57,10 @@
     "nodemon": "^1.8.1",
     "npm-run-all": "^1.4.0",
     "react": "^0.14.3",
-    "react-autocomplete": "^0.1.4",
     "react-dom": "^0.14.3",
     "react-modal": "^0.6.1",
     "style-loader": "^0.13.0",
+    "react-select": "^0.9.1",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0"
   }

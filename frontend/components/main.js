@@ -6,6 +6,17 @@ import MediaDialog from './media-dialog';
 
 import * as api from './../api';
 
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
+
 export default React.createClass({
   getInitialState: function() {
     return {
@@ -34,6 +45,7 @@ export default React.createClass({
 
         <Modal
           isOpen={this.state.modalIsOpen}
+          style={customStyles}
           onRequestClose={this.closeModal}>
           <MediaDialog closeModal={this.closeModal} file={this.state.file} />
         </Modal>

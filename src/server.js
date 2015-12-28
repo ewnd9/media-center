@@ -59,7 +59,7 @@ app.get('/api/v1/suggestions', (req, res) => {
 		.then((data) => {
 			res.json(data.map(media => formatSuggestion(media[req.query.type])));
 		})
-		.catch(err => res.json(err));
+		.catch(err => res.json([]));
 });
 
 var server = app.listen(PORT, () => {
