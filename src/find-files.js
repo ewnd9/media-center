@@ -41,7 +41,7 @@ const loadFile = (db, item) => {
 };
 
 export default (db, dir) => {
-	return globby(['**/*.mkv'], { cwd: dir, realpath: true })
+	return globby(['**/*.+(mkv|mp4)'], { cwd: dir, realpath: true })
 		.then(items => {
 			const flatFiles = items.map(item => {
 				const data = item.split('/');
