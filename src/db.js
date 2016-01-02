@@ -12,6 +12,10 @@ export default (dbPath) => {
 		return `prefix:${prefix}`;
 	};
 
+	const updateFileIfExisted = (err) => {
+
+	};
+
 	const addFile = (file, data) => {
 		const _data = file.split('/');
 		const filename = _data[_data.length - 1];
@@ -28,6 +32,17 @@ export default (dbPath) => {
 					...data,
 					_id: prefixId(recognition.title)
 				})
+			}, (err) => {
+				if (err.name === 'conflict') {
+					return db.get(fileId(file)).then((dbData) => {
+						return db.put({
+							...dbData,
+							...data
+						});
+					})
+				} else {
+					throw err;
+				}
 			});
 	};
 

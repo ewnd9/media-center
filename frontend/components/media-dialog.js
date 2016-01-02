@@ -46,6 +46,7 @@ export default React.createClass({
     api.playFile(this.props.file.file, {
       type: this.state.type.value,
       imdb: this.state.imdb.value,
+      title: this.state.imdb.label,
       s: this.state.s,
       ep: this.state.ep
     });

@@ -1,4 +1,5 @@
 import React from 'react';
+import * as api from './../api';
 
 const tr = (s) => s.length < 2 ? '0' + s : s;
 
@@ -23,7 +24,12 @@ const format = (data) => {
 const MediaList = React.createClass({
   handleClick: function(index) {
     const file = this.props.files[index];
-    this.props.openModal(file);
+
+    if (file.db) {
+      api.playFile(file.file, file.db);
+    } else {
+      this.props.openModal(file);
+    }
   },
   render: function() {
     return (
@@ -35,7 +41,7 @@ const MediaList = React.createClass({
           let title;
 
           if (item.db) {
-            title = 'V ' + format(item.db);
+            title = format(item.db);
           } else if (item.recognition) {
             title = '? ' + format(item.recognition);
           } else {

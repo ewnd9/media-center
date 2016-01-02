@@ -59,8 +59,8 @@
     "react": "^0.14.4",
     "react-dom": "^0.14.4",
     "react-modal": "^0.6.1",
-    "style-loader": "^0.13.0",
     "react-select": "^1.0.0-beta8",
+    "style-loader": "^0.13.0",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0"
   }

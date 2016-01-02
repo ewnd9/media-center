@@ -1,9 +1,10 @@
 import OMXPlayer from './../vendor/omxplayer';
-import storage, { PLAY_MEDIA, PAUSE_MEDIA, USER_PAUSE_MEDIA, USER_CLOSE } from './../storage';
+import storage, { PLAY_MEDIA, PAUSE_MEDIA, USER_PAUSE_MEDIA, USER_CLOSE, USER_NEXT_AUDIO, USER_SEEK_FORWARD } from './../storage';
 import fkill from 'fkill';
 import { registerKeys, unregisterKeys } from './../x11';
 
 let omxplayer = null;
+let currentAudioStream;
 
 const killProcess = () => {
 	unregisterKeys();
@@ -16,12 +17,29 @@ storage.on(USER_PAUSE_MEDIA, () => {
 	}
 });
 
+storage.on(USER_NEXT_AUDIO, () => {
+	if (omxplayer) {
+		omxplayer.getListAudio((err, list) => {
+			currentAudioStream = (currentAudioStream + 1) % list.length;
+			omxplayer.selectAudio(currentAudioStream);
+		});
+	}
+});
+
+storage.on(USER_SEEK_FORWARD, () => {
+	if (omxplayer) {
+		omxplayer.seek(30);
+	}
+});
+
 storage.on(USER_CLOSE, () => {
 	killProcess();
 });
 
 export default (file) => {
 	return killProcess().then(registerKeys).then(() => {
+		currentAudioStream = 0;
+
 		var configuration = {};
 		omxplayer = new OMXPlayer(configuration);
 

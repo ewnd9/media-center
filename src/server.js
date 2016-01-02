@@ -40,8 +40,14 @@ app.get('/api/v1/files', (req, res) => {
 });
 
 app.post('/api/v1/playback/start', (req, res) => {
+	db.addFile(req.body.filename, req.body.media);
 	storage.emit(OPEN_MEDIA, req.body.media);
-	play(req.body.filename);
+
+	if (process.env.NODE_ENV === 'production') {
+		play(req.body.filename);
+	} else {
+		console.log(process.env.NODE_ENV);
+	}
 
 	res.json({ status: 'ok' });
 });

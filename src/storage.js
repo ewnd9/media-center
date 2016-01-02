@@ -15,6 +15,8 @@ export const PAUSE_MEDIA = 'PAUSE_MEDIA';
 
 export const USER_PAUSE_MEDIA = 'USER_PAUSE_MEDIA';
 export const USER_CLOSE = 'USER_CLOSE';
+export const USER_NEXT_AUDIO = 'USER_NEXT_AUDIO';
+export const USER_SEEK_FORWARD = 'USER_SEEK_FORWARD';
 
 export const OPEN_MEDIA = 'OPEN_MEDIA';
 
