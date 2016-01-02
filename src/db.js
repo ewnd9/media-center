@@ -12,8 +12,13 @@ export default (dbPath) => {
 		return `prefix:${prefix}`;
 	};
 
-	const updateFileIfExisted = (err) => {
-
+	const updateFile = (file, data) => {
+		return db.get(fileId(file)).then((dbData) => {
+			return db.put({
+				...dbData,
+				...data
+			});
+		});
 	};
 
 	const addFile = (file, data) => {
@@ -34,12 +39,7 @@ export default (dbPath) => {
 				})
 			}, (err) => {
 				if (err.name === 'conflict') {
-					return db.get(fileId(file)).then((dbData) => {
-						return db.put({
-							...dbData,
-							...data
-						});
-					})
+					return updateFile(file, data);
 				} else {
 					throw err;
 				}
@@ -52,6 +52,7 @@ export default (dbPath) => {
 	return {
 		addFile,
 		getFile,
-		getPrefix
+		getPrefix,
+		updateFile
 	};
 };

@@ -44,7 +44,7 @@ app.post('/api/v1/playback/start', (req, res) => {
 	storage.emit(OPEN_MEDIA, req.body.media);
 
 	if (process.env.NODE_ENV === 'production') {
-		play(req.body.filename);
+		play(db, req.body.filename);
 	} else {
 		console.log(process.env.NODE_ENV);
 	}

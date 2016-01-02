@@ -36,7 +36,7 @@ storage.on(USER_CLOSE, () => {
 	killProcess();
 });
 
-export default (file) => {
+export default (db, file) => {
 	return killProcess().then(registerKeys).then(() => {
 		currentAudioStream = 0;
 
@@ -58,6 +58,7 @@ export default (file) => {
 
 		omxplayer.on('prop:Position', (_position) => {
 			position = _position;
+			db.updateFile(file, { position });
 		});
 
 		omxplayer.on('prop:PlaybackStatus', (status) => {
