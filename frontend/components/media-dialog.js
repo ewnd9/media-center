@@ -1,7 +1,6 @@
 import React from 'react';
 import * as api from './../api';
 import Select from 'react-select';
-import Autocomplete from 'react-autocomplete';
 
 export default React.createClass({
   getInitialState: function() {
@@ -9,13 +8,12 @@ export default React.createClass({
       const r = this.props.file.recognition;
 
       return {
-        imdb: r.title,
-        title: r.title,
-        type: r.type,
+        type: {
+          label: r.type,
+          value: r.type
+        },
         s: r.s,
-        ep: r.ep,
-        initType: r.type,
-        initImdb: r.title
+        ep: r.ep
       };
     } else {
       return {
@@ -25,7 +23,7 @@ export default React.createClass({
     }
   },
   getSelectOptions: function(input) {
-    return api.getMediaSuggestion(input || this.state.title, this.state.type)
+    return api.getMediaSuggestion(input || this.state.title, this.state.type.value)
       .then(options => {
         let i = 0;
 
@@ -39,15 +37,15 @@ export default React.createClass({
   componentWillReceiveProps: function(props) {
   },
   onChangeInput: function(field, event) {
-    const value = typeof event === 'object' ? event.target.value : event;
+    const value = event.label && event.value ? event : event.target.value;
     this.setState({ [field]: value });
   },
   handleSubmit: function(event) {
     event.preventDefault();
 
     api.playFile(this.props.file.file, {
-      type: this.state.type,
-      imdb: document.querySelector('input[name="imdb"]').value,
+      type: this.state.type.value,
+      imdb: this.state.imdb.value,
       s: this.state.s,
       ep: this.state.ep
     });
@@ -60,22 +58,23 @@ export default React.createClass({
           <div className="field-group">
             <Select
               name="type"
-              value={this.state.initType}
               options={[{ value: 'show', label: 'show'}, { value: 'movie', label: 'movie' }]}
+              value={this.state.type}
               onChange={this.onChangeInput.bind(this, 'type')}
             />
           </div>
 
           <div className="field-group">
-            <Select
+            <Select.Async
               name="imdb"
-              value={this.state.title}
-              asyncOptions={this.getSelectOptions}
+              loadOptions={this.getSelectOptions}
+              value={this.state.imdb}
+              onChange={this.onChangeInput.bind(this, 'imdb')}
             />
           </div>
 
           {
-            this.state.type === 'show' && (
+            this.state.type.value === 'show' && (
               <div className="field-group">
                 <input name="s" placeholder="Season" value={this.state.s} onChange={this.onChangeInput.bind(this, 's')} />
               </div>
@@ -83,7 +82,7 @@ export default React.createClass({
           }
 
           {
-            this.state.type === 'show' && (
+            this.state.type.value === 'show' && (
               <div className="field-group">
                 <input name="ep" placeholder="Episode" value={this.state.ep} onChange={this.onChangeInput.bind(this, 'ep')} />
               </div>
