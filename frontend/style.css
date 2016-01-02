@@ -50,3 +50,11 @@ body {
 .MediaDialog .field-group {
 	margin: 10px;
 }
+
+.progress-complete {
+	color: green;
+}
+
+.progress-incomplete {
+	color: red;
+}
