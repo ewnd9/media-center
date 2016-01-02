@@ -103,7 +103,7 @@ OMXPlayer.prototype.start = function(moviePath, callback) {
 	}
 
 	if (configuration.omxPlayerPath) {
-		var parameters = [ "-b", "-o", "hdmi", "-p" ];
+		var parameters = [ "-b", "-o", "hdmi" ]; //, "-p" ];
 		if (configuration.omxPlayerParams) {
 			parameters = parameters.concat(configuration.omxPlayerParams);
 		}
