@@ -56,9 +56,17 @@ export default (db, file) => {
 			duration = _duration;
 		})
 
+		let positionCount = 0;
+
 		omxplayer.on('prop:Position', (_position) => {
 			position = _position;
-			db.updateFile(file, { position });
+
+			if (positionCount % 10 === 0) {
+				db.updateFile(file, { position });
+				console.log('update ' + position);
+			}
+
+			positionCount = (positionCount + 1) % 10;
 		});
 
 		omxplayer.on('prop:PlaybackStatus', (status) => {
