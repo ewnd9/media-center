@@ -39,9 +39,14 @@ const MediaList = React.createClass({
 					const data = file.split('/');
 
           let title;
+          let progress = '';
 
           if (item.db) {
             title = format(item.db);
+
+            if (item.db.position) {
+              progress = parseInt((item.db.position / item.db.duration) * 100) + '% ';
+            }
           } else if (item.recognition) {
             title = '? ' + format(item.recognition);
           } else {
@@ -55,7 +60,7 @@ const MediaList = React.createClass({
 
               <div onClick={this.handleClick.bind(this, index)}>
                 <a className="title">{ title }</a>
-                <a className="fullpath">{ file }</a>
+                <a className="fullpath">{ progress + file }</a>
               </div>
 
               <div className="children">

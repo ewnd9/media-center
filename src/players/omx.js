@@ -63,7 +63,6 @@ export default (db, file) => {
 
 			if (positionCount % 10 === 0) {
 				db.updateFile(file, { position });
-				console.log('update ' + position);
 			}
 
 			positionCount = (positionCount + 1) % 10;

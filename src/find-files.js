@@ -13,10 +13,27 @@ const loadRecognition = (db, item) => {
 		return db
 			.getPrefix(item.recognition.title)
 			.then((res) => {
-				res.s = item.recognition.s;
-				res.ep = item.recognition.ep;
+				item.db = item.db || {};
 
-				item.db = res;
+				if (!item.db.type) {
+					item.db.type = res.type;
+				}
+
+				if (!item.db.imdb) {
+					item.db.imdb = res.imdb;
+				}
+
+				if (!item.db.title) {
+					item.db.title = res.title;
+				}
+
+				if (!item.db.s) {
+					item.db.s = item.recognition.s;
+				}
+
+				if (!item.db.ep) {
+					item.db.ep = item.recognition.ep;
+				}
 			}, (err) => {
 				if (err.status !== 404) {
 					throw err;
