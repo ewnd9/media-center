@@ -13,10 +13,10 @@ const loadRecognition = (db, item) => {
 		return db
 			.getPrefix(item.recognition.title)
 			.then((res) => {
-				item.recognition = {
-					...item.recognition,
-					...res
-				};
+				res.s = item.recognition.s;
+				res.ep = item.recognition.ep;
+
+				item.db = res;
 			}, (err) => {
 				if (err.status !== 404) {
 					throw err;
