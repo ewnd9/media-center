@@ -1,5 +1,13 @@
 import OMXPlayer from './../vendor/omxplayer';
-import storage, { PLAY_MEDIA, PAUSE_MEDIA, USER_PAUSE_MEDIA, USER_CLOSE, USER_NEXT_AUDIO, USER_SEEK_FORWARD } from './../storage';
+import storage, {
+	PLAY_MEDIA,
+	PAUSE_MEDIA,
+	USER_PAUSE_MEDIA,
+	USER_CLOSE,
+	USER_NEXT_AUDIO,
+	USER_SEEK_FORWARD,
+	SCROBBLE
+} from './../storage';
 import fkill from 'fkill';
 import { registerKeys, unregisterKeys } from './../x11';
 
@@ -62,7 +70,12 @@ export default (db, file) => {
 			position = _position;
 
 			if (positionCount % 10 === 0) {
-				db.updateFile(file, { position });
+				db.updateFile(file, { position })
+					.then((res) => {
+						if (!res.scrobble && (position / duration * 100) > 80) {
+							storage.emit(SCROBBLE, { db, filename: file });
+						}
+					});
 			}
 
 			positionCount = (positionCount + 1) % 10;

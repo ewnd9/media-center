@@ -31,6 +31,10 @@ const MediaList = React.createClass({
       this.props.openModal(file);
     }
   },
+  handleHistoryClick: function(index) {
+    const file = this.props.files[index];
+    api.addToHistory(file.file, file.db);
+  },
   render: function() {
     return (
 			<div>
@@ -60,17 +64,29 @@ const MediaList = React.createClass({
 								 key={file}
 								 tabIndex={index + 1}>
 
-              <div onClick={this.handleClick.bind(this, index)}>
-                <a className="title">{ title }</a>
-                <a className="fullpath">
+              <div>
+                <a className="title" onClick={this.handleClick.bind(this, index)}>
+                  { title }
+                </a>
+                <div className="fullpath">
                   { progress && (
                     <span className={progressClass}>
                       { progress + '%' }
                     </span>
                   ) }
-                  { ' ' }
+                  {' '}
+                  {
+                    item.db && item.db.scrobble && (
+                      <span className="scrobble">[Scrobble]</span>
+                    ) || (
+                      <a onClick={this.handleHistoryClick.bind(this, index)}>
+                        [Add To History]
+                      </a>
+                    )
+                  }
+                  {' '}
                   <span>{ file }</span>
-                </a>
+                </div>
               </div>
 
               <div className="children">

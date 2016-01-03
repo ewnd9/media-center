@@ -52,6 +52,12 @@ app.post('/api/v1/playback/start', (req, res) => {
 	res.json({ status: 'ok' });
 });
 
+app.post('/api/v1/history', (req, res) => {
+	trakt.addToHistory(db, req.body.filename, req.body.media)
+		.then(_ => res.json({ status: 'ok' }))
+		.catch(err => res.json({ status: 'err' }));
+});
+
 const formatSuggestion = (media) => {
 	return {
 		value: media.ids.imdb,

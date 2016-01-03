@@ -2,17 +2,28 @@ import fetch from 'isomorphic-fetch';
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 
+export const post = (url, body) => {
+	return fetch(baseUrl + url, {
+		method: 'post',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(body)
+	});
+};
+
 export const playFile = (filename, media) => {
-	return fetch(baseUrl + '/api/v1/playback/start', {
-	  method: 'post',
-	  headers: {
-	    'Accept': 'application/json',
-	    'Content-Type': 'application/json'
-	  },
-	  body: JSON.stringify({
-	    filename,
-			media
-	  })
+	return post('/api/v1/playback/start', {
+		filename,
+		media
+	});
+};
+
+export const addToHistory = (filename, media) => {
+	return post('/api/v1/history', {
+		filename,
+		media
 	});
 };
 

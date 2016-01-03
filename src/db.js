@@ -17,7 +17,7 @@ export default (dbPath) => {
 			return db.put({
 				...dbData,
 				...data
-			});
+			}).then(() => dbData);
 		});
 	};
 

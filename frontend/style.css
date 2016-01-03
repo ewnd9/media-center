@@ -51,10 +51,12 @@ body {
 	margin: 10px;
 }
 
-.progress-complete {
-	color: green;
+.progress-complete, .scrobble {
+	color: #1B5E20;
+	background: white;
 }
 
 .progress-incomplete {
-	color: red;
+	color: #B71C1C;
+	background: white;
 }

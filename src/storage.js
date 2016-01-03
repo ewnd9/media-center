@@ -19,5 +19,6 @@ export const USER_NEXT_AUDIO = 'USER_NEXT_AUDIO';
 export const USER_SEEK_FORWARD = 'USER_SEEK_FORWARD';
 
 export const OPEN_MEDIA = 'OPEN_MEDIA';
+export const SCROBBLE = 'SCROBBLE';
 
 export default storage;
