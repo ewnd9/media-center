@@ -20,6 +20,13 @@ export const playFile = (filename, media) => {
 	});
 };
 
+export const saveInfo = (filename, media) => {
+	return post('/api/v1/playback/info', {
+		filename,
+		media
+	});
+};
+
 export const addToHistory = (filename, media) => {
 	return post('/api/v1/history', {
 		filename,

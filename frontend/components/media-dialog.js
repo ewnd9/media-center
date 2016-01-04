@@ -48,22 +48,32 @@ export default React.createClass({
     const value = event.label && event.value ? event : event.target.value;
     this.setState({ [field]: value });
   },
-  handleSubmit: function(event) {
-    event.preventDefault();
-
-    api.playFile(this.props.file.file, {
+  getInfo: function() {
+    return {
       type: this.state.type.value,
       imdb: this.state.imdb.value,
       title: this.state.imdb.label,
       s: this.state.s,
       ep: this.state.ep
-    });
+    };
+  },
+  handlePlaying: function(event) {
+    event.preventDefault();
+
+    api.playFile(this.props.file.file, this.getInfo())
+      .then(() => this.props.closeModal(event));
+  },
+  handleSaveInfo: function(event) {
+    event.preventDefault();
+
+    api.saveInfo(this.props.file.file, this.getInfo())
+      .then(() => this.props.closeModal(event));
   },
   render: function() {
     return (
 			<div className="MediaDialog">
 				<h2>{this.props.file.filename}</h2>
-				<form onSubmit={this.handleSubmit}>
+				<form>
           <div className="field-group">
             <Select
               name="type"
@@ -100,7 +110,8 @@ export default React.createClass({
           }
 
 					<div className="field-group">
-            <button>Submit</button>
+            <button onClick={this.handlePlaying}>Play</button>
+            <button onClick={this.handleSaveInfo}>Save and Close</button>
             <button onClick={this.props.closeModal}>Close</button>
 					</div>
 				</form>

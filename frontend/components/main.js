@@ -36,6 +36,7 @@ export default React.createClass({
   closeModal: function(event) {
     event.preventDefault();
     this.setState({ modalIsOpen: false });
+    this.getFiles();
   },
   render: function() {
     return (
