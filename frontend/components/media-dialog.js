@@ -22,8 +22,16 @@ export default React.createClass({
       };
     }
   },
+  componentDidMount: function() {
+    if (this.props.file.recognition) {
+      this.getSelectOptions(this.props.file.recognition.title)
+        .then(res => {
+          this.setState({ imdb: res.options[0] });
+        });
+    }
+  },
   getSelectOptions: function(input) {
-    return api.getMediaSuggestion(input || this.state.title, this.state.type.value)
+    return api.getMediaSuggestion(input, this.state.type.value)
       .then(options => {
         let i = 0;
 
@@ -70,6 +78,7 @@ export default React.createClass({
               name="imdb"
               loadOptions={this.getSelectOptions}
               value={this.state.imdb}
+              minimumInput={1}
               onChange={this.onChangeInput.bind(this, 'imdb')}
             />
           </div>
