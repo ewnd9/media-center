@@ -70,9 +70,11 @@ export default (db, file) => {
 			position = _position;
 
 			if (positionCount % 10 === 0) {
-				db.updateFile(file, { position })
+				db.updateFile(file, { position, duration })
 					.then((res) => {
-						if (!res.scrobble && (position / duration * 100) > 80) {
+						const pos = position / duration * 100;
+
+						if (!res.scrobble && pos !== Infinity && pos > 80) {
 							storage.emit(SCROBBLE, { db, filename: file });
 						}
 					});
