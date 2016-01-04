@@ -16,7 +16,8 @@ export default (dbPath) => {
 		return db.get(fileId(file)).then((dbData) => {
 			return db.put({
 				...dbData,
-				...data
+				...data,
+				updatedAt: new Date().toISOString()
 			}).then(() => dbData);
 		});
 	};

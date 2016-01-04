@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import * as api from './../api';
 
 const tr = (s) => s.length < 2 ? '0' + s : s;
@@ -59,6 +60,10 @@ const MediaList = React.createClass({
             title = data[data.length - 1];
           }
 
+          if (item.db && item.db.scrobbleAt && !item.db.scrobbleAtDiff) {
+            item.db.scrobbleAtDiff = moment(item.db.scrobbleAt).fromNow();
+          }
+
 					return (
 						<div className="file-entry"
 								 key={file}
@@ -77,7 +82,9 @@ const MediaList = React.createClass({
                   {' '}
                   {
                     item.db && item.db.scrobble && (
-                      <span className="scrobble">[Scrobble]</span>
+                      <span className="scrobble">
+                        [Scrobble] ({item.db.scrobbleAtDiff})
+                      </span>
                     ) || (
                       <a onClick={this.handleHistoryClick.bind(this, index)}>
                         [Add To History]

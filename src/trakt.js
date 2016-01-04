@@ -88,7 +88,7 @@ export let getScrobbleMovieData = (data) => {
 
 export let addToHistory = (db, filename, data = currMedia) => {
 	return method('https://api-v2launch.trakt.tv/sync/history', getHistoryData(data))
-		.then(() => db.updateFile(filename, { scrobble: true }));
+		.then(() => db.updateFile(filename, { scrobble: true, scrobbleAt: new Date().toISOString() }));
 };
 
 export let getHistoryData = (data) => {

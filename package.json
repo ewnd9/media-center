@@ -55,6 +55,7 @@
     "isomorphic-fetch": "^2.2.0",
     "mocha": "^2.2.5",
     "mock-fs": "^3.6.0",
+    "moment": "^2.11.0",
     "nock": "^3.6.0",
     "nodemon": "^1.8.1",
     "npm-run-all": "^1.4.0",
