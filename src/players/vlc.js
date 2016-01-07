@@ -27,7 +27,7 @@ export default (file) => {
     });
   });
 
-  var args = [
+  let args = [
   	// '-I', 'qt4',
   	'--control', 'dbus'
   ];

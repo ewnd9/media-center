@@ -1,4 +1,4 @@
-var storage = require('dot-file-config')('.badtaste-npm', {
+const storage = require('dot-file-config')('.badtaste-npm', {
   cloudSync: false
 });
 

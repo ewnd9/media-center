@@ -48,11 +48,11 @@ export default (db, file) => {
 	return killProcess().then(registerKeys).then(() => {
 		currentAudioStream = 0;
 
-		var configuration = {};
+		let configuration = {};
 		omxplayer = new OMXPlayer(configuration);
 
-		var duration = 0;
-		var position = 0;
+		let duration = 0;
+		let position = 0;
 
 		omxplayer.start(file, function(error) {
 			setTimeout(() => {

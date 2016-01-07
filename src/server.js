@@ -80,6 +80,6 @@ app.get('/api/v1/suggestions', (req, res) => {
 		.catch(err => res.json([]));
 });
 
-var server = app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
 	console.log(`listen localhost:${PORT}`);
 });
