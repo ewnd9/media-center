@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -12,7 +13,8 @@ var plugins = [
   new webpack.ProvidePlugin({
     'Promise': 'bluebird',
     'window.Promise': 'bluebird'
-  })
+  }),
+  new ExtractTextPlugin('styles.css')
 ];
 
 if (process.env.NODE_ENV === 'production') {
@@ -57,7 +59,10 @@ module.exports = {
         test: /\.html$/,
         loader: "file?name=[name].[ext]",
       },
-      { test: /\.css$/, loader: "style-loader!css-loader" }
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+      }
     ]
   },
   plugins: plugins,
