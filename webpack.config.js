@@ -8,6 +8,10 @@ var plugins = [
     'process.env': {
       'NODE_ENV': JSON.stringify(NODE_ENV)
     }
+  }),
+  new webpack.ProvidePlugin({
+    'Promise': 'bluebird',
+    'window.Promise': 'bluebird'
   })
 ];
 
