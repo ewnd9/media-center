@@ -109,6 +109,29 @@ export default (db, dir) => {
 		})
 		.then((result) => {
 			result.sort((a, b) => b.birthtime - a.birthtime);
+
+			result.forEach((folder) => {
+				if (folder.contents) {
+					const summary = folder.contents.reduce((total, curr) => {
+						if (curr.db && curr.db.s) {
+							const key = `${curr.db.title} season ${curr.db.s}`;
+
+							total[key] = total[key] || {};
+							total[key].count = (total[key].count || 0) + 1;
+							total[key].scrobble = (total[key].scrobble || 0) + (curr.db.scrobble ? 1 : 0);
+						} else if (curr.db) {
+							total[curr.db.title] = true;
+						} else {
+							total[curr.filename] = true;
+						}
+
+						return total;
+					}, {});
+
+					folder.summary = _.map(summary, (data, title) => ({ title, data }));
+				}
+			});
+
 			return result;
 		});
 };

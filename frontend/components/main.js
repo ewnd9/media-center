@@ -42,7 +42,7 @@ export default React.createClass({
     return (
 			<div>
         <div className="container">
-				  <MediaList openModal={this.openModal} files={this.state.files} />
+				  <MediaList openModal={this.openModal} files={this.state.files} level={0} />
         </div>
 
         <Modal

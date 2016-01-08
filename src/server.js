@@ -36,7 +36,10 @@ app.use(cors({
 app.get('/api/v1/files', (req, res) => {
 	findFiles(db, MEDIA_PATH)
 		.then(_ => res.json(_))
-		.catch(err => res.json(err));
+		.catch(err => {
+			console.log(err);
+			res.json(err);
+		});
 });
 
 app.post('/api/v1/playback/start', (req, res) => {
