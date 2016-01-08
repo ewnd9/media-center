@@ -21,7 +21,8 @@ export default React.createClass({
   getInitialState: function() {
     return {
       modalIsOpen: false,
-      files: []
+      files: [],
+      mode: localStorage.mode || 'all'
     };
   },
   getFiles: function() {
@@ -38,11 +39,28 @@ export default React.createClass({
     this.setState({ modalIsOpen: false });
     this.getFiles();
   },
+  setMode: function(mode) {
+    localStorage.mode = mode;
+    this.setState({ mode });
+  },
   render: function() {
     return (
 			<div>
-        <div className="container">
-				  <MediaList openModal={this.openModal} files={this.state.files} level={0} />
+        <div className="my-container">
+          <div id="top-options" className="btn-group btn-group-sm" role="group">
+            <button type="button"
+                    onClick={this.setMode.bind(this, 'all')}
+                    className={`btn btn-default ${this.state.mode === 'all' ? 'active' : ''}`}>
+              All
+            </button>
+            <button type="button"
+                    onClick={this.setMode.bind(this, 'not-watched')}
+                    className={`btn btn-default ${this.state.mode === 'not-watched' ? 'active' : ''}`}>
+              Not Watched
+            </button>
+          </div>
+
+				  <MediaList openModal={this.openModal} files={this.state.files} level={0} mode={this.state.mode} />
         </div>
 
         <Modal

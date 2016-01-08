@@ -11,8 +11,11 @@ body {
 	background: linear-gradient(to right,  rgba(96,108,136,1) 0%,rgba(63,76,107,1) 100%);
 }
 
-.container {
-	color: #FFF;
+.my-container {
+	color: #FFF !important;
+	a {
+		color: #FFF !important;
+	}
 	padding: 20px;
 }
 
@@ -59,4 +62,8 @@ body {
 .progress-incomplete {
 	color: #B71C1C;
 	background: white;
+}
+
+#top-options {
+	margin-bottom: 20px;
 }

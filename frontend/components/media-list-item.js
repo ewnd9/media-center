@@ -63,6 +63,10 @@ export default React.createClass({
 
 		const level = this.props.level || 0;
 
+    if (item.db && item.db.scrobble && this.props.mode === 'not-watched') {
+      return null;
+    }
+
 		return (
 			<div className={`file-entry level-${level}`}
 					 key={file}

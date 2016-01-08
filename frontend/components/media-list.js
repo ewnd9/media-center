@@ -13,10 +13,21 @@ const MediaList = React.createClass({
 
             if (item.contents) {
               return (
-                <MediaListFolder key={index} file={item} level={level} openModal={this.props.openModal} />
+                <MediaListFolder key={index}
+                                 file={item}
+                                 level={level}
+                                 mode={this.props.mode}
+                                 openModal={this.props.openModal} />
               );
             } else {
-              return (<MediaListItem key={index} file={item} index={index} level={level + 1} openModal={this.props.openModal} />);
+              return (
+                <MediaListItem key={index}
+                               file={item}
+                               index={index}
+                               level={level + 1}
+                               mode={this.props.mode}
+                               openModal={this.props.openModal} />
+              );
             }
           })
         }
