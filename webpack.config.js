@@ -1,6 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var autoprefixer = require('autoprefixer');
+var precss = require('precss');
 
 var NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -61,11 +63,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader')
       }
     ]
   },
   plugins: plugins,
+  postcss: [autoprefixer, precss],
   devServer: {
     contentBase: "./public",
     noInfo: true, //  --no-info option

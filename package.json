@@ -47,6 +47,7 @@
     "x11": "^2.0.2"
   },
   "devDependencies": {
+    "autoprefixer": "^6.2.3",
     "ava": "^0.7.0",
     "babel": "^5.8.21",
     "babel-loader": "^5.3.2",
@@ -62,7 +63,9 @@
     "nock": "^3.6.0",
     "nodemon": "^1.8.1",
     "npm-run-all": "^1.4.0",
+    "postcss-loader": "^0.8.0",
     "pre-commit": "^1.1.2",
+    "precss": "^1.4.0",
     "react": "^0.14.4",
     "react-dom": "^0.14.4",
     "react-modal": "^0.6.1",
