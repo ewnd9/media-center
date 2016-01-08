@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 
-const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+export const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 
 export const post = (url, body) => {
 	return fetch(baseUrl + url, {

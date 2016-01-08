@@ -5,9 +5,11 @@ import cors from 'express-cors';
 import globby from 'globby';
 import play from './players/omx';
 import * as trakt from './trakt';
-import storage, { OPEN_MEDIA } from './storage';
+import storage, { OPEN_MEDIA, PAUSE_MEDIA } from './storage';
 import initDb from './db';
 import findFiles from './find-files';
+import HTTP from 'http';
+import socketIO from 'socket.io';
 
 const MEDIA_PATH = process.env.MEDIA_PATH || '/home/ewnd9/Downloads';
 const PORT = process.env.PORT || 3000;
@@ -83,6 +85,11 @@ app.get('/api/v1/suggestions', (req, res) => {
 		.catch(err => res.json([]));
 });
 
-const server = app.listen(PORT, () => {
+const http = HTTP.Server(app);
+const io = socketIO(http);
+
+storage.on(PAUSE_MEDIA, () => io.emit(PAUSE_MEDIA));
+
+http.listen(PORT, () => {
 	console.log(`listen localhost:${PORT}`);
 });

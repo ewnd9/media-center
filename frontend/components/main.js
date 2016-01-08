@@ -17,6 +17,8 @@ const customStyles = {
   }
 };
 
+require('script!socket.io-client/socket.io.js');
+
 export default React.createClass({
   getInitialState: function() {
     return {
@@ -29,6 +31,9 @@ export default React.createClass({
     api.findFiles().then((files) => this.setState({ files }));
   },
   componentDidMount: function() {
+    const socket = io(api.baseUrl);
+    socket.on('PAUSE_MEDIA', () => this.getFiles());
+
     this.getFiles();
   },
   openModal: function(file) {
