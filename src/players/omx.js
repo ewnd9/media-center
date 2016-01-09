@@ -1,3 +1,5 @@
+import fkill from 'fkill';
+
 import OMXPlayer from './../vendor/omxplayer';
 import storage, {
 	PLAY_MEDIA,
@@ -6,9 +8,10 @@ import storage, {
 	USER_CLOSE,
 	USER_NEXT_AUDIO,
 	USER_SEEK_FORWARD,
+	USER_TOGGLE_SUBTITLES,
+	USER_TOGGLE_VIDEO,
 	SCROBBLE
 } from './../storage';
-import fkill from 'fkill';
 import { registerKeys, unregisterKeys } from './../x11';
 
 let omxplayer = null;
@@ -42,6 +45,36 @@ storage.on(USER_SEEK_FORWARD, () => {
 
 storage.on(USER_CLOSE, () => {
 	killProcess();
+});
+
+let subtitlesState = false;
+storage.on(USER_TOGGLE_SUBTITLES, () => {
+	if (omxplayer) {
+		if (subtitlesState) {
+			omxplayer.showSubtitles();
+			console.log('turning on subtitles');
+		} else {
+			omxplayer.hideSubtitles();
+			console.log('turning off subtitles');
+		}
+
+		subtitlesState = !subtitlesState;
+	}
+});
+
+let videoState = false;
+storage.on(USER_TOGGLE_VIDEO, () => {
+	if (omxplayer) {
+		if (videoState) {
+			omxplayer.hideVideo();
+			console.log('turning off video');
+		} else {
+			omxplayer.unHideVideo();
+			console.log('turning on video');
+		}
+
+		videoState = !videoState;
+	}
 });
 
 export default (db, file) => {

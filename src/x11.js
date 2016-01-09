@@ -1,33 +1,46 @@
-import storage, { USER_PAUSE_MEDIA, USER_CLOSE, USER_NEXT_AUDIO, USER_SEEK_FORWARD } from './storage';
+import storage, {
+	USER_PAUSE_MEDIA,
+	USER_CLOSE,
+	USER_NEXT_AUDIO,
+	USER_SEEK_FORWARD,
+	USER_TOGGLE_SUBTITLES,
+	USER_TOGGLE_VIDEO
+} from './storage';
 import Promise from 'bluebird';
 import x11 from 'x11';
+import _ from 'lodash';
 
 const noKeyModifier = 0;
 const ctrlKeyModifier = 4;
 
+const events = {};
+
 const space = 65;
+events[space] = USER_PAUSE_MEDIA;
+
 const keyC = 54;
+events[keyC] = USER_NEXT_AUDIO;
 const keyV = 55;
+events[keyV] = USER_SEEK_FORWARD;
+
+const keyS = 39;
+events[keyS] = USER_TOGGLE_SUBTITLES;
+const keyD = 40;
+events[keyD] = USER_TOGGLE_VIDEO;
+
 const esc = 9;
+events[esc] = USER_CLOSE;
 
 const pointerMode = false;
 const keyboardMode = true;
-
-const events = {};
-
-events[space] = USER_PAUSE_MEDIA;
-events[esc] = USER_CLOSE;
-events[keyC] = USER_NEXT_AUDIO;
-events[keyV] = USER_SEEK_FORWARD;
 
 let X;
 let root;
 
 const grabKeys = () => {
-	X.GrabKey(root, 0, noKeyModifier, space, false, true);
-	X.GrabKey(root, 0, noKeyModifier, esc, false, true);
-	X.GrabKey(root, 0, noKeyModifier, keyC, false, true);
-	X.GrabKey(root, 0, noKeyModifier, keyV, false, true);
+	_.map(events, (event, key) => {
+		X.GrabKey(root, 0, noKeyModifier, key, false, true);
+	});
 };
 
 export const registerKeys = () => {
@@ -59,9 +72,8 @@ export const registerKeys = () => {
 
 export const unregisterKeys = () => {
 	if (X) {
-		X.UngrabKey(root, space, 0);
-		X.UngrabKey(root, esc, 0);
-		X.UngrabKey(root, keyC, 0);
-		X.UngrabKey(root, keyV, 0);
+		_.map(events, (event, key) => {
+			X.UngrabKey(root, key, 0);
+		});
 	}
 };
