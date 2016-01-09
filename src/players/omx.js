@@ -1,4 +1,5 @@
 import fkill from 'fkill';
+import exitHook from 'exit-hook';
 
 import OMXPlayer from './../vendor/omxplayer';
 import storage, {
@@ -21,6 +22,8 @@ const killProcess = () => {
 	unregisterKeys();
 	return fkill('omxplayer.bin').then(() => console.log('success'), (err) => console.log(err));
 };
+
+exitHook(killProcess);
 
 storage.on(USER_PAUSE_MEDIA, () => {
 	if (omxplayer) {
