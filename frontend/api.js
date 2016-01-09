@@ -13,10 +13,11 @@ export const post = (url, body) => {
 	});
 };
 
-export const playFile = (filename, media) => {
+export const playFile = (filename, media, position) => {
 	return post('/api/v1/playback/start', {
 		filename,
-		media
+		media,
+		position
 	});
 };
 

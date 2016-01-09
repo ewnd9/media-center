@@ -23,9 +23,9 @@ const format = (data) => {
 };
 
 export default React.createClass({
-  handleClick: function(file) {
+  handleClick: function(file, position) {
     if (file.db) {
-      api.playFile(file.file, file.db);
+      api.playFile(file.file, file.db, position);
     } else {
       this.props.openModal(file);
     }
@@ -78,9 +78,9 @@ export default React.createClass({
 					</a>
 					<div className="fullpath">
 						{ progress && (
-							<span className={progressClass}>
+							<a className={progressClass} onClick={this.handleClick.bind(this, item, item.db.position)}>
 								{ progress + '%' }
-							</span>
+							</a>
 						) }
 						{' '}
 						{

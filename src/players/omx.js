@@ -80,11 +80,21 @@ storage.on(USER_TOGGLE_VIDEO, () => {
 	}
 });
 
-export default (db, file) => {
+const tr = h => h < 10 ? ('0' + h) : ('' + h);
+
+export default (db, file, prevPosition) => {
 	return killProcess().then(registerKeys).then(() => {
 		currentAudioStream = 0;
 
-		let configuration = {};
+		const configuration = {};
+
+		if (prevPosition) {
+			const seconds = prevPosition / 1000 / 1000;
+			const positionTime = `${tr(seconds / 60 / 60 | 0)}:${tr(seconds / 60 | 0)}:${tr(seconds % 60 | 0)}`;
+
+			configuration.omxPlayerParams = ['--pos', positionTime];
+		}
+
 		omxplayer = new OMXPlayer(configuration);
 
 		let duration = 0;

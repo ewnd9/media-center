@@ -54,13 +54,13 @@ body {
 	margin: 10px;
 }
 
-.progress-complete, .scrobble {
-	color: #1B5E20;
+a.progress-complete, .scrobble {
+	color: #1B5E20 !important;
 	background: white;
 }
 
-.progress-incomplete {
-	color: #B71C1C;
+a.progress-incomplete {
+	color: #B71C1C !important;
 	background: white;
 }
 
