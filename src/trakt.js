@@ -1,30 +1,31 @@
 import request from 'superagent';
 import Promise from 'bluebird';
+
 import storage, {
-	OPEN_MEDIA,
 	PLAY_MEDIA,
 	PAUSE_MEDIA,
  	SCROBBLE
 } from './storage';
 
+import * as traktUtils from './trakt-utils';
+
 let token = null;
 export let setToken = (_token) => token = _token;
 
-let currMedia = null;
-storage.on(OPEN_MEDIA, (data) => {
-	currMedia = data;
+storage.on(PLAY_MEDIA, ({ media, progress }) => {
+	startScrobble(traktUtils.formatScrobbleData({ media, progress }));
 });
-storage.on(PLAY_MEDIA, (progress) => {
-	startScrobble(getScrobbleData({ ...currMedia, progress }));
+
+storage.on(PAUSE_MEDIA, ({ media, progress }) => {
+	pauseScrobble(traktUtils.formatScrobbleData({ media, progress }));
 });
-storage.on(PAUSE_MEDIA, (progress) => {
-	pauseScrobble(getScrobbleData({ ...currMedia, progress }));
-});
-storage.on(SCROBBLE, ({ db, filename }) => {
-	addToHistory(db, filename);
+
+storage.on(SCROBBLE, ({ db, filename, media }) => {
+	addToHistory(db, filename, media);
 });
 
 export let method = (url, data, cb) => {
+	console.log(url, JSON.stringify(data, null, 2));
 	return new Promise((resolve, reject) => {
 		request.post(url)
 					 .send(data)
@@ -43,83 +44,18 @@ export let method = (url, data, cb) => {
 	});
 };
 
-export let startScrobble = (data) => {
-	console.log(JSON.stringify(data, null, 2));
+const startScrobble = (data) => {
 	return method('https://api-v2launch.trakt.tv/scrobble/start', data);
 };
 
-export let pauseScrobble = (data) => {
+const pauseScrobble = (data) => {
 	return method('https://api-v2launch.trakt.tv/scrobble/pause', data);
 };
 
-export let getScrobbleData = (data) => {
-	if (data.type === 'show') {
-		return getScrobbleShowData(data);
-	} else if (data.type === 'movie') {
-		return getScrobbleMovieData(data);
-	}
-};
-
-export let getScrobbleShowData = (data) => {
-	return {
-	  show: {
-	    ids: {
-	      imdb: data.imdb
-	    }
-	  },
-	  episode: {
-	    season: data.s,
-	    number: data.ep
-	  },
-	  progress: data.progress || 0
-	};
-};
-
-export let getScrobbleMovieData = (data) => {
-	return {
-		movie: {
-			ids: {
-				imdb: data.imdb
-			}
-		},
-		progress: data.progress
-	};
-};
-
-export let addToHistory = (db, filename, data = currMedia) => {
-	return method('https://api-v2launch.trakt.tv/sync/history', getHistoryData(data))
+export let addToHistory = (db, filename, data) => {
+	return method('https://api-v2launch.trakt.tv/sync/history', traktUtils.formatHistoryData(data))
 		.then(() => db.updateFile(filename, { scrobble: true, scrobbleAt: new Date().toISOString() }));
 };
-
-export let getHistoryData = (data) => {
-	if (data.type === 'show') {
-		return getHistoryShowData(data);
-	} else if (data.type === 'movie') {
-		return getHistoryMovieData(data);
-	}
-};
-
-export let getHistoryShowData = (data) => ({
-	shows: [{
-		ids: {
-			imdb: data.imdb
-		},
-		seasons: [{
-			number: data.s,
-			episodes: [{
-				number: data.ep
-			}]
-		}]
-	}]
-});
-
-export let getHistoryMovieData = (data) => ({
-	movies: [{
-    ids: {
-      imdb: data.imdb
-    }
-  }]
-});
 
 export let search = (query, type) => {
 	return new Promise((resolve, reject) => {

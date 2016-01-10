@@ -20,7 +20,6 @@ export const USER_SEEK_FORWARD = 'USER_SEEK_FORWARD';
 export const USER_TOGGLE_SUBTITLES = 'USER_TOGGLE_SUBTITLES';
 export const USER_TOGGLE_VIDEO = 'USER_TOGGLE_VIDEO';
 
-export const OPEN_MEDIA = 'OPEN_MEDIA';
 export const SCROBBLE = 'SCROBBLE';
 
 export default storage;

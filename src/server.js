@@ -5,7 +5,7 @@ import cors from 'express-cors';
 import globby from 'globby';
 import play from './players/omx';
 import * as trakt from './trakt';
-import storage, { OPEN_MEDIA, PAUSE_MEDIA } from './storage';
+import storage, { PAUSE_MEDIA } from './storage';
 import initDb from './db';
 import findFiles from './find-files';
 import HTTP from 'http';
@@ -20,6 +20,8 @@ const db = initDb(DB_PATH + '/' + 'db');
 
 trakt.setToken(TRAKT_TOKEN);
 const app = express();
+
+let player;
 
 app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -46,10 +48,9 @@ app.get('/api/v1/files', (req, res) => {
 
 app.post('/api/v1/playback/start', (req, res) => {
 	db.addFile(req.body.filename, req.body.media);
-	storage.emit(OPEN_MEDIA, req.body.media);
 
 	if (process.env.NODE_ENV === 'production') {
-		play(db, req.body.filename, req.body.position);
+		player = play(db, req.body.media, req.body.filename, req.body.position);
 	} else {
 		console.log(process.env.NODE_ENV);
 	}

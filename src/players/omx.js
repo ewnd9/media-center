@@ -82,7 +82,7 @@ storage.on(USER_TOGGLE_VIDEO, () => {
 
 const tr = h => h < 10 ? ('0' + h) : ('' + h);
 
-export default (db, file, prevPosition) => {
+export default (db, media, file, prevPosition) => {
 	return killProcess().then(registerKeys).then(() => {
 		currentAudioStream = 0;
 
@@ -99,16 +99,20 @@ export default (db, file, prevPosition) => {
 
 		let duration = 0;
 		let position = 0;
+		let status;
+
+		const progress = () => position / duration * 100;
+
+		const emitPlay = () => storage.emit(PLAY_MEDIA, { progress: progress(), media });
+		const emitPause = () => storage.emit(PAUSE_MEDIA, { progress: progress(), media });
 
 		omxplayer.start(file, function(error) {
-			setTimeout(() => {
-				storage.emit(PLAY_MEDIA, position / duration * 100);
-			}, 1000);
+			setTimeout(emitPlay, 1000);
 		});
 
 		omxplayer.on('prop:Duration', (_duration) => {
 			duration = _duration;
-		})
+		});
 
 		let positionCount = 0;
 
@@ -121,7 +125,7 @@ export default (db, file, prevPosition) => {
 						const pos = position / duration * 100;
 
 						if (!res.scrobble && pos !== Infinity && pos > 80) {
-							storage.emit(SCROBBLE, { db, filename: file });
+							storage.emit(SCROBBLE, { db, filename: file, media });
 						}
 					});
 			}
@@ -129,16 +133,29 @@ export default (db, file, prevPosition) => {
 			positionCount = (positionCount + 1) % 10;
 		});
 
-		omxplayer.on('prop:PlaybackStatus', (status) => {
+		omxplayer.on('prop:PlaybackStatus', (_status) => {
+			status = _status;
+
 			if (status === 'Playing') {
-				storage.emit(PLAY_MEDIA, position / duration * 100);
+				emitPlay();
 			} else if (status === 'Paused') {
-				storage.emit(PAUSE_MEDIA, position / duration * 100);
+				emitPause();
 			}
 		});
 
 		omxplayer.on('stopped', () => {
-			storage.emit(PAUSE_MEDIA, position / duration * 100);
+			status = 'Stopped';
+			emitPause();
 		});
+
+		return {
+			getInfo: () => ({
+				progress: progress(),
+				position,
+				duration,
+				status,
+				media
+			})
+		};
 	});
 };
