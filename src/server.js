@@ -1,7 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-import cors from 'express-cors';
+import cors from 'cors';
 import globby from 'globby';
 import play from './players/omx';
 import * as trakt from './trakt';
@@ -28,14 +28,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 
 app.use(morgan('request: :remote-addr :method :url :status'));
 app.use(express.static('public'));
-
-app.use(cors({
-	allowedOrigins: [
-		'localhost:3000',
-		'localhost:8080',
-		'localhost:8000',
-	]
-}));
+app.use(cors());
 
 app.get('/api/v1/files', (req, res) => {
 	findFiles(db, MEDIA_PATH)
@@ -46,11 +39,20 @@ app.get('/api/v1/files', (req, res) => {
 		});
 });
 
+app.get('/api/v1/playback/status', (req, res) => {
+	if (player) {
+		res.json(player.getInfo());
+	} else {
+		res.json({ status: null });
+	}
+});
+
 app.post('/api/v1/playback/start', (req, res) => {
 	db.addFile(req.body.filename, req.body.media);
 
 	if (process.env.NODE_ENV === 'production') {
-		player = play(db, req.body.media, req.body.filename, req.body.position);
+		play(db, req.body.media, req.body.filename, req.body.position)
+			.then(_player => player = _player)
 	} else {
 		console.log(process.env.NODE_ENV);
 	}
