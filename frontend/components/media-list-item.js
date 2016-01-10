@@ -73,7 +73,7 @@ export default React.createClass({
 					 tabIndex={index + 1}>
 
 				<div>
-					<a className="title" onClick={this.handleClick.bind(this, item)}>
+					<a className="title" onClick={this.handleClick.bind(this, item, undefined)}>
 						{ title }
 					</a>
 					<div className="fullpath">
