@@ -81,7 +81,7 @@ export default (db, dir) => {
 					item.birthtime = fs.statSync(item.dir).birthtime;
 
 					return loadFile(db, item)
-						.then((res) => {
+						.then(() => {
 							result.push(item);
 							return result;
 						});

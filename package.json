@@ -11,7 +11,7 @@
     "start:nodemon": "nodemon --watch lib app.js",
     "build:backend": "babel -s -d lib src",
     "build:backend:watch": "babel --watch -s -d lib src",
-    "style": "eslint src/ frontend/",
+    "style": "eslint src/",
     "test": "ava ./test/*.js",
     "test:watch": "nodemon test/*.js --exec ava"
   },

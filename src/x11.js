@@ -11,7 +11,7 @@ import x11 from 'x11';
 import _ from 'lodash';
 
 const noKeyModifier = 0;
-const ctrlKeyModifier = 4;
+// const ctrlKeyModifier = 4;
 
 const events = {};
 
@@ -39,7 +39,7 @@ let root;
 
 const grabKeys = () => {
 	_.map(events, (event, key) => {
-		X.GrabKey(root, 0, noKeyModifier, key, false, true);
+		X.GrabKey(root, 0, noKeyModifier, key, pointerMode, keyboardMode);
 	});
 };
 

@@ -121,7 +121,11 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
 			emitUpdate();
 		};
 
-		omxplayer.start(file, function(error) {
+		omxplayer.start(file, (err) => {
+			if (err) {
+				console.log(err);
+			}
+			
 			setTimeout(emitPlay, 1000);
 		});
 
