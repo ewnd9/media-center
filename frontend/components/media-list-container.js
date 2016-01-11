@@ -1,9 +1,7 @@
 import React from 'react';
 import MediaList from './media-list';
 import * as api from './../api';
-
-/* global io */
-require('script!socket.io-client/socket.io.js');
+import { STOP_PLAYBACK } from './../constants';
 
 export default React.createClass({
   getInitialState: function() {
@@ -16,9 +14,7 @@ export default React.createClass({
     api.findFiles().then((files) => this.setState({ files }));
   },
   componentDidMount: function() {
-    const socket = io(api.baseUrl);
-    socket.on('PAUSE_MEDIA', () => this.getFiles());
-
+    this.props.socket.on(STOP_PLAYBACK, () => this.getFiles());
     this.getFiles();
   },
   setMode: function(mode) {

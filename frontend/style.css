@@ -16,7 +16,7 @@ body {
 	a {
 		color: #FFF !important;
 	}
-	padding: 20px;
+	padding: 20px 20px 50px 20px;
 }
 
 .file-entry {
@@ -70,4 +70,25 @@ a.progress-incomplete {
 
 .trakt-report-item {
 	margin-bottom: 10px;
+}
+
+.bottom-playback-panel-holder {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.bottom-playback-panel {
+	background-color: black;
+	font-size: 16pt;
+	padding: 10px;
+}
+
+#playback {
+	text-align: center;
+}
+
+#playback .btn {
+	margin-right: 10px;
 }

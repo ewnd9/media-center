@@ -2,15 +2,23 @@ import fkill from 'fkill';
 import exitHook from 'exit-hook';
 
 import OMXPlayer from './../vendor/omxplayer';
-import storage, {
+
+import storage from './../storage';
+
+import {
 	UPDATE_PLAYBACK,
+	STOP_PLAYBACK,
 	USER_PAUSE_MEDIA,
 	USER_CLOSE,
 	USER_NEXT_AUDIO,
 	USER_SEEK_FORWARD,
 	USER_TOGGLE_SUBTITLES,
-	USER_TOGGLE_VIDEO
-} from './../storage';
+	USER_TOGGLE_VIDEO,
+	PLAYING,
+	PAUSED,
+	STOPPED
+} from './../constants';
+
 import { registerKeys, unregisterKeys } from './../x11';
 
 let omxplayer = null;
@@ -121,11 +129,17 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
 			emitUpdate();
 		};
 
+		const emitStop = () => {
+			trakt.pauseScrobble(media, progress());
+			emitUpdate();
+			storage.emit(STOP_PLAYBACK);
+		};
+
 		omxplayer.start(file, (err) => {
 			if (err) {
 				console.log(err);
 			}
-			
+
 			setTimeout(emitPlay, 1000);
 		});
 
@@ -152,19 +166,19 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
 			positionCount = (positionCount + 1) % 10;
 		});
 
-		omxplayer.on('prop:PlaybackStatus', (_status) => {
-			status = _status;
-
-			if (status === 'Playing') {
+		omxplayer.on('prop:PlaybackStatus', (omxStatus) => {
+			if (omxStatus === 'Playing') {
+				status = PLAYING;
 				emitPlay();
-			} else if (status === 'Paused') {
+			} else if (omxStatus === 'Paused') {
+				status = PAUSED;
 				emitPause();
 			}
 		});
 
 		omxplayer.on('stopped', () => {
-			status = 'Stopped';
-			emitPause();
+			status = STOPPED;
+			emitStop();
 		});
 
 		return { getInfo };

@@ -2,12 +2,19 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import storage, { UPDATE_PLAYBACK } from './storage';
+import storage from './storage';
 import initDb from './db';
 import HTTP from 'http';
 import socketIO from 'socket.io';
 import Trakt from 'trakt-utils';
 import Router from './routes/index';
+
+import {
+	UPDATE_PLAYBACK,
+	STOP_PLAYBACK,
+	USER_PAUSE_MEDIA,
+	USER_CLOSE
+} from './constants';
 
 const MEDIA_PATH = process.env.MEDIA_PATH || '/home/ewnd9/Downloads';
 const PORT = process.env.PORT || 3000;
@@ -45,7 +52,27 @@ app.use((err, res) => {
 const http = HTTP.Server(app);
 const io = socketIO(http);
 
-storage.on(UPDATE_PLAYBACK, data => io.emit('PAUSE_MEDIA', data));
+const proxyEvents = [USER_PAUSE_MEDIA, USER_CLOSE].map(event => ({
+	event,
+	fn: () => storage.emit(event)
+}));
+
+let lastPlaybackStatus;
+
+io.on('connection', (socket) => {
+	socket.emit(UPDATE_PLAYBACK, lastPlaybackStatus);
+
+	proxyEvents.forEach(({ event, fn }) => {
+		socket.on(event, fn);
+	});
+});
+
+[UPDATE_PLAYBACK, STOP_PLAYBACK].forEach(event => {
+	storage.on(event, data => {
+		lastPlaybackStatus = data;
+		io.emit(event, data);
+	});
+});
 
 http.listen(PORT, () => {
 	console.log(`listen localhost:${PORT}`);

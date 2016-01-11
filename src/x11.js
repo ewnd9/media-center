@@ -1,11 +1,14 @@
-import storage, {
+import storage from './storage';
+
+import {
 	USER_PAUSE_MEDIA,
 	USER_CLOSE,
 	USER_NEXT_AUDIO,
 	USER_SEEK_FORWARD,
 	USER_TOGGLE_SUBTITLES,
 	USER_TOGGLE_VIDEO
-} from './storage';
+} from './constants';
+
 import Promise from 'bluebird';
 import x11 from 'x11';
 import _ from 'lodash';

@@ -1,26 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import * as api from './../api';
-
-const tr = (s) => s.length < 2 ? '0' + s : s;
-
-const format = (data) => {
-  let result = data.title;
-
-  if (data.year) {
-    result = result + ` (${data.year})`;
-  }
-
-  if (data.s) {
-    result = result + ` S${tr(data.s + '')}`;
-  }
-
-  if (data.ep) {
-    result = result + `E${tr(data.ep + '')}`;
-  }
-
-  return result;
-};
+import { formatTitle } from './../utils';
 
 export default React.createClass({
   handleClick: function(file, position) {
@@ -45,14 +26,14 @@ export default React.createClass({
 		let progressClass;
 
 		if (item.db) {
-			title = format(item.db);
+			title = formatTitle(item.db);
 
 			if (item.db.position) {
 				progress = parseInt((item.db.position / item.db.duration) * 100);
 				progressClass = `progress progress-${ progress < 80 ? 'incomplete' : 'complete' }`;
 			}
 		} else if (item.recognition) {
-			title = '? ' + format(item.recognition);
+			title = '? ' + formatTitle(item.recognition);
 		} else {
 			title = data[data.length - 1];
 		}

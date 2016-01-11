@@ -1,11 +1,17 @@
 import Promise from 'bluebird';
 import notifier from 'node-notifier';
 
-import storage, {
+import storage from './../storage';
+
+import {
 	UPDATE_PLAYBACK,
+	STOP_PLAYBACK,
   USER_PAUSE_MEDIA,
-  USER_CLOSE
-} from './../storage';
+  USER_CLOSE,
+	PLAYING,
+	PAUSED,
+	STOPPED
+} from './../constants';
 
 const notify = (message) => {
   notifier.notify({
@@ -14,13 +20,24 @@ const notify = (message) => {
   });
 };
 
+let loopInterval;
+
+const pausePlaying = () => {
+	if (loopInterval) {
+		clearInterval(loopInterval);
+	}
+};
+
+
 export default (trakt, addToHistory, db, media, file, prevPosition) => {
+	pausePlaying();
+
   return Promise
     .resolve()
     .then(() => {
       let position = 0;
       let duration = 100 * 60 * 1000 * 1000; // 100 minutes
-      let status = 'Playing';
+      let status = PLAYING;
 
       const getInfo = () => ({
         progress: position / duration * 100,
@@ -30,16 +47,7 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
         status
       });
 
-      let loopInterval;
-
       const emitUpdate = () => storage.emit(UPDATE_PLAYBACK, getInfo());
-      const emitClose = () => storage.emit(USER_CLOSE, getInfo());
-
-			const pausePlaying = () => {
-				if (loopInterval) {
-					clearInterval(loopInterval);
-				}
-			};
 
       const startPlaying = () => {
 				pausePlaying();
@@ -54,10 +62,11 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
 			notify(`START PLAYING ${file} ${prevPosition ? 'from ' + prevPosition : ''}`);
 
       const onPause = () => {
-        if (status === 'Playing') {
-          status = 'Pause';
+        if (status === PLAYING) {
+          status = PAUSED;
+					pausePlaying();
         } else {
-          status = 'Playing';
+          status = PLAYING;
 					startPlaying();
         }
 
@@ -69,8 +78,11 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
       storage.on(USER_PAUSE_MEDIA, onPause);
 
       const onClose = () => {
+				status = STOPPED;
+				pausePlaying();
+
         emitUpdate();
-				emitClose();
+				storage.emit(STOP_PLAYBACK, getInfo());
 
         notify(`CLOSE MEDIA`);
 
