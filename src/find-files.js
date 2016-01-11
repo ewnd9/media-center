@@ -73,9 +73,24 @@ export default (db, dir) => {
 			});
 
 			const grouped = _.groupBy(flatFiles, 'dir');
-			const combined = _.map(grouped, (curr, dir) => ({ curr, dir }));
 
-			const result = Promise.reduce(combined, (result, { curr, dir }) => {
+			const combined = _.map(grouped, (curr, dir) => ({ curr, dir }));
+			const [firstLevel, others] = _.partition(combined, x => x.dir === dir);
+
+			let flatten;
+
+			if (firstLevel.length === 1) {
+				const xs = firstLevel[0].curr.map(file => ({
+					curr: [file],
+					dir: firstLevel[0].dir
+				}));
+
+				flatten = others.concat(xs);
+			} else {
+				flatten = others;
+			}
+
+			const result = Promise.reduce(flatten, (result, { curr, dir }) => {
 				if (curr.length === 1) {
 					const item = curr[0];
 					item.birthtime = fs.statSync(item.dir).birthtime;
@@ -109,7 +124,6 @@ export default (db, dir) => {
 		})
 		.then((result) => {
 			result.sort((a, b) => b.birthtime - a.birthtime);
-
 			result.forEach((folder) => {
 				if (folder.contents) {
 					const summary = folder.contents.reduce((total, curr) => {
