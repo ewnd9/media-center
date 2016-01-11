@@ -19,8 +19,10 @@ export default React.createClass({
       };
     } else {
       return {
-        imdb: [],
-        type: 'show'
+        type: {
+          label: 'show',
+          value: 'show'
+        }
       };
     }
   },
@@ -79,6 +81,14 @@ export default React.createClass({
     api.setHidden(this.props.file.file, this.props.file.filename)
       .then(() => this.props.closeModal(event));
   },
+  isNotValid: function() {
+    return !!!this.state.imdb || this.state.type.value === 'show' && (!this.state.s || !this.state.ep);
+  },
+  onSaveClick: function(fn, event) {
+    if (!this.isNotValid()) {
+      fn(event);
+    }
+  },
   render: function() {
     return (
 			<div className="MediaDialog">
@@ -120,10 +130,18 @@ export default React.createClass({
           }
 
 					<div className="field-group">
-            <IconButton icon="play" onClick={this.handlePlaying}>Play</IconButton>
-            <IconButton icon="floppy-saved" onClick={this.handleSaveInfo}>Save & Close</IconButton>
-            <IconButton icon="tree-conifer" onClick={this.handleHide}>Hide File</IconButton>
-            <IconButton icon="remove" onClick={this.props.closeModal}>Close</IconButton>
+            <IconButton icon="play" disabled={this.isNotValid()} onClick={this.onSaveClick.bind(this, this.handlePlaying)}>
+              Play
+            </IconButton>
+            <IconButton icon="floppy-saved" disabled={this.isNotValid()} onClick={this.onSaveClick.bind(this, this.handleSaveInfo)}>
+              Save & Close
+            </IconButton>
+            <IconButton icon="tree-conifer" onClick={this.handleHide}>
+              Hide File
+            </IconButton>
+            <IconButton icon="remove" onClick={this.props.closeModal}>
+              Close
+            </IconButton>
 					</div>
 				</form>
 			</div>
