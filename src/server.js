@@ -2,7 +2,6 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import play from './players/omx';
 import storage, { UPDATE_PLAYBACK } from './storage';
 import initDb from './db';
 import HTTP from 'http';
@@ -29,7 +28,16 @@ app.use(morgan('request: :remote-addr :method :url :status'));
 app.use(express.static('public'));
 app.use(cors());
 
+let play;
+
+if (process.env.NODE_ENV === 'production') {
+	play = require('./players/omx');
+} else {
+	play = require('./players/mock-player');
+}
+
 app.use('/', Router(MEDIA_PATH, db, trakt, play));
+
 app.use((err, res) => {
 	res.status(err && err.status || 500).json({ error: err.stack });
 });

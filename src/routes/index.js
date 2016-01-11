@@ -31,12 +31,8 @@ export default (MEDIA_PATH, db, trakt, play) => {
   router.post('/api/v1/playback/start', (req, res) => {
   	db.addFile(req.body.filename, req.body.media);
 
-  	if (process.env.NODE_ENV === 'production') {
-  		play(trakt, addToHistory, db, req.body.media, req.body.filename, req.body.position)
-  			.then(_player => player = _player);
-  	} else {
-  		console.log(process.env.NODE_ENV);
-  	}
+		play(trakt, addToHistory, db, req.body.media, req.body.filename, req.body.position)
+			.then(_player => player = _player);
 
   	res.json({ status: 'ok' });
   });

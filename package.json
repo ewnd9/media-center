@@ -65,6 +65,7 @@
     "mock-fs": "^3.6.0",
     "moment": "^2.11.0",
     "nock": "^3.6.0",
+    "node-notifier": "^4.4.0",
     "nodemon": "^1.8.1",
     "npm-run-all": "^1.4.0",
     "postcss-loader": "^0.8.0",
