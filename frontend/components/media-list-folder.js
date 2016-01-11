@@ -3,10 +3,15 @@ import MediaList from './media-list';
 
 export default React.createClass({
   getInitialState: function() {
-    return { hidden: true };
+    const val = localStorage[this.getLocalStorageKey()];
+    return { hidden: typeof val !== 'undefined' ? val === 'true' : true };
   },
   toggleHidden: function() {
     this.setState({ hidden: !this.state.hidden });
+    localStorage[this.getLocalStorageKey()] = !this.state.hidden;
+  },
+  getLocalStorageKey: function() {
+    return `folder:${this.props.file.dir}`;
   },
   render: function() {
 		const { level, file } = this.props;
