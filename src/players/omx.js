@@ -3,15 +3,13 @@ import exitHook from 'exit-hook';
 
 import OMXPlayer from './../vendor/omxplayer';
 import storage, {
-	PLAY_MEDIA,
-	PAUSE_MEDIA,
+	UPDATE_PLAYBACK,
 	USER_PAUSE_MEDIA,
 	USER_CLOSE,
 	USER_NEXT_AUDIO,
 	USER_SEEK_FORWARD,
 	USER_TOGGLE_SUBTITLES,
-	USER_TOGGLE_VIDEO,
-	SCROBBLE
+	USER_TOGGLE_VIDEO
 } from './../storage';
 import { registerKeys, unregisterKeys } from './../x11';
 
@@ -82,7 +80,7 @@ storage.on(USER_TOGGLE_VIDEO, () => {
 
 const tr = h => h < 10 ? ('0' + h) : ('' + h);
 
-export default (db, media, file, prevPosition) => {
+export default (trakt, addToHistory, db, media, file, prevPosition) => {
 	return killProcess().then(registerKeys).then(() => {
 		currentAudioStream = 0;
 
@@ -103,8 +101,25 @@ export default (db, media, file, prevPosition) => {
 
 		const progress = () => position / duration * 100;
 
-		const emitPlay = () => storage.emit(PLAY_MEDIA, { progress: progress(), media });
-		const emitPause = () => storage.emit(PAUSE_MEDIA, { progress: progress(), media });
+		const getInfo = () => ({
+			progress: progress(),
+			position,
+			duration,
+			status,
+			media
+		});
+
+		const emitUpdate = () => storage.emit(UPDATE_PLAYBACK, getInfo());
+
+		const emitPlay = () => {
+			trakt.startScrobble(media, progress());
+			emitUpdate();
+		};
+
+		const emitPause = () => {
+			trakt.pauseScrobble(media, progress());
+			emitUpdate();
+		};
 
 		omxplayer.start(file, function(error) {
 			setTimeout(emitPlay, 1000);
@@ -125,7 +140,7 @@ export default (db, media, file, prevPosition) => {
 						const pos = position / duration * 100;
 
 						if (!res.scrobble && pos !== Infinity && pos > 80) {
-							storage.emit(SCROBBLE, { db, filename: file, media });
+							addToHistory(file, media);
 						}
 					});
 			}
@@ -148,14 +163,6 @@ export default (db, media, file, prevPosition) => {
 			emitPause();
 		});
 
-		return {
-			getInfo: () => ({
-				progress: progress(),
-				position,
-				duration,
-				status,
-				media
-			})
-		};
+		return { getInfo };
 	});
 };
