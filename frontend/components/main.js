@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import * as api from './../api';
 import {
   UPDATE_PLAYBACK,
+  STOP_PLAYBACK,
   USER_PAUSE_MEDIA,
   USER_CLOSE,
   STOPPED
@@ -27,16 +28,24 @@ const customStyles = {
 
 /* global io */
 require('script!socket.io-client/socket.io.js');
+const socket = io(api.baseUrl);
 
 export default React.createClass({
   getInitialState: function() {
-    const socket = io(api.baseUrl);
-    socket.on(UPDATE_PLAYBACK, data => this.setPlayback(data));
-
     return {
       modalIsOpen: false,
+      files: [],
       socket
     };
+  },
+  componentDidMount: function() {
+    socket.on(UPDATE_PLAYBACK, playback => this.setState({ playback }));
+    socket.on(STOP_PLAYBACK, () => this.getFiles());
+
+    this.getFiles();
+  },
+  getFiles: function() {
+    api.findFiles().then((files) => this.setState({ files }));
   },
   openModal: function(file) {
     this.setState({ modalIsOpen: true, file });
@@ -44,9 +53,7 @@ export default React.createClass({
   closeModal: function(event) {
     event.preventDefault();
     this.setState({ modalIsOpen: false });
-  },
-  setPlayback: function(playback) {
-    this.setState({ playback });
+    this.getFiles();
   },
   socketEmit: function(event, data) {
     this.state.socket.emit(event, data);
@@ -59,7 +66,7 @@ export default React.createClass({
             <MediaListContainer
               openModal={this.openModal}
               setPlayback={this.setPlayback}
-              socket={this.state.socket} />
+              files={this.state.files} />
           </div>
           <div className="col-md-6">
             <TraktReport />

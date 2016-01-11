@@ -2,6 +2,8 @@ import React from 'react';
 import * as api from './../api';
 import Select from 'react-select';
 
+import IconButton from './icon-button';
+
 export default React.createClass({
   getInitialState: function() {
     if (this.props.file.recognition) {
@@ -71,6 +73,12 @@ export default React.createClass({
     api.saveInfo(this.props.file.file, this.getInfo())
       .then(() => this.props.closeModal(event));
   },
+  handleHide: function(event) {
+    event.preventDefault();
+
+    api.setHidden(this.props.file.file, this.props.file.filename)
+      .then(() => this.props.closeModal(event));
+  },
   render: function() {
     return (
 			<div className="MediaDialog">
@@ -112,9 +120,10 @@ export default React.createClass({
           }
 
 					<div className="field-group">
-            <button onClick={this.handlePlaying}>Play</button>
-            <button onClick={this.handleSaveInfo}>Save and Close</button>
-            <button onClick={this.props.closeModal}>Close</button>
+            <IconButton icon="play" onClick={this.handlePlaying}>Play</IconButton>
+            <IconButton icon="floppy-saved" onClick={this.handleSaveInfo}>Save & Close</IconButton>
+            <IconButton icon="tree-conifer" onClick={this.handleHide}>Hide File</IconButton>
+            <IconButton icon="remove" onClick={this.props.closeModal}>Close</IconButton>
 					</div>
 				</form>
 			</div>

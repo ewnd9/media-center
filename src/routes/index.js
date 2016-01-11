@@ -43,8 +43,18 @@ export default (MEDIA_PATH, db, trakt, play) => {
   		.catch(err => next(err));
   });
 
-  router.post('/api/v1/history', (req, res, next) => {
+  router.post('/api/v1/files/scrobble', (req, res, next) => {
   	addToHistory(req.body.filename, req.body.media)
+  		.then(() => res.json({ status: 'ok' }))
+  		.catch(err => next(err));
+  });
+
+  router.post('/api/v1/files/hidden', (req, res, next) => {
+    db
+      .updateFile(req.body.file, {
+        hidden: true,
+        title: req.body.filename
+      })
   		.then(() => res.json({ status: 'ok' }))
   		.catch(err => next(err));
   });

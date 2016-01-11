@@ -33,9 +33,16 @@ export const saveInfo = (filename, media) => {
 };
 
 export const addToHistory = (filename, media) => {
-	return post('/api/v1/history', {
+	return post('/api/v1/files/scrobble', {
 		filename,
 		media
+	});
+};
+
+export const setHidden = (file, filename) => {
+	return post('/api/v1/files/hidden', {
+		filename,
+		file
 	});
 };
 

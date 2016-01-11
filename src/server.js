@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/', Router(MEDIA_PATH, db, trakt, play));
 
 app.use((err, res) => {
-	res.status(err && err.status || 500).json({ error: err.stack });
+	res.status(500).json({ error: err.stack });
 });
 
 const http = HTTP.Server(app);

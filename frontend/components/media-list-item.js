@@ -44,7 +44,7 @@ export default React.createClass({
 
 		const level = this.props.level || 0;
 
-    if (item.db && item.db.scrobble && this.props.mode === 'not-watched') {
+    if (this.props.mode === 'not-watched' && item.db && (item.db.scrobble || item.db.hidden)) {
       return null;
     }
 

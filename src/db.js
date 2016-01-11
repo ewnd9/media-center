@@ -12,14 +12,37 @@ export default (dbPath) => {
 		return `prefix:${prefix}`;
 	};
 
-	const updateFile = (file, data) => {
-		return db.get(fileId(file)).then((dbData) => {
-			return db.put({
-				...dbData,
-				...data,
-				updatedAt: new Date().toISOString()
-			}).then(() => dbData);
+	const handleError = (err, fn) => {
+		if (err.status === 404) {
+			return fn();
+		} else {
+			throw err;
+		}
+	};
+
+	const putFile = (prevData, newData) => {
+		return db.put({
+			...prevData,
+			...newData,
+			updatedAt: new Date().toISOString()
+		})
+	};
+
+	const postFile = (file, data) => {
+		return db.post({
+			...data,
+			_id: fileId(file)
 		});
+	};
+
+	const updateFile = (file, data) => {
+		return db
+			.get(fileId(file))
+			.then(
+				dbData => putFile(dbData, data),
+				err => handleError(err, () => postFile(file, data))
+			)
+			.then(() => data);
 	};
 
 	const addFile = (file, data) => {

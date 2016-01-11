@@ -6,31 +6,31 @@ import {
   PAUSED
 } from './../constants';
 
+import IconButton from './icon-button';
+
 export default ({ playback, onPlay, onPause, onClose }) => {
   return (
     <div id="playback">
-      <button type="button" className="btn btn-default btn-sm">
-        <span className="glyphicon glyphicon-film" aria-hidden="true"></span>
-        {' '}
+      <IconButton icon="film">
         {playback.progress | 0}{'%'}
         {' '}
         {formatTitle(playback.media)}
-      </button>
+      </IconButton>
 
       { playback.status === PAUSED && (
-        <button type="button" className="btn btn-default btn-sm" onClick={onPlay}>
-          <span className="glyphicon glyphicon-play" aria-hidden="true"></span> Play
-          </button>
-        )}
+          <IconButton icon="play" onClick={onPlay}>
+            Play
+          </IconButton>
+      )}
       { playback.status === PLAYING && (
-        <button type="button" className="btn btn-default btn-sm" onClick={onPause}>
-          <span className="glyphicon glyphicon-pause" aria-hidden="true"></span> Pause
-        </button>
+        <IconButton icon="pause" onClick={onPause}>
+          Pause
+        </IconButton>
       )}
 
-      <button type="button" className="btn btn-default btn-sm" onClick={onClose}>
-        <span className="glyphicon glyphicon glyphicon-stop" aria-hidden="true"></span> Stop
-      </button>
+      <IconButton icon="stop" onClick={onClose}>
+        Stop
+      </IconButton>
     </div>
   );
 };

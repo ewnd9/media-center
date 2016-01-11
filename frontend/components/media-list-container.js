@@ -1,21 +1,11 @@
 import React from 'react';
 import MediaList from './media-list';
-import * as api from './../api';
-import { STOP_PLAYBACK } from './../constants';
 
 export default React.createClass({
   getInitialState: function() {
     return {
-      files: [],
       mode: localStorage.mode || 'all'
     };
-  },
-  getFiles: function() {
-    api.findFiles().then((files) => this.setState({ files }));
-  },
-  componentDidMount: function() {
-    this.props.socket.on(STOP_PLAYBACK, () => this.getFiles());
-    this.getFiles();
   },
   setMode: function(mode) {
     localStorage.mode = mode;
@@ -37,7 +27,7 @@ export default React.createClass({
           </button>
         </div>
 
-        <MediaList openModal={this.props.openModal} files={this.state.files} level={0} mode={this.state.mode} />
+        <MediaList openModal={this.props.openModal} files={this.props.files} level={0} mode={this.state.mode} />
       </div>
     );
   }
