@@ -30,7 +30,7 @@ app.use(express.static('public'));
 app.use(cors());
 
 app.use('/', Router(MEDIA_PATH, db, trakt, play));
-app.use((err, req, res) => {
+app.use((err, res) => {
 	res.status(err && err.status || 500).json({ error: err.stack });
 });
 

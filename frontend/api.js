@@ -2,6 +2,10 @@ import fetch from 'isomorphic-fetch';
 
 export const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 
+export const get = (url) => {
+	return fetch(baseUrl + url).then(_ => _.json());
+};
+
 export const post = (url, body) => {
 	return fetch(baseUrl + url, {
 		method: 'post',
@@ -36,11 +40,13 @@ export const addToHistory = (filename, media) => {
 };
 
 export const findFiles = () => {
-	return fetch(baseUrl + '/api/v1/files')
-		.then(response => response.json())
+	return get('/api/v1/files');
 };
 
 export const getMediaSuggestion = (title, type) => {
-  return fetch(baseUrl + '/api/v1/suggestions?title=' + encodeURIComponent(title) + '&type=' + type)
-    .then(_ => _.json());
+  return get('/api/v1/suggestions?title=' + encodeURIComponent(title) + '&type=' + type);
+};
+
+export const getReport = () => {
+	return get('/api/v1/report');
 };
