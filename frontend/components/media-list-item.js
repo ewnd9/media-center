@@ -81,7 +81,7 @@ export default React.createClass({
 							<a className={progressClass} onClick={this.handleClick.bind(this, item, item.db.position)}>
 								{ progress + '%' }
 							</a>
-						) }
+						) || ''}
 						{' '}
 						{
 							item.db && item.db.scrobble && (
