@@ -1,5 +1,4 @@
 import React from 'react';
-import * as api from './../api';
 import MediaListItem from './media-list-item';
 import MediaListFolder from './media-list-folder';
 

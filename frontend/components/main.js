@@ -17,6 +17,7 @@ const customStyles = {
   }
 };
 
+/* global io */
 require('script!socket.io-client/socket.io.js');
 
 export default React.createClass({

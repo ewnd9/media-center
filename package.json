@@ -11,7 +11,7 @@
     "start:nodemon": "nodemon --watch lib app.js",
     "build:backend": "babel -s -d lib src",
     "build:backend:watch": "babel --watch -s -d lib src",
-    "style": "eslint src/",
+    "style": "eslint src/ frontend/",
     "test": "ava ./test/*.js",
     "test:watch": "nodemon test/*.js --exec ava"
   },
@@ -57,6 +57,7 @@
     "chai": "^3.2.0",
     "css-loader": "^0.23.0",
     "eslint": "^1.10.3",
+    "eslint-plugin-react": "^3.14.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "isomorphic-fetch": "^2.2.0",

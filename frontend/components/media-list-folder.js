@@ -1,5 +1,4 @@
 import React from 'react';
-import * as api from './../api';
 import MediaList from './media-list';
 
 export default React.createClass({

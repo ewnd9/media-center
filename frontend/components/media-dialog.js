@@ -31,7 +31,8 @@ export default React.createClass({
     }
   },
   getSelectOptions: function(input) {
-    return api.getMediaSuggestion(input, this.state.type.value)
+    return api
+      .getMediaSuggestion(input, this.state.type.value)
       .then(options => {
         let i = 0;
 
@@ -40,9 +41,10 @@ export default React.createClass({
         });
 
         return { options };
-      }, err => ({ options: [] }));
-  },
-  componentWillReceiveProps: function(props) {
+      }, err => {
+        console.log(err);
+        return { options: [] };
+      });
   },
   onChangeInput: function(field, event) {
     const value = event.label && event.value ? event : event.target.value;
