@@ -151,6 +151,7 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
 
 		omxplayer.on('prop:Position', (_position) => {
 			position = _position;
+			emitUpdate();
 
 			if (positionCount % 10 === 0) {
 				db.updateFile(file, { position, duration })

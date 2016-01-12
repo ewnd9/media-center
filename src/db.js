@@ -20,30 +20,27 @@ export default (dbPath) => {
 		}
 	};
 
-	const putFile = (prevData, newData) => {
-		return db.put({
-			...prevData,
+	const putDoc = (file, initData, newData = {}) => {
+		const doc = {
+			...initData,
 			...newData,
-			updatedAt: new Date().toISOString()
-		})
-	};
-
-	const postFile = (file, data) => {
-		return db.post({
-			...data,
+			updatedAt: new Date().toISOString(),
 			_id: fileId(file)
-		});
+		};
+
+		return db.put(doc).then(() => doc);
 	};
 
-	const updateFile = (file, data) => {
+	const updateDoc = (id, data) => {
 		return db
-			.get(fileId(file))
+			.get(id)
 			.then(
-				dbData => putFile(dbData, data),
-				err => handleError(err, () => postFile(file, data))
-			)
-			.then(() => data);
+				dbData => putDoc(id, dbData, data),
+				err => handleError(err, () => putDoc(id, data))
+			);
 	};
+
+	const updateFile = (file, data) => updateDoc(fileId(file), data);
 
 	const addFile = (file, data) => {
 		const _data = file.split('/');
