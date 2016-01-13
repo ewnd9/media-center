@@ -55,7 +55,10 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'babel'
+        loaders: [
+          'react-hot',
+          'babel'
+        ]
       },
       {
         test: /\.html$/,
@@ -76,7 +79,6 @@ module.exports = {
   devServer: {
     contentBase: "./public",
     noInfo: true, //  --no-info option
-    hot: false,
-    inline: true
+    hot: true
   }
 };
