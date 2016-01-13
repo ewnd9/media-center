@@ -5,8 +5,9 @@ import sinon from 'sinon';
 import Promise from 'bluebird';
 
 import createServer from './fixtures/create-server';
+import createDb from './fixtures/create-db';
+
 import Router from './../src/routes/index';
-import createDb from './../src/db';
 
 const port = 4005;
 const post = async (url, body) => {
@@ -22,8 +23,7 @@ const post = async (url, body) => {
 };
 
 test('/api/v1/files/scrobble', async t => {
-  const port = 4005;
-  const db = createDb('/tmp/x' + Math.random());
+  const db = createDb();
 
   const addToHistory = sinon.stub().returns(Promise.resolve());
   const trakt = {
@@ -50,5 +50,4 @@ test('/api/v1/files/scrobble', async t => {
   const d1 = await db.getFile(filename);
   t.is(true, d1.scrobble);
   t.not(d0.updatedAt, d1.updatedAt);
-
 });

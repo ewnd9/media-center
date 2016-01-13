@@ -2,9 +2,8 @@ import test from 'ava';
 import 'babel-core/register';
 import mock from 'mock-fs';
 import findFiles from './../src/find-files';
-import initDb from './../src/db';
+import createDb from './fixtures/create-db';
 
-const testDb = '/tmp/media-center-db-' + Math.random();
 const testDir = '/home/pi/video';
 
 const showFolder = 'Master of None S01 Season 1 Complete 1080p WEB-DL [rartv]';
@@ -23,12 +22,9 @@ const movieTitle = 'Minions';
 const nearestDate = new Date(2);
 const pastDate = new Date(1);
 
-let db;
-
-test.before(async t => {
-	db = initDb(testDb);
-
-	await db.addFile([testDir, showFolder, showFile1].join('/'), {
+test('#findFiles', async t => {
+	const db = createDb();
+	const res = await db.addFile([testDir, showFolder, showFile1].join('/'), {
 		type: 'show',
 		title: showTitle,
 		s: 1,
@@ -53,13 +49,7 @@ test.before(async t => {
 			})
 	  }
 	});
-});
 
-test.after(() => {
-	mock.restore();
-});
-
-test('#findFiles', async t => {
 	const result = await findFiles(db, testDir);
 
 	t.is(result[0].birthtime, nearestDate);
@@ -97,4 +87,5 @@ test('#findFiles', async t => {
 	t.is(items[1].recognition.s, 1);
 	t.is(items[1].recognition.ep, 2);
 
+	mock.restore();
 });
