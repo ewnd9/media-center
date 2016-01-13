@@ -1,74 +1,66 @@
 import PouchDB from 'pouchdb';
 import split from 'split-torrent-release';
 
+let db;
+
+function Model(createId) {
+	this.createId = createId;
+};
+
+Model.prototype.on404 = function(err, fn) {
+	if (err.status === 404) {
+		return fn();
+	} else {
+		throw err;
+	}
+};
+
+Model.prototype.get = function(id) {
+	return db.get(this.createId(id));
+};
+
+Model.prototype.put = function(id, data) {
+	const doc = {
+		...data,
+		_id: this.createId(id),
+		updatedAt: new Date().toISOString()
+	};
+
+	return db.put(doc).then(() => doc);
+};
+
+Model.prototype.update = function(id, data) {
+	return this
+		.get(id)
+		.then(
+			dbData => this.put(id, { ...dbData, ...data }),
+			err => this.on404(err, () => this.put(id, data))
+		);
+};
+
 export default (dbPath) => {
-	const db = new PouchDB(dbPath);
+	db = new PouchDB(dbPath);
 
-	const fileId = (file) => {
-		return `file:${file.replace('\W', '')}`;
-	};
+	const fileId = (file) => `file:${file.replace('\W', '')}`;
+	const prefixId = (prefix) => `prefix:${prefix}`;
 
-	const prefixId = (prefix) => {
-		return `prefix:${prefix}`;
-	};
+	const File = new Model(fileId);
+	const Prefix = new Model(prefixId);
 
-	const handleError = (err, fn) => {
-		if (err.status === 404) {
-			return fn();
-		} else {
-			throw err;
-		}
-	};
-
-	const putDoc = (id, initData, newData = {}) => {
-		const doc = {
-			...initData,
-			...newData,
-			updatedAt: new Date().toISOString(),
-			_id: id
-		};
-
-		return db.put(doc).then(() => doc);
-	};
-
-	const updateDoc = (id, data) => {
-		return db
-			.get(id)
-			.then(
-				dbData => putDoc(id, dbData, data),
-				err => handleError(err, () => putDoc(id, data))
-			);
-	};
-
-	const updateFile = (file, data) => updateDoc(fileId(file), data);
+	const updateFile = File.update.bind(File);
+	const getFile = File.get.bind(File);
+	const getPrefix = Prefix.get.bind(Prefix);
 
 	const addFile = (file, data) => {
-		const _data = file.split('/');
-		const filename = _data[_data.length - 1];
+		const parts = file.split('/');
+		const filename = parts[parts.length - 1];
 
 		const recognition = split(filename);
 
-		return db
-			.put({
-				...data,
-				_id: fileId(file)
-			})
-			.then(() => {
-				return db.put({
-					...data,
-					_id: prefixId(recognition.title)
-				})
-			}, (err) => {
-				if (err.name === 'conflict') {
-					return updateFile(file, data);
-				} else {
-					throw err;
-				}
-			});
+		return File
+			.update(file, data)
+			.then(() => Prefix.update(recognition.title, data));
 	};
-
-	const getFile = (file) => db.get(fileId(file));
-	const getPrefix = (prefix) => db.get(prefixId(prefix));
 
 	return {
 		addFile,
