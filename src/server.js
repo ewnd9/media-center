@@ -38,9 +38,9 @@ app.use(cors());
 let play;
 
 if (process.env.NODE_ENV === 'production') {
-	play = require('./players/omx');
+	play = require('./players/omx').default;
 } else {
-	play = require('./players/mock-player');
+	play = require('./players/mock-player').default;
 }
 
 app.use('/', Router(MEDIA_PATH, db, trakt, play));
