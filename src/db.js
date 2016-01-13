@@ -20,12 +20,12 @@ export default (dbPath) => {
 		}
 	};
 
-	const putDoc = (file, initData, newData = {}) => {
+	const putDoc = (id, initData, newData = {}) => {
 		const doc = {
 			...initData,
 			...newData,
 			updatedAt: new Date().toISOString(),
-			_id: fileId(file)
+			_id: id
 		};
 
 		return db.put(doc).then(() => doc);
