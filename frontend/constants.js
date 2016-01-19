@@ -1,2 +1,1 @@
-import * as constants from './../src/constants'; // straight out of backend
-export default constants;
+export * from './../src/constants'; // straight out of backend
