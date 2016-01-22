@@ -13,6 +13,10 @@ const loadRecognition = (db, item) => {
 		return db
 			.getPrefix(item.recognition.title)
 			.then((res) => {
+				if (res.type !== item.recognition.type) {
+					return;
+				}
+
 				item.db = item.db || {};
 
 				if (!item.db.type) {
