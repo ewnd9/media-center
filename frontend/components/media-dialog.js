@@ -1,6 +1,7 @@
 import React from 'react';
 import * as api from './../api';
 import Select from 'react-select';
+import { debounce } from 'lodash';
 
 import IconButton from './icon-button';
 
@@ -34,7 +35,7 @@ export default React.createClass({
         });
     }
   },
-  getSelectOptions: function(input) {
+  getSelectOptions: function(input, callback) {
     return api
       .getMediaSuggestion(input, this.state.type.value)
       .then(options => {
@@ -44,9 +45,18 @@ export default React.createClass({
           item.value = item.value || i++;
         });
 
+        if (callback) {
+          callback(null, { options });
+        }
+
         return { options };
       }, err => {
         console.log(err);
+
+        if (callback) {
+          callback(err);
+        }
+        
         return { options: [] };
       });
   },
@@ -106,7 +116,7 @@ export default React.createClass({
           <div className="field-group">
             <Select.Async
               name="imdb"
-              loadOptions={this.getSelectOptions}
+              loadOptions={debounce(this.getSelectOptions, 200)}
               value={this.state.imdb}
               minimumInput={1}
               onChange={this.onChangeInput.bind(this, 'imdb')}

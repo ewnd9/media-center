@@ -8,11 +8,14 @@ export default React.createClass({
     if (file.db) {
       api.playFile(file.file, file.db, position);
     } else {
-      this.props.openModal(file);
+      this.openModal(file);
     }
   },
   handleHistoryClick: function(file) {
     api.addToHistory(file.file, file.db);
+  },
+  openModal: function(file) {
+    this.props.openModal(file);
   },
   render: function() {
 		const item = this.props.file;
@@ -70,9 +73,15 @@ export default React.createClass({
 									[Scrobble] ({item.db.scrobbleAtDiff})
 								</span>
 							) || (
-								<a onClick={this.handleHistoryClick.bind(this, item)}>
-									[Add To History]
-								</a>
+                <span>
+                  <a onClick={this.handleHistoryClick.bind(this, item)}>
+  									[Add To History]
+  								</a>
+                  {' '}
+  								<a onClick={this.openModal.bind(this, item)}>
+  									[Change Media]
+  								</a>
+                </span>
 							)
 						}
 						{' '}
