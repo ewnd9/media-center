@@ -75,20 +75,12 @@ export default (MEDIA_PATH, db, trakt, play) => {
   		.catch(() => res.json([]));
   });
 
-  let reportCache;
 
   router.get('/api/v1/report', (req, res, next) => {
-    if (reportCache) {
-      res.json(reportCache);
-    } else {
-      trakt
-        .getReport()
-        .then(_ => {
-          reportCache = _;
-          res.json(_);
-        })
-        .catch(err => next(err));
-    }
+    trakt
+      .getReport()
+      .then(_ => res.json(_))
+      .catch(err => next(err));
   });
 
   return router;
