@@ -8,12 +8,16 @@ import HTTP from 'http';
 import socketIO from 'socket.io';
 import Trakt from 'trakt-utils';
 import Router from './routes/index';
+import { exec } from 'child_process';
 
 import {
 	UPDATE_PLAYBACK,
 	STOP_PLAYBACK,
 	USER_PAUSE_MEDIA,
-	USER_CLOSE
+	USER_CLOSE,
+	USER_SCREENSHOT,
+	USER_SCREEN_OFF,
+	USER_OPEN_BROWSER
 } from './constants';
 
 const MEDIA_PATH = process.env.MEDIA_PATH || '/home/ewnd9/Downloads';
@@ -42,6 +46,17 @@ if (process.env.NODE_ENV === 'production') {
 } else {
 	play = require('./players/mock-player').default;
 }
+
+storage.on(USER_SCREENSHOT, () => {
+	// https://github.com/info-beamer/tools/tree/master/screenshot
+	exec(`DISPLAY=:0 /home/pi/tools/screenshot/screenshot > /home/pi/Pictures/${new Date().toISOString()}.jpg`);
+});
+storage.on(USER_SCREEN_OFF, () => {
+	exec(`DISPLAY=:0 xset dpms force suspend`);
+});
+storage.on(USER_OPEN_BROWSER, () => {
+	exec(`DISPLAY=:0 xdg-open "http://localhost:${PORT}/" &`);
+});
 
 app.use('/', Router(MEDIA_PATH, db, trakt, play));
 
