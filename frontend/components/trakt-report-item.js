@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 export default ({ report, show }) => {
   const titles = [];
@@ -15,16 +16,23 @@ export default ({ report, show }) => {
     titles.push(`${formatInterval(report.aired)} available`);
   }
 
+  const now = new Date();
+
   if (report.future.length > 0) {
     showId = report.future[0].episodes[0].show.ids.slug;
 
     report.future.forEach(report => {
       const length = report.episodes.length;
+      const awaiting = (
+        report.gap === 0 ?
+          `${moment(report.episodes[0].first_aired).diff(now, 'hours')} hours` :
+          `${report.gap + 1} days`
+      );
 
       if (length === 1) {
-        titles.push(`${format(report.episodes[0].episode)} in ${report.gap} days`)
+        titles.push(`${format(report.episodes[0].episode)} in ${awaiting}`)
       } else {
-        titles.push(`${formatInterval(report.episodes)} every week in ${report.gap} days`);
+        titles.push(`${formatInterval(report.episodes)} every week in ${awaiting}`);
       }
     });
   }
