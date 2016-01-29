@@ -13,6 +13,8 @@ const showImdb = 'tt4635276';
 
 const showFile1 = 'Master.of.None.S01E01.Plan.B.1080p.NF.WEBRip.DD5.1.x264-NTb.mkv';
 const showFile2 = 'Master.of.None.S01E02.Parents.1080p.NF.WEBRip.DD5.1.x264-NTb.mkv';
+const showFile3 = 'Master.of.None.S01E02.Parents.1080p.NF.WEBRip.DD5.1.x264-NTb.Sample.mkv';
+const showFile4 = 'Master.of.None.S01E02.Parents.1080p.NF.WEBRip.DD5.1.x264-NTb.sample.mkv';
 
 const movieFolder = 'Minions 2015 1080p BluRay x264 AC3-JYK';
 const movieFile = 'Minions 2015 1080p BluRay x264 AC3-JYK.mkv';
@@ -38,7 +40,9 @@ test('#findFiles', async t => {
 				birthtime: pastDate,
 		    items: {
 					[showFile1]: '',
-					[showFile2]: ''
+					[showFile2]: '',
+					[showFile3]: '',
+					[showFile4]: ''
 		    }
 			}),
 	    [movieFolder]: mock.directory({
@@ -64,6 +68,8 @@ test('#findFiles', async t => {
 	t.is(result[1].birthtime, pastDate);
 
 	const items = result[1].contents;
+
+	t.is(items.length, 2);
 
 	t.is(items[0].file, [testDir, showFolder, showFile1].join('/'));
 

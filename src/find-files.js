@@ -61,20 +61,24 @@ const loadFile = (db, item) => {
 		});
 };
 
-export default (db, dir) => {
-	return globby(['**/*.+(mkv|mp4|avi)'], { cwd: dir, realpath: true })
-		.then(items => {
-			const flatFiles = items.map(item => {
-				const data = item.split('/');
-				const dir = data.slice(0, data.length - 1).join('/');
+const exts = '(mkv|mp4|avi)';
 
-				return {
-					dir,
-					file: item,
-					filename: data[data.length - 1],
-					dirname: data[data.length - 2]
-				};
-			});
+export default (db, dir) => {
+	return globby([`**/*.+${exts}`], { cwd: dir, realpath: true })
+		.then(items => {
+			const flatFiles = items
+				.filter(item => !((/\.sample\./i).test(item))) // I've failed with negative pattern in globby :(
+				.map(item => {
+					const data = item.split('/');
+					const dir = data.slice(0, data.length - 1).join('/');
+
+					return {
+						dir,
+						file: item,
+						filename: data[data.length - 1],
+						dirname: data[data.length - 2]
+					};
+				});
 
 			const grouped = _.groupBy(flatFiles, 'dir');
 
