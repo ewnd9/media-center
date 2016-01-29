@@ -96,6 +96,7 @@ storage.on(STOP_PLAYBACK, data => {
 
 chokidar
 	.watch(MEDIA_PATH, {
+		ignored: /\.part$/,
   	persistent: true,
 		ignoreInitial: true
 	})
