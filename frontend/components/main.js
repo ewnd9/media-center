@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import * as api from './../api';
 import {
   UPDATE_PLAYBACK,
-  STOP_PLAYBACK,
+  RELOAD_FILES,
   USER_PAUSE_MEDIA,
   USER_CLOSE,
   STOPPED
@@ -40,7 +40,7 @@ export default React.createClass({
   },
   componentDidMount: function() {
     socket.on(UPDATE_PLAYBACK, playback => this.setState({ playback }));
-    socket.on(STOP_PLAYBACK, () => this.getFiles());
+    socket.on(RELOAD_FILES, () => this.getFiles());
 
     this.getFiles();
   },

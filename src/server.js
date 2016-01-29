@@ -9,6 +9,7 @@ import socketIO from 'socket.io';
 import Trakt from 'trakt-utils';
 import Router from './routes/index';
 import { exec } from 'child_process';
+import chokidar from 'chokidar';
 
 import {
 	UPDATE_PLAYBACK,
@@ -17,7 +18,8 @@ import {
 	USER_CLOSE,
 	USER_SCREENSHOT,
 	USER_SCREEN_OFF,
-	USER_OPEN_BROWSER
+	USER_OPEN_BROWSER,
+	RELOAD_FILES
 } from './constants';
 
 const MEDIA_PATH = process.env.MEDIA_PATH || '/home/ewnd9/Downloads';
@@ -82,12 +84,24 @@ io.on('connection', (socket) => {
 	});
 });
 
-[UPDATE_PLAYBACK, STOP_PLAYBACK].forEach(event => {
-	storage.on(event, data => {
-		lastPlaybackStatus = data;
-		io.emit(event, data);
-	});
+storage.on(UPDATE_PLAYBACK, data => {
+	lastPlaybackStatus = data;
+	io.emit(UPDATE_PLAYBACK, data);
 });
+
+storage.on(STOP_PLAYBACK, data => {
+	lastPlaybackStatus = data;
+	io.emit(RELOAD_FILES);
+});
+
+chokidar
+	.watch(MEDIA_PATH, {
+  	persistent: true,
+		ignoreInitial: true
+	})
+	.on('all', () => {
+		io.emit(RELOAD_FILES);
+	});
 
 http.listen(PORT, () => {
 	console.log(`listen localhost:${PORT}`);
