@@ -1,15 +1,11 @@
 import storage from './storage';
 
 import {
-	USER_PAUSE_MEDIA,
-	USER_CLOSE,
-	USER_NEXT_AUDIO,
-	USER_SEEK_FORWARD,
-	USER_TOGGLE_SUBTITLES,
-	USER_TOGGLE_VIDEO,
 	USER_SCREENSHOT,
 	USER_SCREEN_OFF,
-	USER_OPEN_BROWSER
+	USER_OPEN_BROWSER,
+	USER_KEY_PRESS,
+	OMX_KEYS
 } from './constants';
 
 import Promise from 'bluebird';
@@ -21,30 +17,39 @@ const noKeyModifier = 0;
 
 const playerEvents = {};
 const globalEvents = {};
+const keyPressEvents = {};
 
-const space = 65;
-playerEvents[space] = USER_PAUSE_MEDIA;
+playerEvents[52] = USER_SCREENSHOT; // z
 
-const keyZ = 52;
-playerEvents[keyZ] = USER_SCREENSHOT;
+keyPressEvents[10] = OMX_KEYS.decreaseSpeed; // 1
+keyPressEvents[11] = OMX_KEYS.increaseSpeed; // 2
+keyPressEvents[44] = OMX_KEYS.previousAudioStream; // j
+keyPressEvents[45] = OMX_KEYS.nextAudioStream; // k
+keyPressEvents[32] = OMX_KEYS.nextChapter; // o
 
-const keyF7 = 73;
-globalEvents[keyF7] = USER_SCREEN_OFF;
-const keyF8 = 74;
-globalEvents[keyF8] = USER_OPEN_BROWSER;
+keyPressEvents[57] = OMX_KEYS.previousSubtitleStream; // n
+keyPressEvents[58] = OMX_KEYS.nextSubtitleStream; // m
+keyPressEvents[39] = OMX_KEYS.toggleSubtitles; // s
+keyPressEvents[40] = OMX_KEYS.decreaseSubtitleDelay; // d
+keyPressEvents[41] = OMX_KEYS.increaseSubtitleDelay; // f
 
-const keyC = 54;
-playerEvents[keyC] = USER_NEXT_AUDIO;
-const keyV = 55;
-playerEvents[keyV] = USER_SEEK_FORWARD;
+keyPressEvents[33] = OMX_KEYS.pause; // p
+keyPressEvents[65] = OMX_KEYS.pause; // space
+keyPressEvents[24] = OMX_KEYS.stop; // q
+keyPressEvents[9] = OMX_KEYS.stop; // esc
 
-const keyS = 39;
-playerEvents[keyS] = USER_TOGGLE_SUBTITLES;
-const keyD = 40;
-playerEvents[keyD] = USER_TOGGLE_VIDEO;
+keyPressEvents[20] = OMX_KEYS.decreaseVolume; // -
+keyPressEvents[112] = OMX_KEYS.increaseVolume; // pgdn
+keyPressEvents[21] = OMX_KEYS.increaseVolume; // +
+keyPressEvents[117] = OMX_KEYS.decreaseVolume; // pgup
 
-const esc = 9;
-playerEvents[esc] = USER_CLOSE;
+keyPressEvents[113] = OMX_KEYS.seekBackward;
+keyPressEvents[114] = OMX_KEYS.seekForward;
+keyPressEvents[116] = OMX_KEYS.seekFastBackward;
+keyPressEvents[111] = OMX_KEYS.seekFastForward;
+
+globalEvents[73] = USER_SCREEN_OFF; // F7
+globalEvents[74] = USER_OPEN_BROWSER; // F8
 
 const pointerMode = false;
 const keyboardMode = true;
@@ -72,11 +77,19 @@ export const registerEvents = events => {
 				grabKeys(events);
 				resolve();
 			}).on('event', function(event) {
-				const action = playerEvents[event.keycode] || globalEvents[event.keycode];
+				const action =
+					playerEvents[event.keycode] ||
+					globalEvents[event.keycode] ||
+					keyPressEvents[event.keycode];
+
 				console.log(event.name, event.keycode, action);
 
 				if (event.name === 'KeyPress') {
-					storage.emit(action);
+					if (action === keyPressEvents[event.keycode]) {
+						storage.emit(USER_KEY_PRESS, action);
+					} else {
+						storage.emit(action);
+					}
 				}
 			});
 		});
@@ -86,7 +99,11 @@ export const registerEvents = events => {
 	}
 };
 
-export const registerKeys = () => registerEvents(playerEvents);
+export const registerKeys = () => {
+	registerEvents(playerEvents);
+	registerEvents(keyPressEvents);
+};
+
 registerEvents(globalEvents);
 
 export const unregisterEvents = events => {
@@ -97,4 +114,7 @@ export const unregisterEvents = events => {
 	}
 };
 
-export const unregisterKeys = () => unregisterEvents(playerEvents);
+export const unregisterKeys = () => {
+	unregisterEvents(playerEvents);
+	unregisterEvents(keyPressEvents);
+};

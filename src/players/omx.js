@@ -8,21 +8,15 @@ import storage from './../storage';
 import {
 	UPDATE_PLAYBACK,
 	STOP_PLAYBACK,
-	USER_PAUSE_MEDIA,
-	USER_CLOSE,
-	USER_NEXT_AUDIO,
-	USER_SEEK_FORWARD,
-	USER_TOGGLE_SUBTITLES,
-	USER_TOGGLE_VIDEO,
 	PLAYING,
 	PAUSED,
-	STOPPED
+	STOPPED,
+	USER_KEY_PRESS
 } from './../constants';
 
 import { registerKeys, unregisterKeys } from './../x11';
 
 let omxplayer = null;
-let currentAudioStream;
 
 const killProcess = () => {
 	unregisterKeys();
@@ -31,58 +25,9 @@ const killProcess = () => {
 
 exitHook(killProcess);
 
-storage.on(USER_PAUSE_MEDIA, () => {
+storage.on(USER_KEY_PRESS, key => {
 	if (omxplayer) {
-		omxplayer.pause();
-	}
-});
-
-storage.on(USER_NEXT_AUDIO, () => {
-	if (omxplayer) {
-		omxplayer.getListAudio((err, list) => {
-			currentAudioStream = (currentAudioStream + 1) % list.length;
-			omxplayer.selectAudio(currentAudioStream);
-		});
-	}
-});
-
-storage.on(USER_SEEK_FORWARD, () => {
-	if (omxplayer) {
-		omxplayer.seek(30);
-	}
-});
-
-storage.on(USER_CLOSE, () => {
-	killProcess();
-});
-
-let subtitlesState = false;
-storage.on(USER_TOGGLE_SUBTITLES, () => {
-	if (omxplayer) {
-		if (subtitlesState) {
-			omxplayer.showSubtitles();
-			console.log('turning on subtitles');
-		} else {
-			omxplayer.hideSubtitles();
-			console.log('turning off subtitles');
-		}
-
-		subtitlesState = !subtitlesState;
-	}
-});
-
-let videoState = false;
-storage.on(USER_TOGGLE_VIDEO, () => {
-	if (omxplayer) {
-		if (videoState) {
-			omxplayer.hideVideo();
-			console.log('turning off video');
-		} else {
-			omxplayer.unHideVideo();
-			console.log('turning on video');
-		}
-
-		videoState = !videoState;
+		omxplayer._omxProcess.stdin.write(key);
 	}
 });
 
@@ -90,15 +35,15 @@ const tr = h => h < 10 ? ('0' + h) : ('' + h);
 
 export default (trakt, addToHistory, db, media, file, prevPosition) => {
 	return killProcess().then(registerKeys).then(() => {
-		currentAudioStream = 0;
-
-		const configuration = {};
+		const configuration = {
+			omxPlayerParams: ['--no-osd']
+		};
 
 		if (prevPosition) {
 			const seconds = prevPosition / 1000 / 1000;
 			const positionTime = `${tr(seconds / 60 / 60 | 0)}:${tr(seconds / 60 | 0)}:${tr(seconds % 60 | 0)}`;
 
-			configuration.omxPlayerParams = ['--pos', positionTime, '--no-osd'];
+			configuration.omxPlayerParams.concat(['--pos', positionTime]);
 		}
 
 		omxplayer = new OMXPlayer(configuration);
@@ -180,6 +125,7 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
 		omxplayer.on('stopped', () => {
 			status = STOPPED;
 			emitStop();
+			killProcess();
 		});
 
 		return { getInfo };
