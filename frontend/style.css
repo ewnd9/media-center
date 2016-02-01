@@ -14,6 +14,8 @@ html, body {
 
 .my-container {
 	color: #FFF !important;
+	display: flex;
+	
 	a {
 		color: #FFF !important;
 	}
@@ -21,7 +23,7 @@ html, body {
 
 .left-panel, .right-panel {
 	padding: 20px 20px 50px 20px;
-	height: 100%;
+	min-height: 100%;
 }
 
 .left-panel {
