@@ -23,10 +23,13 @@ export default ({ report, show }) => {
 
     report.future.forEach(report => {
       const length = report.episodes.length;
+      const date = moment(report.episodes[0].first_aired);
+      const day = date.format('ddd');
+
       const awaiting = (
         report.gap === 0 ?
-          `${moment(report.episodes[0].first_aired).diff(now, 'hours')} hours` :
-          `${report.gap + 1} days`
+          `${date.diff(now, 'hours')} hours (${day})` :
+          `${report.gap + 1} days (${day})`
       );
 
       if (length === 1) {
