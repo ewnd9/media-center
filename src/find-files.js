@@ -4,162 +4,114 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 import split from 'split-torrent-release';
 
-const loadRecognition = (db, item) => {
-	item.recognition = split(item.filename || item.dirname);
-
-	if (!item.recognition) {
-		return Promise.resolve(item);
-	} else {
-		return db
-			.getPrefix(item.recognition.title)
-			.then((res) => {
-				if (res.type !== item.recognition.type) {
-					return;
-				}
-
-				item.db = item.db || {};
-
-				if (!item.db.type) {
-					item.db.type = res.type;
-				}
-
-				if (!item.db.imdb) {
-					item.db.imdb = res.imdb;
-				}
-
-				if (!item.db.title) {
-					item.db.title = res.title;
-				}
-
-				if (!item.db.s) {
-					item.db.s = item.recognition.s;
-				}
-
-				if (!item.db.ep) {
-					item.db.ep = item.recognition.ep;
-				}
-			}, (err) => {
-				if (err.status !== 404) {
-					throw err;
-				}
-			})
-			.then(() => item);
-	}
-};
-
-const loadFile = (dbFiles, db, item) => {
-	const file = dbFiles.find(file => {
-		return file.doc && file.doc._id === db.fileId(item.file);
-	});
-
-	if (file) {
-		item.db = file.doc;
-	}
-
-	return loadRecognition(db, item);
-};
-
 const exts = '(mkv|mp4|avi)';
 
-export default (db, dir) => {
-	return globby([`**/*.+${exts}`], { cwd: dir, realpath: true })
-		.then(items => {
-			const flatFiles = items
-				.filter(item => !((/\.sample\./i).test(item))) // I've failed with negative pattern in globby :(
-				.map(item => {
-					const data = item.split('/');
-					const dir = data.slice(0, data.length - 1).join('/');
+function setupDb(db, media, [dbFiles, dbPrefixes]) {
+	return media.map(media => {
+		media.db = (dbFiles.rows.find(file => {
+			return file.doc && file.doc._id === db.fileId(media.file);
+		}) || {}).doc;
 
-					return {
-						dir,
-						file: item,
-						filename: data[data.length - 1],
-						dirname: data[data.length - 2]
-					};
-				});
+		if (media.recognition) {
+			const prefix = (dbPrefixes.rows.find(prefix => {
+				return prefix.doc && prefix.doc._id === db.prefixId(media.recognition.title);
+			}) || {}).doc;
 
-			const grouped = _.groupBy(flatFiles, 'dir');
+			if (prefix) {
+				media.db = media.db || {};
 
-			const combined = _.map(grouped, (curr, dir) => ({ curr, dir }));
-			const [firstLevel, others] = _.partition(combined, x => x.dir === dir);
+				const copy = (field, value) => {
+					if (!media.db[field]) {
+						media.db[field] = value;
+					}
+				};
 
-			let flatten;
-
-			if (firstLevel.length === 1) {
-				const xs = firstLevel[0].curr.map(file => ({
-					curr: [file],
-					dir: firstLevel[0].dir
-				}));
-
-				flatten = others.concat(xs);
-			} else {
-				flatten = others;
+				copy('type', prefix.type);
+				copy('imdb', prefix.imdb);
+				copy('title', prefix.title);
+				copy('s', media.recognition.s);
+				copy('ep', media.recognition.ep);
 			}
+		}
 
-			const files = flatten.reduce((result, { curr }) => {
-				return result.concat(curr.map(_ => _.file));
-			}, []);
+		return media;
+	});
+};
 
-			const result = db
-				.getFiles(files)
-				.then(res => {
-					return Promise.reduce(flatten, (result, { curr, dir }) => {
-						if (curr.length === 1) {
-							const item = curr[0];
-							item.birthtime = fs.statSync(item.dir).birthtime;
+export default (db, rootDir) => {
+	return globby([`**/*.+${exts}`], { cwd: rootDir, realpath: true })
+		.then(allVideos => {
+			const videos = allVideos.filter(item => !((/\.sample\./i).test(item)));
 
-							return loadFile(res.rows, db, item)
-								.then(() => {
-									result.push(item);
-									return result;
-								});
-						} else {
-							return Promise
-								.map(curr, item => loadFile(res.rows, db, item))
-								.then((res) => {
-									const item = {
-										dir,
-										dirname: curr[0].dirname,
-										contents: res,
-										birthtime: fs.statSync(dir).birthtime
-									};
+			const media = videos.map(video => {
+				const data = video.split('/');
 
-									result.push(item);
-									return loadRecognition(db, item);
-								})
-								.then(() => result);
-						}
+				const media = {
+					file: video,
+					dir: data.slice(0, data.length - 1).join('/'),
+					fileName: data[data.length - 1],
+					dirName: data[data.length - 2],
+					birthtime: fs.statSync(video).birthtime,
+				};
 
-						return result;
-					}, []);
-				});
-
-			return result;
-		})
-		.then((result) => {
-			result.sort((a, b) => b.birthtime - a.birthtime);
-			result.forEach((folder) => {
-				if (folder.contents) {
-					const summary = folder.contents.reduce((total, curr) => {
-						if (curr.db && curr.db.s) {
-							const key = `${curr.db.title} season ${curr.db.s}`;
-
-							total[key] = total[key] || {};
-							total[key].count = (total[key].count || 0) + 1;
-							total[key].scrobble = (total[key].scrobble || 0) + (curr.db.scrobble ? 1 : 0);
-						} else if (curr.db) {
-							total[curr.db.title] = true;
-						} else {
-							total[curr.filename] = true;
-						}
-
-						return total;
-					}, {});
-
-					folder.summary = _.map(summary, (data, title) => ({ title, data }));
-				}
+				media.recognition = split(media.fileName || media.dirName);
+				return media;
 			});
 
-			return result;
+			return Promise
+				.all([db.getFiles(videos), db.getPrefixes(media.filter(_ => !!_.recognition))])
+				.then(setupDb.bind(null, db, media));
+		})
+		.then(result => {
+			const grouped = _.groupBy(result, 'dir');
+			const topLevel = grouped[rootDir] || [];
+			const media = _
+				.map(grouped, (media, dir) => ({ media, dir }))
+				.filter(({ dir }) => dir !== rootDir)
+				.concat(topLevel.map(media => ({ media: [media], dir: media.dir })));
+
+			const cmpNames = (a, b) => {
+				if (a.fileName < b.fileName) {
+  				return 1;
+				} else if (a.fileName > b.fileName) {
+					return -1;
+				} else {
+					return 0;
+				}
+			};
+
+			media.sort((a, b) => {
+				a.media.sort(cmpNames);
+				b.media.sort(cmpNames);
+
+				const mA = _.max(a.media.map(a => a.birthtime.getTime()));
+				const mB = _.max(b.media.map(b => b.birthtime.getTime()));
+
+				return mB - mA;
+			});
+
+			media.forEach(dirObj => {
+				const { media } = dirObj;
+
+				const summary = media.reduce((total, media) => {
+					if (media.db && media.db.s) {
+						const key = `${media.db.title} season ${media.db.s}`;
+
+						total[key] = total[key] || {};
+						total[key].count = (total[key].count || 0) + 1;
+						total[key].scrobble = (total[key].scrobble || 0) + (media.db.scrobble ? 1 : 0);
+					} else if (media.db) {
+						total[media.db.title] = true;
+					} else {
+						total[media.fileName] = true;
+					}
+
+					return total;
+				}, {});
+
+				dirObj.summary = _.map(summary, (data, title) => ({ title, data }));
+			});
+
+			return media;
 		});
 };

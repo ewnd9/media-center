@@ -56,6 +56,11 @@ export default (dbPath) => {
 		keys: files.map(file => fileId(file))
 	});
 
+	const getPrefixes = files => db.allDocs({
+		include_docs: true,
+		keys: files.map(file => prefixId(file.recognition.title))
+	});
+
 	const addFile = (file, data) => {
 		const parts = file.split('/');
 		const filename = parts[parts.length - 1];
@@ -72,7 +77,9 @@ export default (dbPath) => {
 		addFile,
 		getFile,
 		getFiles,
+		prefixId,
 		getPrefix,
+		getPrefixes,
 		updateFile
 	};
 };

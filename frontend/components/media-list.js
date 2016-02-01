@@ -10,18 +10,18 @@ const MediaList = React.createClass({
           this.props.files.map((item, index) => {
             const level = this.props.level;
 
-            if (item.contents) {
+            if (item.media.length > 1) {
               return (
                 <MediaListFolder key={index}
                                  file={item}
-                                 level={level}
+                                 level={level + 1}
                                  mode={this.props.mode}
                                  openModal={this.props.openModal} />
               );
             } else {
               return (
                 <MediaListItem key={index}
-                               file={item}
+                               file={item.media[0]}
                                index={index}
                                level={level + 1}
                                mode={this.props.mode}

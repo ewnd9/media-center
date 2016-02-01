@@ -1,5 +1,5 @@
 import React from 'react';
-import MediaList from './media-list';
+import MediaListItem from './media-list-item';
 
 export default React.createClass({
   getInitialState: function() {
@@ -29,16 +29,22 @@ export default React.createClass({
       return null;
     }
 
-		return (
-			<div className={`file-entry level-${level + 1}`}>
-				<a className="title" onClick={this.toggleHidden}>{summary}</a>
-				{
-					!this.state.hidden && (
-						<MediaList files={file.contents}
-                       level={level + 2}
+    const childs = file.media.map((media, index) => {
+      return (
+        <MediaListItem key={index}
+                       file={media}
+                       index={index}
+                       level={level + 1}
                        mode={this.props.mode}
                        openModal={this.props.openModal} />
-					)
+      );
+    })
+
+		return (
+			<div className={`file-entry level-${level}`}>
+				<a className="title" onClick={this.toggleHidden}>{summary}</a>
+				{
+					!this.state.hidden && childs || ''
 				}
 			</div>
 		);

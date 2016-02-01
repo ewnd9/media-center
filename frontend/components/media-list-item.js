@@ -21,7 +21,7 @@ export default React.createClass({
 		const item = this.props.file;
 		const index = this.props.index;
 
-		const file = item.filename || item.dir;
+		const file = item.fileName || item.dir;
 		const data = file.split('/');
 
 		let title;
