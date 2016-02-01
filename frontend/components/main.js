@@ -14,6 +14,7 @@ import MediaListContainer from './media-list-container';
 import TraktReport from './trakt-report';
 import MediaDialog from './media-dialog';
 import Playback from './playback';
+import ScreenshotsGallery from './screenshots-gallery/screenshots-gallery';
 
 const customStyles = {
   content : {
@@ -69,6 +70,7 @@ export default React.createClass({
               files={this.state.files} />
           </div>
           <div className="col-md-6">
+            <ScreenshotsGallery />
             <TraktReport />
           </div>
         </div>

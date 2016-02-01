@@ -40,6 +40,7 @@
     "inquirer-question": "^1.1.1",
     "keypress": "^0.2.1",
     "meow": "^3.4.1",
+    "mkdirp": "^0.5.1",
     "morgan": "^1.6.1",
     "omxplayer": "0.0.1",
     "pouchdb": "^5.1.0",
@@ -47,6 +48,7 @@
     "source-map-support": "^0.4.0",
     "split-torrent-release": "^1.1.0",
     "trakt-utils": "^0.1.1",
+    "user-home": "^2.0.0",
     "x11": "^2.0.2"
   },
   "devDependencies": {

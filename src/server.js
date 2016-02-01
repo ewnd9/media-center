@@ -7,9 +7,10 @@ import initDb from './db';
 import HTTP from 'http';
 import socketIO from 'socket.io';
 import Trakt from 'trakt-utils';
-import Router from './routes/index';
 import { exec } from 'child_process';
 import chokidar from 'chokidar';
+import userHome from 'user-home';
+import mkdirp from 'mkdirp';
 
 import {
 	UPDATE_PLAYBACK,
@@ -22,10 +23,19 @@ import {
 	RELOAD_FILES
 } from './constants';
 
-const MEDIA_PATH = process.env.MEDIA_PATH || '/home/ewnd9/Downloads';
+const getPath = (variable, homeFolder) => {
+	const result = process.env[variable] || (userHome + homeFolder);
+	mkdirp.sync(result);
+
+	return result;
+};
+
+const MEDIA_PATH = getPath('MEDIA_PATH', '/Downloads');
+const DB_PATH = getPath('DB_PATH', '/media-center-db');
+const SCREENSHOTS_PATH = getPath('SCREENSHOTS_PATH', '/media-center-screenshots');
+
 const PORT = process.env.PORT || 3000;
 const TRAKT_TOKEN = process.env.TRAKT_TOKEN;
-const DB_PATH = process.env.DB_PATH || '/home/ewnd9/media-center-db';
 
 const traktId = '412681ab85026009c32dc6e525ba6226ff063aad0c1a374def0c8ee171cf121f';
 const traktSecret = '714f0cb219791a0ecffec788fd7818c601397b95b2b3e8f486691366954902fb';
@@ -39,6 +49,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 
 app.use(morgan('request: :remote-addr :method :url :status'));
 app.use(express.static('public'));
+app.use('/screenshots', express.static(SCREENSHOTS_PATH));
 app.use(cors());
 
 let play;
@@ -51,7 +62,7 @@ if (process.env.NODE_ENV === 'production') {
 
 storage.on(USER_SCREENSHOT, () => {
 	// https://github.com/info-beamer/tools/tree/master/screenshot
-	exec(`DISPLAY=:0 /home/pi/tools/screenshot/screenshot > /home/pi/Pictures/${new Date().toISOString()}.jpg`);
+	exec(`DISPLAY=:0 /home/pi/tools/screenshot/screenshot > ${SCREENSHOTS_PATH}/${new Date().toISOString()}.jpg`);
 });
 storage.on(USER_SCREEN_OFF, () => {
 	exec(`DISPLAY=:0 xset dpms force suspend`);
@@ -60,10 +71,20 @@ storage.on(USER_OPEN_BROWSER, () => {
 	exec(`DISPLAY=:0 xdg-open "http://localhost:${PORT}/" &`);
 });
 
-app.use('/', Router(MEDIA_PATH, db, trakt, play));
+import VideoRouter from './routes/index';
+import ScreenshotsRouter from './routes/screenshots';
 
-app.use((err, res) => {
-	res.status(500).json({ error: err.stack });
+app.use('/', VideoRouter(MEDIA_PATH, db, trakt, play));
+app.use('/', ScreenshotsRouter(SCREENSHOTS_PATH));
+
+app.use((err, req, res, next) => {
+	if (!err) {
+		next();
+		return;
+	}
+
+	console.log(err);
+	res.json({ error: err.stack });
 });
 
 const http = HTTP.Server(app);

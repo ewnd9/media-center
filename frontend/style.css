@@ -92,3 +92,12 @@ a.progress-incomplete {
 .btn-icon {
 	margin-right: 10px;
 }
+
+.screenshot {
+	max-width: 300px;
+	margin-bottom: 20px;
+}
+
+.screenshots-gallery {
+	text-align: center;
+}

@@ -50,6 +50,10 @@ export const findFiles = () => {
 	return get('/api/v1/files');
 };
 
+export const getScreenshots = () => {
+	return get('/api/v1/screenshots');
+};
+
 export const getMediaSuggestion = (title, type) => {
   return get('/api/v1/suggestions?title=' + encodeURIComponent(title) + '&type=' + type);
 };
