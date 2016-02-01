@@ -20,6 +20,8 @@ import {
 	USER_SCREENSHOT,
 	USER_SCREEN_OFF,
 	USER_OPEN_BROWSER,
+	USER_KEY_PRESS,
+	OMX_KEYS,
 	RELOAD_FILES
 } from './constants';
 
@@ -90,19 +92,13 @@ app.use((err, req, res, next) => {
 const http = HTTP.Server(app);
 const io = socketIO(http);
 
-const proxyEvents = [USER_PAUSE_MEDIA, USER_CLOSE].map(event => ({
-	event,
-	fn: () => storage.emit(event)
-}));
-
 let lastPlaybackStatus;
 
 io.on('connection', (socket) => {
 	socket.emit(UPDATE_PLAYBACK, lastPlaybackStatus);
 
-	proxyEvents.forEach(({ event, fn }) => {
-		socket.on(event, fn);
-	});
+	socket.on(USER_PAUSE_MEDIA, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.pause));
+	socket.on(USER_CLOSE, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.stop));
 });
 
 storage.on(UPDATE_PLAYBACK, data => {
