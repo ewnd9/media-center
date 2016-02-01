@@ -8,7 +8,7 @@ const loadRecognition = (db, item) => {
 	item.recognition = split(item.filename || item.dirname);
 
 	if (!item.recognition) {
-		return item;
+		return Promise.resolve(item);
 	} else {
 		return db
 			.getPrefix(item.recognition.title)
@@ -47,18 +47,16 @@ const loadRecognition = (db, item) => {
 	}
 };
 
-const loadFile = (db, item) => {
-	return db
-		.getFile(item.file).then((res) => res, (err) => {
-			if (err.status !== 404) {
-				throw err;
-			}
+const loadFile = (dbFiles, db, item) => {
+	const file = dbFiles.find(file => {
+		return file.doc && file.doc._id === db.fileId(item.file);
+	});
 
-			return undefined;
-		}).then((res) => {
-			item.db = res;
-			return loadRecognition(db, item);
-		});
+	if (file) {
+		item.db = file.doc;
+	}
+
+	return loadRecognition(db, item);
 };
 
 const exts = '(mkv|mp4|avi)';
@@ -98,35 +96,43 @@ export default (db, dir) => {
 				flatten = others;
 			}
 
-			const result = Promise.reduce(flatten, (result, { curr, dir }) => {
-				if (curr.length === 1) {
-					const item = curr[0];
-					item.birthtime = fs.statSync(item.dir).birthtime;
-
-					return loadFile(db, item)
-						.then(() => {
-							result.push(item);
-							return result;
-						});
-				} else {
-					return Promise
-						.map(curr, (item) => loadFile(db, item))
-						.then((res) => {
-							const item = {
-								dir,
-								dirname: curr[0].dirname,
-								contents: res,
-								birthtime: fs.statSync(dir).birthtime
-							};
-
-							result.push(item);
-							return loadRecognition(db, item);
-						})
-						.then(() => result);
-				}
-
-				return result;
+			const files = flatten.reduce((result, { curr }) => {
+				return result.concat(curr.map(_ => _.file));
 			}, []);
+
+			const result = db
+				.getFiles(files)
+				.then(res => {
+					return Promise.reduce(flatten, (result, { curr, dir }) => {
+						if (curr.length === 1) {
+							const item = curr[0];
+							item.birthtime = fs.statSync(item.dir).birthtime;
+
+							return loadFile(res.rows, db, item)
+								.then(() => {
+									result.push(item);
+									return result;
+								});
+						} else {
+							return Promise
+								.map(curr, item => loadFile(res.rows, db, item))
+								.then((res) => {
+									const item = {
+										dir,
+										dirname: curr[0].dirname,
+										contents: res,
+										birthtime: fs.statSync(dir).birthtime
+									};
+
+									result.push(item);
+									return loadRecognition(db, item);
+								})
+								.then(() => result);
+						}
+
+						return result;
+					}, []);
+				});
 
 			return result;
 		})

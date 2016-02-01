@@ -51,6 +51,11 @@ export default (dbPath) => {
 	const getFile = File.get.bind(File);
 	const getPrefix = Prefix.get.bind(Prefix);
 
+	const getFiles = files => db.allDocs({
+		include_docs: true,
+		keys: files.map(file => fileId(file))
+	});
+
 	const addFile = (file, data) => {
 		const parts = file.split('/');
 		const filename = parts[parts.length - 1];
@@ -63,8 +68,10 @@ export default (dbPath) => {
 	};
 
 	return {
+		fileId,
 		addFile,
 		getFile,
+		getFiles,
 		getPrefix,
 		updateFile
 	};
