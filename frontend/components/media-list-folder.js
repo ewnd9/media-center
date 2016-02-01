@@ -15,17 +15,9 @@ export default React.createClass({
   },
   render: function() {
 		const { level, file } = this.props;
-    const fSummary = file.summary;
+    const summary = file.summary;
 
-		const summary = fSummary.map(({ title, data }) => {
-			if (typeof data === 'boolean') {
-				return title;
-			} else {
-				return (fSummary.length === 1 ? `(${data.scrobble} / ${data.count}) ` : '') + title;
-			}
-		}).join(', ');
-
-    if (fSummary.length === 1 && fSummary[0].data.scrobble > 0 && fSummary[0].data.scrobble === fSummary[0].data.count && this.props.mode === 'not-watched') {
+    if (file.watched && this.props.mode === 'not-watched') {
       return null;
     }
 

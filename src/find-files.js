@@ -91,25 +91,18 @@ export default (db, rootDir) => {
 			});
 
 			media.forEach(dirObj => {
-				const { media } = dirObj;
+				const media = dirObj.media[0];
 
-				const summary = media.reduce((total, media) => {
-					if (media.db && media.db.s) {
-						const key = `${media.db.title} season ${media.db.s}`;
+				if (media.db && media.db.s) {
+					const title = `${media.db.title} season ${media.db.s}`;
+					const scrobble = _.sum(_.pluck(dirObj.media, 'scrobble'));
 
-						total[key] = total[key] || {};
-						total[key].count = (total[key].count || 0) + 1;
-						total[key].scrobble = (total[key].scrobble || 0) + (media.db.scrobble ? 1 : 0);
-					} else if (media.db) {
-						total[media.db.title] = true;
-					} else {
-						total[media.fileName] = true;
-					}
-
-					return total;
-				}, {});
-
-				dirObj.summary = _.map(summary, (data, title) => ({ title, data }));
+					dirObj.summary = `${title} (${scrobble} / ${dirObj.media.length})`;
+					dirObj.watched = scrobble === dirObj.media.length;
+				} else {
+					const title = media.recognition && media.recognition.title || media.fileName;
+					dirObj.summary = `${title} ${dirObj.media.length > 1 ? '( 0 / ' + dirObj.media.length + ')' : ''}`;
+				}
 			});
 
 			return media;
