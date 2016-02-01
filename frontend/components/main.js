@@ -62,13 +62,13 @@ export default React.createClass({
     return (
 			<div>
         <div className="my-container container-fluid">
-          <div className="col-md-6">
+          <div className="col-md-6 left-panel">
             <MediaListContainer
               openModal={this.openModal}
               setPlayback={this.setPlayback}
               files={this.state.files} />
           </div>
-          <div className="col-md-6">
+          <div className="col-md-6 right-panel">
             <RightPanel />
           </div>
         </div>

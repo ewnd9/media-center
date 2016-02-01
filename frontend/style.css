@@ -7,8 +7,9 @@ html, body {
   height:100%;
 }
 
-body {
-	background: linear-gradient(to right,  rgba(96,108,136,1) 0%,rgba(63,76,107,1) 100%);
+.container-fluid {
+	padding-left: 0;
+	padding-right: 0;
 }
 
 .my-container {
@@ -16,16 +17,44 @@ body {
 	a {
 		color: #FFF !important;
 	}
+}
+
+.left-panel, .right-panel {
 	padding: 20px 20px 50px 20px;
+	height: 100%;
+}
+
+.left-panel {
+	background: linear-gradient(to right, rgba(96,108,136,1) 0%, rgba(63,76,107,1) 100%);
+	border-right: 1px solid rgba(0,0,0,0.5);
+	box-shadow: inset -7px 0 10px -7px rgba(0,0,0,0.5);
+	padding-right: 50px;
+}
+
+.right-panel {
+	background-color: rgba(79, 92, 121, 1);
+	padding-left: 50px;
+}
+
+.top-options, .file-entry {
+	margin-bottom: 20px;
+}
+
+.top-options-wrapper, .file-entry {
+	text-align: right;
 }
 
 .file-entry {
-	margin-bottom: 20px;
+	font-size: 16pt;
+}
+
+.file-title {
+	font-size: 20pt !important;
 }
 
 .level-2 {
 	margin-top: 20px;
-	margin-left: 20px;
+	margin-right: 20px;
 }
 
 .title, .fullpath {
@@ -62,10 +91,6 @@ a.progress-complete, .scrobble {
 a.progress-incomplete {
 	color: #B71C1C !important;
 	background: white;
-}
-
-#top-options {
-	margin-bottom: 20px;
 }
 
 .trakt-report-item {

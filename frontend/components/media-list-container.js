@@ -14,17 +14,19 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-        <div id="top-options" className="btn-group btn-group-sm" role="group">
-          <button type="button"
-                  onClick={this.setMode.bind(this, 'all')}
-                  className={`btn btn-default ${this.state.mode === 'all' ? 'active' : ''}`}>
-            All
-          </button>
-          <button type="button"
-                  onClick={this.setMode.bind(this, 'not-watched')}
-                  className={`btn btn-default ${this.state.mode === 'not-watched' ? 'active' : ''}`}>
-            Not Watched
-          </button>
+        <div className="top-options-wrapper">
+          <div className="btn-group btn-group-sm top-options" role="group">
+            <button type="button"
+                    onClick={this.setMode.bind(this, 'all')}
+                    className={`btn btn-default ${this.state.mode === 'all' ? 'active' : ''}`}>
+              All
+            </button>
+            <button type="button"
+                    onClick={this.setMode.bind(this, 'not-watched')}
+                    className={`btn btn-default ${this.state.mode === 'not-watched' ? 'active' : ''}`}>
+              Not Watched
+            </button>
+          </div>
         </div>
 
         <MediaList openModal={this.props.openModal} files={this.props.files} level={0} mode={this.state.mode} />

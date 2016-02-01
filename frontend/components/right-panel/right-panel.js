@@ -23,7 +23,7 @@ export default React.createClass({
 
     return (
       <div>
-        <div id="top-options" className="btn-group btn-group-sm" role="group">
+        <div className="btn-group btn-group-sm top-options" role="group">
           {
             buttons.map(({ label, value }) => {
               return (

@@ -57,7 +57,7 @@ export default React.createClass({
 					 tabIndex={index + 1}>
 
 				<div>
-					<a className="title" onClick={this.handleClick.bind(this, item, undefined)}>
+					<a className="title file-title" onClick={this.handleClick.bind(this, item, undefined)}>
 						{ title }
 					</a>
 					<div className="fullpath">
@@ -67,25 +67,25 @@ export default React.createClass({
 							</a>
 						) || ''}
 						{' '}
-						{
-							item.db && item.db.scrobble && (
-								<span className="scrobble">
-									[Scrobble] ({item.db.scrobbleAtDiff})
-								</span>
-							) || (
-                <span>
-                  <a onClick={this.handleHistoryClick.bind(this, item)}>
-  									[Add To History]
-  								</a>
-                  {' '}
-  								<a onClick={this.openModal.bind(this, item)}>
-  									[Change Media]
-  								</a>
-                </span>
-							)
-						}
-						{' '}
 						<span>{ file }</span>
+            {' '}
+            {
+              item.db && item.db.scrobble && (
+                <span className="scrobble">
+                  [Scrobble] ({item.db.scrobbleAtDiff})
+                </span>
+              ) || (
+                <span>
+                  <a onClick={this.openModal.bind(this, item)}>
+                    [Change Media]
+                  </a>
+                  {' '}
+                  <a onClick={this.handleHistoryClick.bind(this, item)}>
+                    [Add To History]
+                  </a>
+                </span>
+              )
+            }
 					</div>
 				</div>
 

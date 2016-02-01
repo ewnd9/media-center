@@ -42,7 +42,7 @@ export default React.createClass({
 
 		return (
 			<div className={`file-entry level-${level}`}>
-				<a className="title" onClick={this.toggleHidden}>{summary}</a>
+				<a className="title file-title" onClick={this.toggleHidden}>{summary}</a>
 				{
 					!this.state.hidden && childs || ''
 				}
