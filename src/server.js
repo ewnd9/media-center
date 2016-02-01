@@ -83,7 +83,7 @@ app.use((err, req, res, next) => {
 		return;
 	}
 
-	console.log(err);
+	console.log(err, err.stack);
 	res.json({ error: err.stack });
 });
 

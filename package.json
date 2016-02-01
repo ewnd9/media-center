@@ -42,6 +42,7 @@
     "meow": "^3.4.1",
     "mkdirp": "^0.5.1",
     "morgan": "^1.6.1",
+    "node-cache": "^3.1.0",
     "omxplayer": "0.0.1",
     "pouchdb": "^5.1.0",
     "socket.io": "^1.4.2",
