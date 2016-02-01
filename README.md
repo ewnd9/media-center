@@ -2,7 +2,7 @@
 
 [WIP] Media center web app for raspberry pi with seamless [trakt.tv](http://trakt.tv/) scrobbling
 
-[![title-image](/mockup.jpg?raw=true)]
+![title-image](/mockup.jpg?raw=true)
 
 ## Install
 
