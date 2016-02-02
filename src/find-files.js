@@ -77,9 +77,9 @@ function flattenVideos(rootDir, result) {
 
 	const cmpNames = (a, b) => {
 		if (a.fileName < b.fileName) {
-			return 1;
-		} else if (a.fileName > b.fileName) {
 			return -1;
+		} else if (a.fileName > b.fileName) {
+			return 1;
 		} else {
 			return 0;
 		}

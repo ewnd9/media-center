@@ -72,27 +72,27 @@ test('#findFiles', async t => {
 
 	const items = result[1].media;
 	t.is(items.length, 2);
-	t.is(items[1].file, [testDir, showFolder, showFile1].join('/'));
-
-	t.is(items[1].db.title, showTitle);
-	t.is(items[1].db.imdb, showImdb);
-	t.ok(items[1].db._id);
-
-	t.is(items[1].recognition.type, 'show');
-	t.ok(items[1].recognition.title === showTitle);
-	t.is(items[1].recognition.s, 1);
-	t.is(items[1].recognition.ep, 1);
-
-	t.is(items[0].file, [testDir, showFolder, showFile2].join('/'));
+	t.is(items[0].file, [testDir, showFolder, showFile1].join('/'));
 
 	t.is(items[0].db.title, showTitle);
 	t.is(items[0].db.imdb, showImdb);
-	t.notOk(items[0].db._id);
+	t.ok(items[0].db._id);
 
 	t.is(items[0].recognition.type, 'show');
-	t.is(items[0].recognition.title, showTitle);
+	t.ok(items[0].recognition.title === showTitle);
 	t.is(items[0].recognition.s, 1);
-	t.is(items[0].recognition.ep, 2);
+	t.is(items[0].recognition.ep, 1);
+
+	t.is(items[1].file, [testDir, showFolder, showFile2].join('/'));
+
+	t.is(items[1].db.title, showTitle);
+	t.is(items[1].db.imdb, showImdb);
+	t.notOk(items[1].db._id);
+
+	t.is(items[1].recognition.type, 'show');
+	t.is(items[1].recognition.title, showTitle);
+	t.is(items[1].recognition.s, 1);
+	t.is(items[1].recognition.ep, 2);
 
 	mock.restore();
 });
