@@ -15,14 +15,14 @@ html, body {
 .my-container {
 	color: #FFF !important;
 	display: flex;
-	
+
 	a {
 		color: #FFF !important;
 	}
 }
 
 .left-panel, .right-panel {
-	padding: 20px 20px 50px 20px;
+	padding: 20px 50px 50px 50px;
 	min-height: 100%;
 }
 
@@ -30,12 +30,10 @@ html, body {
 	background: linear-gradient(to right, rgba(96,108,136,1) 0%, rgba(63,76,107,1) 100%);
 	border-right: 1px solid rgba(0,0,0,0.5);
 	box-shadow: inset -7px 0 10px -7px rgba(0,0,0,0.5);
-	padding-right: 50px;
 }
 
 .right-panel {
 	background-color: rgba(79, 92, 121, 1);
-	padding-left: 50px;
 }
 
 .top-options, .file-entry {

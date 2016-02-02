@@ -11,22 +11,35 @@ export default React.createClass({
   getReport: function() {
     api
       .getReport()
-      .then(report => this.setState({ report, loaded: true }));
+      .then(report => this.setState({ report: report.filter(_ => _.length > 0), loaded: true }));
   },
   componentDidMount: function() {
     this.getReport();
   },
   render: function() {
+    const renderReport = report => report.map((group, index) => {
+      if (index > 0) {
+        return (
+          <div>
+            <hr />
+            { renderGroup(group) }
+          </div>
+        );
+      } else {
+        return renderGroup(group);
+      }
+    });
+
+    const renderGroup = group => group.map(({ report, show }) => {
+      return (
+        <TraktReportItem report={report} show={show} key={show} />
+      );
+    });
+
     if (this.state.loaded) {
       return (
         <div>
-          {
-            this.state.report.map(({ report, show }) => {
-              return (
-                <TraktReportItem report={report} show={show} key={show} />
-              );
-            })
-          }
+          { renderReport(this.state.report) }
         </div>
       );
     } else {
