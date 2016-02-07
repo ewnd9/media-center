@@ -43,7 +43,7 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
 			const seconds = prevPosition / 1000 / 1000;
 			const positionTime = `${tr(seconds / 60 / 60 | 0)}:${tr(seconds / 60 | 0)}:${tr(seconds % 60 | 0)}`;
 
-			configuration.omxPlayerParams.concat(['--pos', positionTime]);
+			configuration.omxPlayerParams = configuration.omxPlayerParams.concat(['--pos', positionTime]);
 		}
 
 		omxplayer = new OMXPlayer(configuration);
