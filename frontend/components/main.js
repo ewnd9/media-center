@@ -60,7 +60,7 @@ export default React.createClass({
   },
   render: function() {
     return (
-			<div>
+      <div>
         <div className="my-container container-fluid">
           <div className="col-md-6 left-panel">
             <MediaListContainer
@@ -93,7 +93,7 @@ export default React.createClass({
           onRequestClose={this.closeModal}>
           <MediaDialog closeModal={this.closeModal} file={this.state.file} />
         </Modal>
-			</div>
+      </div>
     );
-	}
+  }
 });

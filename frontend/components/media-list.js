@@ -5,8 +5,8 @@ import MediaListFolder from './media-list-folder';
 const MediaList = React.createClass({
   render: function() {
     return (
-			<div>
-				{
+      <div>
+        {
           this.props.files.map((item, index) => {
             const level = this.props.level;
 
@@ -30,9 +30,9 @@ const MediaList = React.createClass({
             }
           })
         }
-			</div>
+      </div>
     );
-	}
+  }
 });
 
 export default MediaList;

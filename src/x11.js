@@ -1,11 +1,11 @@
 import storage from './storage';
 
 import {
-	USER_SCREENSHOT,
-	USER_SCREEN_OFF,
-	USER_OPEN_BROWSER,
-	USER_KEY_PRESS,
-	OMX_KEYS
+  USER_SCREENSHOT,
+  USER_SCREEN_OFF,
+  USER_OPEN_BROWSER,
+  USER_KEY_PRESS,
+  OMX_KEYS
 } from './constants';
 
 import Promise from 'bluebird';
@@ -58,63 +58,63 @@ let X;
 let root;
 
 const grabKeys = events => {
-	_.map(events, (event, key) => {
-		X.GrabKey(root, 0, noKeyModifier, key, pointerMode, keyboardMode);
-	});
+  _.map(events, (event, key) => {
+    X.GrabKey(root, 0, noKeyModifier, key, pointerMode, keyboardMode);
+  });
 };
 
 export const registerEvents = events => {
-	if (!X) {
-		return new Promise((resolve, reject) => {
-			x11.createClient(function(err, display) {
-				if (err) {
-					reject(err);
-				}
+  if (!X) {
+    return new Promise((resolve, reject) => {
+      x11.createClient(function(err, display) {
+        if (err) {
+          reject(err);
+        }
 
-				X = display.client;
-				root = display.screen[0].root;
+        X = display.client;
+        root = display.screen[0].root;
 
-				grabKeys(events);
-				resolve();
-			}).on('event', function(event) {
-				const action =
-					playerEvents[event.keycode] ||
-					globalEvents[event.keycode] ||
-					keyPressEvents[event.keycode];
+        grabKeys(events);
+        resolve();
+      }).on('event', function(event) {
+        const action =
+          playerEvents[event.keycode] ||
+          globalEvents[event.keycode] ||
+          keyPressEvents[event.keycode];
 
-				console.log(event.name, event.keycode, action);
+        console.log(event.name, event.keycode, action);
 
-				if (event.name === 'KeyPress') {
-					if (action === keyPressEvents[event.keycode]) {
-						storage.emit(USER_KEY_PRESS, action);
-					} else {
-						storage.emit(action);
-					}
-				}
-			});
-		});
-	} else {
-		grabKeys(events);
-		return Promise.resolve();
-	}
+        if (event.name === 'KeyPress') {
+          if (action === keyPressEvents[event.keycode]) {
+            storage.emit(USER_KEY_PRESS, action);
+          } else {
+            storage.emit(action);
+          }
+        }
+      });
+    });
+  } else {
+    grabKeys(events);
+    return Promise.resolve();
+  }
 };
 
 export const registerKeys = () => {
-	registerEvents(playerEvents);
-	registerEvents(keyPressEvents);
+  registerEvents(playerEvents);
+  registerEvents(keyPressEvents);
 };
 
 registerEvents(globalEvents);
 
 export const unregisterEvents = events => {
-	if (X) {
-		_.map(events, (event, key) => {
-			X.UngrabKey(root, key, 0);
-		});
-	}
+  if (X) {
+    _.map(events, (event, key) => {
+      X.UngrabKey(root, key, 0);
+    });
+  }
 };
 
 export const unregisterKeys = () => {
-	unregisterEvents(playerEvents);
-	unregisterEvents(keyPressEvents);
+  unregisterEvents(playerEvents);
+  unregisterEvents(keyPressEvents);
 };

@@ -13,23 +13,23 @@ import userHome from 'user-home';
 import mkdirp from 'mkdirp';
 
 import {
-	UPDATE_PLAYBACK,
-	STOP_PLAYBACK,
-	USER_PAUSE_MEDIA,
-	USER_CLOSE,
-	USER_SCREENSHOT,
-	USER_SCREEN_OFF,
-	USER_OPEN_BROWSER,
-	USER_KEY_PRESS,
-	OMX_KEYS,
-	RELOAD_FILES
+  UPDATE_PLAYBACK,
+  STOP_PLAYBACK,
+  USER_PAUSE_MEDIA,
+  USER_CLOSE,
+  USER_SCREENSHOT,
+  USER_SCREEN_OFF,
+  USER_OPEN_BROWSER,
+  USER_KEY_PRESS,
+  OMX_KEYS,
+  RELOAD_FILES
 } from './constants';
 
 const getPath = (variable, homeFolder) => {
-	const result = process.env[variable] || (userHome + homeFolder);
-	mkdirp.sync(result);
+  const result = process.env[variable] || (userHome + homeFolder);
+  mkdirp.sync(result);
 
-	return result;
+  return result;
 };
 
 const MEDIA_PATH = getPath('MEDIA_PATH', '/Downloads');
@@ -57,20 +57,20 @@ app.use(cors());
 let play;
 
 if (process.env.NODE_ENV === 'production') {
-	play = require('./players/omx').default;
+  play = require('./players/omx').default;
 } else {
-	play = require('./players/mock-player').default;
+  play = require('./players/mock-player').default;
 }
 
 storage.on(USER_SCREENSHOT, () => {
-	// https://github.com/info-beamer/tools/tree/master/screenshot
-	exec(`DISPLAY=:0 /home/pi/tools/screenshot/screenshot > ${SCREENSHOTS_PATH}/${new Date().toISOString()}.jpg`);
+  // https://github.com/info-beamer/tools/tree/master/screenshot
+  exec(`DISPLAY=:0 /home/pi/tools/screenshot/screenshot > ${SCREENSHOTS_PATH}/${new Date().toISOString()}.jpg`);
 });
 storage.on(USER_SCREEN_OFF, () => {
-	exec(`DISPLAY=:0 xset dpms force suspend`);
+  exec(`DISPLAY=:0 xset dpms force suspend`);
 });
 storage.on(USER_OPEN_BROWSER, () => {
-	exec(`DISPLAY=:0 xdg-open "http://localhost:${PORT}/" &`);
+  exec(`DISPLAY=:0 xdg-open "http://localhost:${PORT}/" &`);
 });
 
 import VideoRouter from './routes/index';
@@ -80,13 +80,13 @@ app.use('/', VideoRouter(MEDIA_PATH, db, trakt, play));
 app.use('/', ScreenshotsRouter(SCREENSHOTS_PATH));
 
 app.use((err, req, res, next) => {
-	if (!err) {
-		next();
-		return;
-	}
+  if (!err) {
+    next();
+    return;
+  }
 
-	console.log(err, err.stack);
-	res.json({ error: err.stack });
+  console.log(err, err.stack);
+  res.json({ error: err.stack });
 });
 
 const http = HTTP.Server(app);
@@ -95,32 +95,32 @@ const io = socketIO(http);
 let lastPlaybackStatus;
 
 io.on('connection', (socket) => {
-	socket.emit(UPDATE_PLAYBACK, lastPlaybackStatus);
+  socket.emit(UPDATE_PLAYBACK, lastPlaybackStatus);
 
-	socket.on(USER_PAUSE_MEDIA, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.pause));
-	socket.on(USER_CLOSE, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.stop));
+  socket.on(USER_PAUSE_MEDIA, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.pause));
+  socket.on(USER_CLOSE, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.stop));
 });
 
 storage.on(UPDATE_PLAYBACK, data => {
-	lastPlaybackStatus = data;
-	io.emit(UPDATE_PLAYBACK, data);
+  lastPlaybackStatus = data;
+  io.emit(UPDATE_PLAYBACK, data);
 });
 
 storage.on(STOP_PLAYBACK, data => {
-	lastPlaybackStatus = data;
-	io.emit(RELOAD_FILES);
+  lastPlaybackStatus = data;
+  io.emit(RELOAD_FILES);
 });
 
 chokidar
-	.watch(MEDIA_PATH, {
-		ignored: /\.part$/,
-  	persistent: true,
-		ignoreInitial: true
-	})
-	.on('all', () => {
-		io.emit(RELOAD_FILES);
-	});
+  .watch(MEDIA_PATH, {
+    ignored: /\.part$/,
+    persistent: true,
+    ignoreInitial: true
+  })
+  .on('all', () => {
+    io.emit(RELOAD_FILES);
+  });
 
 http.listen(PORT, () => {
-	console.log(`listen localhost:${PORT}`);
+  console.log(`listen localhost:${PORT}`);
 });

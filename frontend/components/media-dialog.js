@@ -56,7 +56,7 @@ export default React.createClass({
         if (callback) {
           callback(err);
         }
-        
+
         return { options: [] };
       });
   },
@@ -101,9 +101,9 @@ export default React.createClass({
   },
   render: function() {
     return (
-			<div className="MediaDialog">
-				<h2>{this.props.file.filename}</h2>
-				<form>
+      <div className="MediaDialog">
+        <h2>{this.props.file.filename}</h2>
+        <form>
           <div className="field-group">
             <Select
               name="type"
@@ -139,7 +139,7 @@ export default React.createClass({
             )
           }
 
-					<div className="field-group">
+          <div className="field-group">
             <IconButton icon="play" disabled={this.isNotValid()} onClick={this.onSaveClick.bind(this, this.handlePlaying)}>
               Play
             </IconButton>
@@ -152,9 +152,9 @@ export default React.createClass({
             <IconButton icon="remove" onClick={this.props.closeModal}>
               Close
             </IconButton>
-					</div>
-				</form>
-			</div>
+          </div>
+        </form>
+      </div>
     );
-	}
+  }
 });

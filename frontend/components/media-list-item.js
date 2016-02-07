@@ -18,56 +18,56 @@ export default React.createClass({
     this.props.openModal(file);
   },
   render: function() {
-		const item = this.props.file;
-		const index = this.props.index;
+    const item = this.props.file;
+    const index = this.props.index;
 
-		const file = item.fileName || item.dir;
-		const data = file.split('/');
+    const file = item.fileName || item.dir;
+    const data = file.split('/');
 
-		let title;
-		let progress;
-		let progressClass;
+    let title;
+    let progress;
+    let progressClass;
 
-		if (item.db) {
-			title = formatTitle(item.db);
+    if (item.db) {
+      title = formatTitle(item.db);
 
-			if (item.db.position) {
-				progress = parseInt((item.db.position / item.db.duration) * 100);
-				progressClass = `progress progress-${ progress < 80 ? 'incomplete' : 'complete' }`;
-			}
-		} else if (item.recognition) {
-			title = '? ' + formatTitle(item.recognition);
-		} else {
-			title = data[data.length - 1];
-		}
+      if (item.db.position) {
+        progress = parseInt((item.db.position / item.db.duration) * 100);
+        progressClass = `progress progress-${ progress < 80 ? 'incomplete' : 'complete' }`;
+      }
+    } else if (item.recognition) {
+      title = '? ' + formatTitle(item.recognition);
+    } else {
+      title = data[data.length - 1];
+    }
 
-		if (item.db && item.db.scrobbleAt && !item.db.scrobbleAtDiff) {
-			item.db.scrobbleAtDiff = moment(item.db.scrobbleAt).fromNow();
-		}
+    if (item.db && item.db.scrobbleAt && !item.db.scrobbleAtDiff) {
+      item.db.scrobbleAtDiff = moment(item.db.scrobbleAt).fromNow();
+    }
 
-		const level = this.props.level || 0;
+    const level = this.props.level || 0;
 
     if (this.props.mode === 'not-watched' && item.db && (item.db.scrobble || item.db.hidden)) {
       return null;
     }
 
-		return (
-			<div className={`file-entry level-${level}`}
-					 key={file}
-					 tabIndex={index + 1}>
+    return (
+      <div className={`file-entry level-${level}`}
+           key={file}
+           tabIndex={index + 1}>
 
-				<div>
-					<a className="title file-title" onClick={this.handleClick.bind(this, item, undefined)}>
-						{ title }
-					</a>
-					<div className="fullpath">
-						{ progress && (
-							<a className={progressClass} onClick={this.handleClick.bind(this, item, item.db.position)}>
-								{ progress + '%' }
-							</a>
-						) || ''}
-						{' '}
-						<span>{ file }</span>
+        <div>
+          <a className="title file-title" onClick={this.handleClick.bind(this, item, undefined)}>
+            { title }
+          </a>
+          <div className="fullpath">
+            { progress && (
+              <a className={progressClass} onClick={this.handleClick.bind(this, item, item.db.position)}>
+                { progress + '%' }
+              </a>
+            ) || ''}
+            {' '}
+            <span>{ file }</span>
             {' '}
             {
               item.db && item.db.scrobble && (
@@ -86,10 +86,10 @@ export default React.createClass({
                 </span>
               )
             }
-					</div>
-				</div>
+          </div>
+        </div>
 
-			</div>
-		);
-	}
+      </div>
+    );
+  }
 });

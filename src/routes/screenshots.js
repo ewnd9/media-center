@@ -7,7 +7,7 @@ export default (SCREENSHOTS_PATH) => {
   router.get('/api/v1/screenshots', (req, res) => {
     const files = fs.readdirSync(SCREENSHOTS_PATH);
 
-  	res.json({
+    res.json({
       files: files.sort().reverse()
     });
   });

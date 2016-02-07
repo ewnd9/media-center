@@ -4,13 +4,13 @@ import notifier from 'node-notifier';
 import storage from './../storage';
 
 import {
-	UPDATE_PLAYBACK,
-	STOP_PLAYBACK,
+  UPDATE_PLAYBACK,
+  STOP_PLAYBACK,
   USER_PAUSE_MEDIA,
   USER_CLOSE,
-	PLAYING,
-	PAUSED,
-	STOPPED
+  PLAYING,
+  PAUSED,
+  STOPPED
 } from './../constants';
 
 const notify = (message) => {
@@ -23,14 +23,14 @@ const notify = (message) => {
 let loopInterval;
 
 const pausePlaying = () => {
-	if (loopInterval) {
-		clearInterval(loopInterval);
-	}
+  if (loopInterval) {
+    clearInterval(loopInterval);
+  }
 };
 
 
 export default (trakt, addToHistory, db, media, file, prevPosition) => {
-	pausePlaying();
+  pausePlaying();
 
   return Promise
     .resolve()
@@ -50,24 +50,24 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
       const emitUpdate = () => storage.emit(UPDATE_PLAYBACK, getInfo());
 
       const startPlaying = () => {
-				pausePlaying();
+        pausePlaying();
 
-			  loopInterval = setInterval(() => {
+        loopInterval = setInterval(() => {
           position = position + 1000 * 1000; // 1 second
           emitUpdate();
         }, 1000);
       };
 
-			startPlaying();
-			notify(`START PLAYING ${file} ${prevPosition ? 'from ' + prevPosition : ''}`);
+      startPlaying();
+      notify(`START PLAYING ${file} ${prevPosition ? 'from ' + prevPosition : ''}`);
 
       const onPause = () => {
         if (status === PLAYING) {
           status = PAUSED;
-					pausePlaying();
+          pausePlaying();
         } else {
           status = PLAYING;
-					startPlaying();
+          startPlaying();
         }
 
         notify(`NEW STATUS ${status}`);
@@ -78,11 +78,11 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
       storage.on(USER_PAUSE_MEDIA, onPause);
 
       const onClose = () => {
-				status = STOPPED;
-				pausePlaying();
+        status = STOPPED;
+        pausePlaying();
 
         emitUpdate();
-				storage.emit(STOP_PLAYBACK, getInfo());
+        storage.emit(STOP_PLAYBACK, getInfo());
 
         notify(`CLOSE MEDIA`);
 

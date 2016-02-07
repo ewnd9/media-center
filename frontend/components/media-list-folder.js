@@ -14,7 +14,7 @@ export default React.createClass({
     return `folder:${this.props.file.dir}`;
   },
   render: function() {
-		const { level, file } = this.props;
+    const { level, file } = this.props;
     const summary = file.summary;
 
     if (file.watched && this.props.mode === 'not-watched') {
@@ -32,13 +32,13 @@ export default React.createClass({
       );
     })
 
-		return (
-			<div className={`file-entry level-${level}`}>
-				<a className="title file-title" onClick={this.toggleHidden}>{summary}</a>
-				{
-					!this.state.hidden && childs || ''
-				}
-			</div>
-		);
-	}
+    return (
+      <div className={`file-entry level-${level}`}>
+        <a className="title file-title" onClick={this.toggleHidden}>{summary}</a>
+        {
+          !this.state.hidden && childs || ''
+        }
+      </div>
+    );
+  }
 });

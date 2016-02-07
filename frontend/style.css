@@ -1,128 +1,128 @@
 a {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 html, body {
-	margin: 0;
+  margin: 0;
   height:100%;
 }
 
 .container-fluid {
-	padding-left: 0;
-	padding-right: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .my-container {
-	color: #FFF !important;
-	display: flex;
+  color: #FFF !important;
+  display: flex;
 
-	a {
-		color: #FFF !important;
-	}
+  a {
+    color: #FFF !important;
+  }
 }
 
 .left-panel, .right-panel {
-	padding: 20px 50px 50px 50px;
-	min-height: 100%;
+  padding: 20px 50px 50px 50px;
+  min-height: 100%;
 }
 
 .left-panel {
-	background: linear-gradient(to right, rgba(96,108,136,1) 0%, rgba(63,76,107,1) 100%);
-	border-right: 1px solid rgba(0,0,0,0.5);
-	box-shadow: inset -7px 0 10px -7px rgba(0,0,0,0.5);
+  background: linear-gradient(to right, rgba(96,108,136,1) 0%, rgba(63,76,107,1) 100%);
+  border-right: 1px solid rgba(0,0,0,0.5);
+  box-shadow: inset -7px 0 10px -7px rgba(0,0,0,0.5);
 }
 
 .right-panel {
-	background-color: rgba(79, 92, 121, 1);
+  background-color: rgba(79, 92, 121, 1);
 }
 
 .top-options, .file-entry {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .top-options-wrapper, .file-entry {
-	text-align: right;
+  text-align: right;
 }
 
 .file-entry {
-	font-size: 16pt;
+  font-size: 16pt;
 }
 
 .file-title {
-	font-size: 20pt !important;
+  font-size: 20pt !important;
 }
 
 .level-2 {
-	margin-top: 20px;
-	margin-right: 20px;
+  margin-top: 20px;
+  margin-right: 20px;
 }
 
 .title, .fullpath {
-	display: block;
+  display: block;
 }
 
 .title {
-	font-size: 14pt;
+  font-size: 14pt;
 }
 
 .fullpath {
-	font-size: 10pt;
+  font-size: 10pt;
 }
 
 .MediaDialog {
-	width: 100%;
+  width: 100%;
 }
 
 .MediaDialog form {
-	width: 400px;
-	margin: 0 auto;
-	text-align: center;
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .MediaDialog .field-group {
-	margin: 10px;
+  margin: 10px;
 }
 
 a.progress-complete, .scrobble {
-	color: #1B5E20 !important;
-	background: white;
+  color: #1B5E20 !important;
+  background: white;
 }
 
 a.progress-incomplete {
-	color: #B71C1C !important;
-	background: white;
+  color: #B71C1C !important;
+  background: white;
 }
 
 .trakt-report-item {
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .bottom-playback-panel-holder {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .bottom-playback-panel {
-	background-color: black;
-	font-size: 16pt;
-	padding: 10px;
+  background-color: black;
+  font-size: 16pt;
+  padding: 10px;
 }
 
 #playback {
-	text-align: center;
+  text-align: center;
 }
 
 .btn-icon {
-	margin-right: 10px;
+  margin-right: 10px;
 }
 
 .screenshot {
-	max-width: 300px;
-	margin-bottom: 20px;
+  max-width: 300px;
+  margin-bottom: 20px;
 }
 
 .screenshots-gallery {
-	text-align: center;
+  text-align: center;
 }
