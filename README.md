@@ -17,13 +17,15 @@ $ cp example.ecosystem.json ecosystem.json
 $ pm2 start ecosystem.json
 ```
 
+### Trakt auth token
+
 ## Development
 
 ### Setup raspberry
 
 [docs/raspberry-setup.md](docs/raspberry-setup.md)
 
-### Setup deploy to raspberry script
+### Deploy to raspberry script
 
 ```
 $ cp example.deploy.sh deploy.sh # replace user@ip to yours
