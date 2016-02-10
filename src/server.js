@@ -87,7 +87,7 @@ app.use((err, req, res, next) => {
 
   console.log(err, err.stack);
   res.status(500);
-  res.json({ error: err.stack });
+  res.json({ error: err.stack.split('\n') });
 });
 
 const http = HTTP.Server(app);

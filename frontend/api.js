@@ -1,9 +1,25 @@
-import fetch from 'isomorphic-fetch';
+import isomorphicFetch from 'isomorphic-fetch';
+import notify from './notify';
 
 export const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 
+const fetch = (url, options = {}) => (
+  isomorphicFetch(url, options)
+    .then(response => {
+      if (response.status !== 200) {
+        return response.json()
+          .then(body => {
+            throw new Error(`${options.method || 'GET'} ${url} returned ${response.status}<br />${body.error.join('<br />')}`); // xss :-(
+          });
+      } else {
+        return response.json();
+      }
+    })
+);
+
 export const get = (url) => {
-  return fetch(baseUrl + url).then(_ => _.json());
+  return fetch(baseUrl + url)
+    .catch(err => notify.error(err.message));
 };
 
 export const post = (url, body) => {
@@ -14,7 +30,8 @@ export const post = (url, body) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
-  });
+  })
+  .catch(err => notify.error(err.message));
 };
 
 export const playFile = (filename, media, position) => {
