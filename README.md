@@ -4,6 +4,27 @@
 
 ![title-image](/mockup.jpg?raw=true)
 
+### Technologies
+
+Backend:
+
+- `express`
+- `pouchdb` (only as embedded db for now, without a syncing to browser or anywhere)
+- `socket.io`
+
+Transpiled with `babel` (`es2015` + `stage-0`)
+
+Frontend:
+
+- `react`
+  - `react-modal`
+  - `react-spinkit`
+  - `react-select`
+- `react-hmr` in development
+- `post-css` (`precss` + `autoprefixer`)
+
+Transpiled with `babel` (`es2015` + `stage-0` + `react`) and bundled with `webpack`
+
 ## Install
 
 ```
@@ -18,6 +39,8 @@ $ pm2 start ecosystem.json
 ```
 
 ### Trakt auth token
+
+You could exchange a pin code from https://trakt.tv/pin/6495 for it via [scripts/trakt-token.js](scripts/trakt-token.js). Then you need to copy token to `ecosystem.json` as `TRAKT_TOKEN`
 
 ## Development
 
