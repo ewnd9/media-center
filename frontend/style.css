@@ -15,10 +15,10 @@ html, body {
 .my-container {
   color: #FFF !important;
   display: flex;
+}
 
-  a {
-    color: #FFF !important;
-  }
+.my-container a {
+  color: #FFF !important;
 }
 
 .left-panel, .right-panel {
