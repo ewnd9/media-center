@@ -5,6 +5,7 @@ import {
   USER_SCREEN_OFF,
   USER_OPEN_BROWSER,
   USER_KEY_PRESS,
+  USER_ANALYTICS,
   OMX_KEYS
 } from './constants';
 
@@ -20,6 +21,7 @@ const globalEvents = {};
 const keyPressEvents = {};
 
 playerEvents[52] = USER_SCREENSHOT; // z
+playerEvents[56] = USER_ANALYTICS; // b
 
 keyPressEvents[10] = OMX_KEYS.decreaseSpeed; // 1
 keyPressEvents[11] = OMX_KEYS.increaseSpeed; // 2

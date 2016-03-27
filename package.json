@@ -37,6 +37,7 @@
     "express": "^4.13.3",
     "fkill": "^3.1.0",
     "globby": "^4.0.0",
+    "got": "^6.2.0",
     "inquirer-credentials": "^1.2.0",
     "inquirer-question": "^1.1.1",
     "keypress": "^0.2.1",

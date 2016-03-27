@@ -11,6 +11,7 @@ import { exec } from 'child_process';
 import chokidar from 'chokidar';
 import userHome from 'user-home';
 import mkdirp from 'mkdirp';
+import got from 'got';
 
 import {
   UPDATE_PLAYBACK,
@@ -21,6 +22,7 @@ import {
   USER_SCREEN_OFF,
   USER_OPEN_BROWSER,
   USER_KEY_PRESS,
+  USER_ANALYTICS,
   OMX_KEYS,
   RELOAD_FILES
 } from './constants';
@@ -62,9 +64,26 @@ if (process.env.NODE_ENV === 'production') {
   play = require('./players/mock-player').default;
 }
 
+const analyticsUrl = process.env.ANALYTICS_URL;
+
 storage.on(USER_SCREENSHOT, () => {
   // https://github.com/info-beamer/tools/tree/master/screenshot
   exec(`DISPLAY=:0 /home/pi/tools/screenshot/screenshot > ${SCREENSHOTS_PATH}/${new Date().toISOString()}.jpg`);
+});
+storage.on(USER_ANALYTICS, () => {
+  if (!analyticsUrl) {
+    return;
+  }
+
+  const params = {
+    json: true,
+    method: 'POST',
+    body: JSON.stringify(lastPlaybackStatus)
+  };
+
+  got(analyticsUrl, params)
+    .then(res => console.log(res.body))
+    .catch(err => console.log(err));
 });
 storage.on(USER_SCREEN_OFF, () => {
   exec(`DISPLAY=:0 xset dpms force suspend`);

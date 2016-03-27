@@ -9,6 +9,7 @@ export const RELOAD_FILES = 'RELOAD_FILES';
 export const USER_SCREENSHOT = 'USER_SCREENSHOT';
 export const USER_SCREEN_OFF = 'USER_SCREEN_OFF';
 export const USER_OPEN_BROWSER = 'USER_OPEN_BROWSER';
+export const USER_ANALYTICS = 'USER_ANALYTICS';
 
 export const PLAYING = 'PLAYING';
 export const PAUSED = 'PAUSED';
