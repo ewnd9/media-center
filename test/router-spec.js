@@ -26,8 +26,11 @@ test('/api/v1/files/scrobble', async t => {
   const db = createDb();
 
   const addToHistory = sinon.stub().returns(Promise.resolve());
+  const getReport = sinon.stub().returns(Promise.resolve());
+
   const trakt = {
-    addToHistory
+    addToHistory,
+    getReport
   };
 
   const router = Router(null, db, trakt, null);
@@ -45,7 +48,7 @@ test('/api/v1/files/scrobble', async t => {
   });
 
   t.is(true, addToHistory.calledOnce);
-  t.same(media, addToHistory.firstCall.args[0]);
+  t.deepEqual(media, addToHistory.firstCall.args[0]);
 
   const d1 = await db.getFile(filename);
   t.is(true, d1.scrobble);

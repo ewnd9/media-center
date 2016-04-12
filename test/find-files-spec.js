@@ -76,10 +76,10 @@ test('#findFiles', async t => {
 
   t.is(items[0].db.title, showTitle);
   t.is(items[0].db.imdb, showImdb);
-  t.ok(items[0].db._id);
+  t.truthy(items[0].db._id);
 
   t.is(items[0].recognition.type, 'show');
-  t.ok(items[0].recognition.title === showTitle);
+  t.truthy(items[0].recognition.title === showTitle);
   t.is(items[0].recognition.s, 1);
   t.is(items[0].recognition.ep, 1);
 
@@ -87,7 +87,7 @@ test('#findFiles', async t => {
 
   t.is(items[1].db.title, showTitle);
   t.is(items[1].db.imdb, showImdb);
-  t.notOk(items[1].db._id);
+  t.falsy(items[1].db._id);
 
   t.is(items[1].recognition.type, 'show');
   t.is(items[1].recognition.title, showTitle);
