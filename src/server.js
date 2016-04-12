@@ -77,6 +77,9 @@ storage.on(USER_ANALYTICS, () => {
 
   const params = {
     json: true,
+    headers: {
+      'Content-type': 'application/json'
+    },
     method: 'POST',
     body: JSON.stringify(lastPlaybackStatus)
   };
