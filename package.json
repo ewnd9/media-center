@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "alertify.js": "^1.0.8",
-    "ava": "^0.9.1",
+    "ava": "^0.14.0",
     "babel-cli": "^6.4.0",
     "babel-core": "^6.4.0",
     "babel-eslint": "^5.0.0-beta9",
@@ -91,7 +91,7 @@
     "script-loader": "^0.6.1",
     "sinon": "^1.17.2",
     "socket.io-client": "^1.4.2",
-    "webpackman": "^0.1.0"
+    "webpackman": "^0.5.0"
   },
   "pre-commit": [
     "style"
