@@ -9,9 +9,9 @@ import socketIO from 'socket.io';
 import Trakt from 'trakt-utils';
 import { exec } from 'child_process';
 import chokidar from 'chokidar';
-import userHome from 'user-home';
 import mkdirp from 'mkdirp';
 import got from 'got';
+import path from 'path';
 
 import {
   UPDATE_PLAYBACK,
@@ -27,16 +27,16 @@ import {
   RELOAD_FILES
 } from './constants';
 
-const getPath = (variable, homeFolder) => {
-  const result = process.env[variable] || (userHome + homeFolder);
+const getPath = (variable, defaultFolder) => {
+  const result = process.env[variable] || path.resolve(__dirname, '..', '..', defaultFolder);
   mkdirp.sync(result);
 
   return result;
 };
 
-const MEDIA_PATH = getPath('MEDIA_PATH', '/Downloads');
-const DB_PATH = getPath('DB_PATH', '/media-center-db');
-const SCREENSHOTS_PATH = getPath('SCREENSHOTS_PATH', '/media-center-screenshots');
+const MEDIA_PATH = getPath('MEDIA_PATH', 'Downloads');
+const DB_PATH = getPath('DB_PATH', 'media-center-db');
+const SCREENSHOTS_PATH = getPath('SCREENSHOTS_PATH', 'media-center-screenshots');
 
 const PORT = process.env.PORT || 3000;
 const TRAKT_TOKEN = process.env.TRAKT_TOKEN;
