@@ -59,7 +59,8 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
       position,
       duration,
       status,
-      media
+      media,
+      file
     });
 
     const emitUpdate = () => storage.emit(UPDATE_PLAYBACK, getInfo());

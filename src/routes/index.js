@@ -23,6 +23,27 @@ export default (MEDIA_PATH, db, trakt, play) => {
       .catch(err => next(err));
   });
 
+  router.post('/api/v1/files/existence', (req, res, next) => {
+    const query = req.body.query.reduce((total, curr) => {
+      total[curr] = false;
+      return total;
+    }, {});
+
+    findFiles(db, MEDIA_PATH)
+      .then(folders => {
+        folders.forEach(folder => {
+          folder.media.forEach(media => {
+            if (typeof query[media.file] !== 'undefined') {
+              query[media.file] = true;
+            }
+          })
+        });
+
+        res.json(query);
+      })
+      .catch(err => next(err));
+  });
+
   router.get('/api/v1/playback/status', (req, res) => {
     if (player) {
       res.json(player.getInfo());
