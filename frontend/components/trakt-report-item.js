@@ -1,11 +1,10 @@
 import React from 'react';
 import moment from 'moment';
+import { formatEpisode as format } from 'show-episode-format';
 
 export default ({ report, show }) => {
   const titles = [];
 
-  const tr = n => n < 10 ? '0' + n : n;
-  const format = ep => `${tr(ep.season)}x${tr(ep.number)}`;
   const formatInterval = eps =>
     `${format(eps[0].episode)} - ${format(eps[eps.length - 1].episode)} (${eps.length})`;
 
