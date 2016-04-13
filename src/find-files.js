@@ -68,47 +68,36 @@ function setupDb(db, media, [dbFiles, dbPrefixes]) {
 };
 
 function flattenVideos(rootDir, result) {
-  const grouped = _.groupBy(result, 'dir');
-  const topLevel = grouped[rootDir] || [];
-  const media = _
-    .map(grouped, (media, dir) => ({ media, dir }))
-    .filter(({ dir }) => dir !== rootDir)
-    .concat(topLevel.map(media => ({ media: [media], dir: media.dir })));
+  const groupedByImdbObj = _.groupBy(result, item => {
+    return item.db && `${item.db.imdb}-${item.db.s}` || 'unrecognized';
+  });
 
-  const cmpNames = (a, b) => {
-    if (a.fileName < b.fileName) {
-      return -1;
-    } else if (a.fileName > b.fileName) {
-      return 1;
-    } else {
-      return 0;
-    }
-  };
+  const groupedByImdb = _.map(groupedByImdbObj, (media, key) => ({ key, media }));
 
-  media.sort((a, b) => {
-    a.media.sort(cmpNames);
-    b.media.sort(cmpNames);
-
+  groupedByImdb.sort((a, b) => {
     const mA = _.max(a.media.map(a => a.birthtime.getTime()));
     const mB = _.max(b.media.map(b => b.birthtime.getTime()));
 
     return mB - mA;
   });
 
-  media.forEach(dirObj => {
-    const media = dirObj.media[0];
+  groupedByImdb.forEach(group => {
+    _.sortBy(group.media, 'db.ep');
+
+    const media = group.media[0];
+    group.dir = media.dir;
 
     if (media.db && media.db.s) {
       const title = `${media.db.title} season ${media.db.s}`;
-      const scrobble = _.sum(_.pluck(dirObj.media, 'scrobble'));
+      const scrobble = group.media.filter(_ => _.db && _.db.scrobble).length;
 
-      dirObj.summary = `${title} (${scrobble} / ${dirObj.media.length})`;
-      dirObj.watched = scrobble === dirObj.media.length;
+      group.summary = `${title} (${scrobble} / ${group.media.length})`;
+      group.watched = scrobble === group.media.length;
     } else {
       const title = media.recognition && media.recognition.title || media.fileName;
-      dirObj.summary = `${title} ${dirObj.media.length > 1 ? '( 0 / ' + dirObj.media.length + ')' : ''}`;
+      group.summary = `${title} ${group.media.length > 1 ? '( 0 / ' + group.media.length + ')' : ''}`;
     }
   });
 
-  return media;
+  return groupedByImdb;
 };
