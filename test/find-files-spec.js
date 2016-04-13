@@ -1,31 +1,36 @@
 import test from 'ava';
 import 'babel-core/register';
-import mock from 'mock-fs';
+
 import findFiles from './../src/find-files';
 import createDb from './fixtures/create-db';
 
-const testDir = '/home/pi/video';
+import {
+  mockFs,
+  unmockFs,
 
-const showFolder = 'Master of None S01 Season 1 Complete 1080p WEB-DL [rartv]';
+  testDir,
+  showFolder,
 
-const showTitle = 'Master of None';
-const showImdb = 'tt4635276';
+  showTitle,
+  showImdb,
 
-const showFile1 = 'Master.of.None.S01E01.Plan.B.1080p.NF.WEBRip.DD5.1.x264-NTb.mkv';
-const showFile2 = 'Master.of.None.S01E02.Parents.1080p.NF.WEBRip.DD5.1.x264-NTb.mkv';
-const showFile3 = 'Master.of.None.S01E02.Parents.1080p.NF.WEBRip.DD5.1.x264-NTb.Sample.mkv';
-const showFile4 = 'Master.of.None.S01E02.Parents.1080p.NF.WEBRip.DD5.1.x264-NTb.sample.mkv';
+  showFile1,
+  showFile2,
+  showFile3,
+  showFile4,
 
-const movieFolder = 'Minions 2015 1080p BluRay x264 AC3-JYK';
-const movieFile = 'Minions 2015 1080p BluRay x264 AC3-JYK.mkv';
+  movieFolder,
+  movieFile,
 
-const movieTitle = 'Minions';
+  movieTitle,
 
-const nearestDate = new Date(2);
-const pastDate = new Date(1);
+  nearestDate,
+  pastDate
+} from './fixtures/create-fs';
 
 test('#findFiles', async t => {
   const db = createDb();
+  
   const res = await db.File.add([testDir, showFolder, showFile1].join('/'), {
     type: 'show',
     title: showTitle,
@@ -34,27 +39,7 @@ test('#findFiles', async t => {
     imdb: showImdb
   });
 
-  const f = birthtime => mock.file({ content: '', birthtime });
-
-  mock({
-    [testDir]: {
-      [showFolder]: mock.directory({
-        birthtime: pastDate,
-        items: {
-          [showFile1]: f(pastDate),
-          [showFile2]: f(pastDate),
-          [showFile3]: f(pastDate),
-          [showFile4]: f(pastDate)
-        }
-      }),
-      [movieFolder]: mock.directory({
-        birthtime: nearestDate,
-        items: {
-          [movieFile]: f(nearestDate)
-        }
-      })
-    }
-  });
+  mockFs();
 
   const result = await findFiles(db, testDir);
   const r0 = result[0].media[0];
@@ -94,5 +79,5 @@ test('#findFiles', async t => {
   t.is(items[1].recognition.s, 1);
   t.is(items[1].recognition.ep, 2);
 
-  mock.restore();
+  unmockFs();
 });
