@@ -1,11 +1,13 @@
 import express from 'express';
 import findFiles from './../find-files';
 
-import Cache from 'node-cache';
-const traktCache = new Cache({ stdTTL: 60 * 10 }); // invalidates in 10 mins
+import Cache from '../utils/cache';
+const REPORT_CACHE = 'REPORT_CACHE';
 
 export default (MEDIA_PATH, db, trakt, play) => {
   const router = express.Router();
+  const cache = new Cache();
+
   let player;
 
   const addToHistory = (filename, media) => {
@@ -99,25 +101,7 @@ export default (MEDIA_PATH, db, trakt, play) => {
       .catch(() => res.json([]));
   });
 
-  const withCache = (key, promiseFn) => {
-    return (req, res, next) => {
-      const data = traktCache.get(key);
-
-      if (data) {
-        res.json(data);
-      } else {
-        promiseFn()
-          .then(response => {
-            res.json(response);
-            traktCache.set(key, response);
-          })
-          .catch(err => next(err));
-      }
-    };
-  };
-
-  const REPORT_CACHE = 'REPORT_CACHE';
-  router.get('/api/v1/report', withCache(REPORT_CACHE, trakt.getReport.bind(trakt)));
+  router.get('/api/v1/report', cache.expressResponse(REPORT_CACHE, trakt.getReport.bind(trakt)));
 
   return router;
 };

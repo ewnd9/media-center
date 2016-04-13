@@ -13,7 +13,7 @@ export default (db, rootDir) => {
 };
 
 function parseVideoFiles(db, allVideos) {
-  const videos = allVideos.filter(item => !((/\.sample\./i).test(item)));
+  const videos = allVideos.filter(item => !((/(?:\.|\/)(?:sample|rarbg\.com)\./i).test(item)));
 
   const media = videos.map(video => {
     const data = video.split('/');
