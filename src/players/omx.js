@@ -100,7 +100,7 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
       emitUpdate();
 
       if (positionCount % 10 === 0) {
-        db.updateFile(file, { position, duration })
+        db.File.update(file, { position, duration })
           .then((res) => {
             const pos = position / duration * 100;
 

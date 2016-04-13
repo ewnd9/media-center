@@ -13,7 +13,7 @@ export default (MEDIA_PATH, db, trakt, play) => {
   const addToHistory = (filename, media) => {
     return trakt
       .addToHistory(media)
-      .then(() => db.updateFile(filename, {
+      .then(() => db.File.update(filename, {
         scrobble: true,
         scrobbleAt: new Date().toISOString()
       }));
@@ -55,7 +55,7 @@ export default (MEDIA_PATH, db, trakt, play) => {
   });
 
   router.post('/api/v1/playback/start', (req, res) => {
-    db.addFile(req.body.filename, req.body.media);
+    db.File.add(req.body.filename, req.body.media);
 
     play(trakt, addToHistory, db, req.body.media, req.body.filename, req.body.position)
       .then(_player => player = _player);
@@ -64,7 +64,7 @@ export default (MEDIA_PATH, db, trakt, play) => {
   });
 
   router.post('/api/v1/playback/info', (req, res, next) => {
-    db.addFile(req.body.filename, req.body.media)
+    db.File.add(req.body.filename, req.body.media)
       .then(() => res.json({ status: 'ok '}))
       .catch(err => next(err));
   });
@@ -76,8 +76,8 @@ export default (MEDIA_PATH, db, trakt, play) => {
   });
 
   router.post('/api/v1/files/hidden', (req, res, next) => {
-    db
-      .updateFile(req.body.file, {
+    db.File
+      .update(req.body.file, {
         hidden: true,
         title: req.body.filename
       })

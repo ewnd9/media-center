@@ -26,7 +26,7 @@ const pastDate = new Date(1);
 
 test('#findFiles', async t => {
   const db = createDb();
-  const res = await db.addFile([testDir, showFolder, showFile1].join('/'), {
+  const res = await db.File.add([testDir, showFolder, showFile1].join('/'), {
     type: 'show',
     title: showTitle,
     s: 1,

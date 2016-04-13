@@ -31,19 +31,19 @@ function parseVideoFiles(db, allVideos) {
   });
 
   return Promise
-    .all([db.getFiles(videos), db.getPrefixes(media.filter(_ => !!_.recognition))])
+    .all([db.File.getAll(videos), db.Prefix.getAll(media.filter(_ => !!_.recognition))])
     .then(setupDb.bind(null, db, media));
 };
 
 function setupDb(db, media, [dbFiles, dbPrefixes]) {
   return media.map(media => {
     media.db = (dbFiles.rows.find(file => {
-      return file.doc && file.doc._id === db.fileId(media.file);
+      return file.doc && file.doc._id === db.File.createId(media.file);
     }) || {}).doc;
 
     if (media.recognition) {
       const prefix = (dbPrefixes.rows.find(prefix => {
-        return prefix.doc && prefix.doc._id === db.prefixId(media.recognition.title);
+        return prefix.doc && prefix.doc._id === db.Prefix.createId(media.recognition.title);
       }) || {}).doc;
 
       if (prefix) {

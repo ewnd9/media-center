@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import storage from './storage';
-import initDb from './db';
+import initDb from './models/index';
 import HTTP from 'http';
 import socketIO from 'socket.io';
 import Trakt from 'trakt-utils';

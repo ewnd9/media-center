@@ -39,7 +39,7 @@ test('/api/v1/files/scrobble', async t => {
   const filename = 'movie.avi';
   const media = { imdb: 'tt0' };
 
-  const d0 = await db.updateFile(filename, media);
+  const d0 = await db.File.update(filename, media);
   t.is(media.imdb, d0.imdb);
 
   const result = await post('/api/v1/files/scrobble', {
@@ -50,7 +50,7 @@ test('/api/v1/files/scrobble', async t => {
   t.is(true, addToHistory.calledOnce);
   t.deepEqual(media, addToHistory.firstCall.args[0]);
 
-  const d1 = await db.getFile(filename);
+  const d1 = await db.File.get(filename);
   t.is(true, d1.scrobble);
   t.not(d0.updatedAt, d1.updatedAt);
 });
