@@ -12,7 +12,7 @@
     "build:backend": "babel -s -d lib src",
     "build:backend:watch": "babel --watch -s -d lib src",
     "build:frontend": "rm -rf public/* && NODE_ENV=production wbuild --x-entry frontend/app.js --x-html frontend/index.html --x-dist public",
-    "style": "eslint src/ frontend/",
+    "style": "eslint 'src/**/*.js' 'frontend/**/*.js'",
     "test": "ava ./test/*.js",
     "test:watch": "nodemon test/*.js --exec ava"
   },
@@ -59,7 +59,7 @@
     "ava": "^0.14.0",
     "babel-cli": "^6.4.0",
     "babel-core": "^6.4.0",
-    "babel-eslint": "^5.0.0-beta9",
+    "babel-eslint": "^6.0.0",
     "babel-plugin-transform-runtime": "^6.4.0",
     "babel-polyfill": "^6.5.0",
     "babel-preset-es2015": "^6.3.13",
@@ -69,9 +69,10 @@
     "bootstrap": "^3.3.6",
     "chai": "^3.2.0",
     "classnames": "^2.2.3",
-    "eslint": "^1.10.3",
-    "eslint-plugin-react": "^3.14.0",
+    "eslint": "^2.7.0",
+    "eslint-plugin-react": "^4.3.0",
     "got": "^6.0.1",
+    "husky": "^0.11.3",
     "isomorphic-fetch": "^2.2.0",
     "mocha": "^2.2.5",
     "mock-fs": "^3.6.0",
@@ -93,8 +94,5 @@
     "sinon": "^1.17.2",
     "socket.io-client": "^1.4.2",
     "webpackman": "^0.5.0"
-  },
-  "pre-commit": [
-    "style"
-  ]
+  }
 }

@@ -9,7 +9,7 @@ const SCREENSHOTS = 'SCREENSHOTS';
 const buttons = [
   { label: 'Trakt Report', value: REPORT },
   { label: 'Screenshots', value: SCREENSHOTS }
-]
+];
 
 export default React.createClass({
   getInitialState: () => ({

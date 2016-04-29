@@ -1,7 +1,7 @@
 import express from 'express';
 import fs from 'fs';
 
-export default (SCREENSHOTS_PATH) => {
+export default SCREENSHOTS_PATH => {
   const router = express.Router();
 
   router.get('/api/v1/screenshots', (req, res) => {

@@ -1,6 +1,6 @@
-const tr = (s) => s.length < 2 ? '0' + s : s;
+const tr = s => s.length < 2 ? '0' + s : s;
 
-export const formatTitle = (data) => {
+export const formatTitle = data => {
   let result = data.title;
 
   if (data.year) {

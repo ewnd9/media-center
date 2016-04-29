@@ -45,7 +45,7 @@ export default React.createClass({
     this.getFiles();
   },
   getFiles: function() {
-    api.findFiles().then((files) => this.setState({ files }));
+    api.findFiles().then(files => this.setState({ files }));
   },
   openModal: function(file) {
     this.setState({ modalIsOpen: true, file });

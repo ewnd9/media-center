@@ -117,7 +117,7 @@ const io = socketIO(http);
 
 let lastPlaybackStatus;
 
-io.on('connection', (socket) => {
+io.on('connection', socket => {
   socket.emit(UPDATE_PLAYBACK, lastPlaybackStatus);
 
   socket.on(USER_PAUSE_MEDIA, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.pause));

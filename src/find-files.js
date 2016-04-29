@@ -33,7 +33,7 @@ function parseVideoFiles(db, allVideos) {
   return Promise
     .all([db.File.getAll(videos), db.Prefix.getAll(media.filter(_ => !!_.recognition))])
     .then(setupDb.bind(null, db, media));
-};
+}
 
 function setupDb(db, media, [dbFiles, dbPrefixes]) {
   return media.map(media => {
@@ -65,7 +65,7 @@ function setupDb(db, media, [dbFiles, dbPrefixes]) {
 
     return media;
   });
-};
+}
 
 function flattenVideos(rootDir, result) {
   const groupedByImdbObj = _.groupBy(result, item => {
@@ -100,4 +100,4 @@ function flattenVideos(rootDir, result) {
   });
 
   return groupedByImdb;
-};
+}

@@ -13,7 +13,7 @@ import {
   STOPPED
 } from './../constants';
 
-const notify = (message) => {
+const notify = message => {
   notifier.notify({
     title: 'MOCK PLAYER',
     message

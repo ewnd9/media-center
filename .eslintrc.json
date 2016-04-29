@@ -1,17 +1,30 @@
 {
-    "parser": "babel-eslint",
-    "env": {
-      "browser": true,
-      "node": true
-    },
-    "plugins": [
-      "react"
+  "parser": "babel-eslint",
+  "globals": {
+    "Promise": true
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "arrow-parens": [
+      2,
+      "as-needed"
     ],
-    "rules": {
-      "no-undef": 2,
-      "no-unused-vars": 2,
-      "no-var": 2,
-      "react/jsx-uses-vars": 2,
-      "react/jsx-uses-react": 2
-    }
+    "keyword-spacing": 2,
+    "no-extra-semi": 2,
+    "no-undef": 2,
+    "no-unused-vars": 2,
+    "no-var": 2,
+    "semi": [
+      2,
+      "always"
+    ],
+    "react/jsx-uses-vars": 2,
+    "react/jsx-uses-react": 2
+  }
 }

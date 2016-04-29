@@ -1,7 +1,7 @@
 export default db => {
   function Model(createId) {
     this.createId = createId;
-  };
+  }
 
   Model.prototype.on404 = function(err, fn) {
     if (err.status === 404) {

@@ -38,7 +38,7 @@ export default (MEDIA_PATH, db, trakt, play) => {
             if (typeof query[media.file] !== 'undefined') {
               query[media.file] = true;
             }
-          })
+          });
         });
 
         res.json(query);
@@ -85,7 +85,7 @@ export default (MEDIA_PATH, db, trakt, play) => {
       .catch(err => next(err));
   });
 
-  const formatSuggestion = (media) => {
+  const formatSuggestion = media => {
     return {
       value: media.ids.imdb,
       label: `${media.title} (${media.year})`
@@ -95,7 +95,7 @@ export default (MEDIA_PATH, db, trakt, play) => {
   router.get('/api/v1/suggestions', (req, res) => {
     trakt
       .search(req.query.title, req.query.type)
-      .then((data) => {
+      .then(data => {
         res.json(data.map(media => formatSuggestion(media[req.query.type])));
       })
       .catch(() => res.json([]));

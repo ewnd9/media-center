@@ -17,7 +17,7 @@ const fetch = (url, options = {}) => (
     })
 );
 
-export const get = (url) => {
+export const get = url => {
   return fetch(baseUrl + url)
     .catch(err => notify.error(err.message));
 };

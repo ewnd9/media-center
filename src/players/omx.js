@@ -20,7 +20,7 @@ let omxplayer = null;
 
 const killProcess = () => {
   unregisterKeys();
-  return fkill('omxplayer.bin').then(() => console.log('success'), (err) => console.log(err));
+  return fkill('omxplayer.bin').then(() => console.log('success'), err => console.log(err));
 };
 
 exitHook(killProcess);
@@ -81,7 +81,7 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
       storage.emit(STOP_PLAYBACK);
     };
 
-    omxplayer.start(file, (err) => {
+    omxplayer.start(file, err => {
       if (err) {
         console.log(err);
       }
@@ -89,19 +89,19 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
       setTimeout(emitPlay, 1000);
     });
 
-    omxplayer.on('prop:Duration', (_duration) => {
+    omxplayer.on('prop:Duration', _duration => {
       duration = _duration;
     });
 
     let positionCount = 0;
 
-    omxplayer.on('prop:Position', (_position) => {
+    omxplayer.on('prop:Position', _position => {
       position = _position;
       emitUpdate();
 
       if (positionCount % 10 === 0) {
         db.File.update(file, { position, duration })
-          .then((res) => {
+          .then(res => {
             const pos = position / duration * 100;
 
             if (!res.scrobble && pos !== Infinity && pos > 80) {
@@ -113,7 +113,7 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
       positionCount = (positionCount + 1) % 10;
     });
 
-    omxplayer.on('prop:PlaybackStatus', (omxStatus) => {
+    omxplayer.on('prop:PlaybackStatus', omxStatus => {
       if (omxStatus === 'Playing') {
         status = PLAYING;
         emitPlay();

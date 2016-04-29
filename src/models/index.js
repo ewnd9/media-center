@@ -2,12 +2,12 @@ import PouchDB from 'pouchdb';
 import split from 'split-torrent-release';
 import modelFactory from './model';
 
-export default (dbPath) => {
+export default dbPath => {
   const db = new PouchDB(dbPath);
   const Model = modelFactory(db);
 
-  const fileId = (file) => `file:${file.replace('\W', '')}`;
-  const prefixId = (prefix) => `prefix:${prefix}`;
+  const fileId = file => `file:${file.replace('\W', '')}`;
+  const prefixId = prefix => `prefix:${prefix}`;
 
   const File = new Model(fileId);
   const Prefix = new Model(prefixId);

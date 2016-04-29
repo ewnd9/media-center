@@ -32,7 +32,7 @@ export default ({ report, show }) => {
       );
 
       if (length === 1) {
-        titles.push(`${format(report.episodes[0].episode)} in ${awaiting}`)
+        titles.push(`${format(report.episodes[0].episode)} in ${awaiting}`);
       } else {
         titles.push(`${formatInterval(report.episodes)} every week in ${awaiting}`);
       }

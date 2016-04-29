@@ -30,7 +30,7 @@ export default React.createClass({
                        mode={this.props.mode}
                        openModal={this.props.openModal} />
       );
-    })
+    });
 
     return (
       <div className={`file-entry level-${level}`}>
