@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from '../theme.css';
 
 import ScreenshotsGallery from './../screenshots-gallery/screenshots-gallery';
 import TraktReport from './../trakt-report';

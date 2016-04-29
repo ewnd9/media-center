@@ -20,7 +20,7 @@ export default React.createClass({
     const renderReport = report => report.map((group, index) => {
       if (index > 0) {
         return (
-          <div>
+          <div key={index}>
             <hr />
             { renderGroup(group) }
           </div>

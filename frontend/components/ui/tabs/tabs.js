@@ -9,7 +9,7 @@ export default React.createClass({
     this.setState({ active: value });
   },
   render() {
-    const { elements } = this.props;
+    const { elements, rightToLeft } = this.props;
     const { active } = this.state;
 
     const el = elements[active];
@@ -23,7 +23,7 @@ export default React.createClass({
                 <button type="button"
                         onClick={this.setActive.bind(this, label)}
                         key={label}
-                        className={`${styles.button} ${active === label ? styles.activeButton : ''}`}>
+                        className={`${!rightToLeft && styles.button || styles.buttonLeftMargin} ${active === label ? styles.activeButton : ''}`}>
                   { label }
                 </button>
               );

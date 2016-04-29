@@ -24,9 +24,16 @@ export default React.createClass({
       [UNWATCHED]: el
     };
 
+    let initial = localStorage.mode;
+
+    if (!elements[initial]) {
+      initial = ALL;
+      delete localStorage.mode;
+    }
+
     return (
       <div className={styles.textAlignRight}>
-        <Tabs elements={elements} initial={localStorage.mode || ALL} />
+        <Tabs elements={elements} initial={initial} rightToLeft={true} />
       </div>
     );
   }
