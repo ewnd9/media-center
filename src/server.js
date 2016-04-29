@@ -57,9 +57,11 @@ app.use('/screenshots', express.static(SCREENSHOTS_PATH));
 app.use(cors());
 
 let play;
+let startOmxPlayer;
 
 if (process.env.NODE_ENV === 'production') {
   play = require('./players/omx').default;
+  startOmxPlayer = require('./players/omx').startOmxPlayer;
 } else {
   play = require('./players/mock-player').default;
 }
@@ -97,8 +99,10 @@ storage.on(USER_OPEN_BROWSER, () => {
 
 import VideoRouter from './routes/index';
 import ScreenshotsRouter from './routes/screenshots';
+import YoutubeRouter from './routes/youtube';
 
 app.use('/', VideoRouter(MEDIA_PATH, db, trakt, play));
+app.use('/', YoutubeRouter(startOmxPlayer));
 app.use('/', ScreenshotsRouter(SCREENSHOTS_PATH));
 
 app.use((err, req, res, next) => {

@@ -78,3 +78,7 @@ export const getMediaSuggestion = (title, type) => {
 export const getReport = () => {
   return get('/api/v1/report');
 };
+
+export const playYoutubeLink = query => {
+  return post('/api/v1/youtube', { query });
+};

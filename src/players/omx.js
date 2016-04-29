@@ -33,7 +33,7 @@ storage.on(USER_KEY_PRESS, key => {
 
 const tr = h => h < 10 ? ('0' + h) : ('' + h);
 
-export default (trakt, addToHistory, db, media, file, prevPosition) => {
+export function startOmxPlayer(file, prevPosition, listeners = {}) {
   return killProcess().then(registerKeys).then(() => {
     const configuration = {
       omxPlayerParams: ['--no-osd']
@@ -54,29 +54,32 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
 
     const progress = () => position / duration * 100;
 
-    const getInfo = () => ({
-      progress: progress(),
-      position,
-      duration,
-      status,
-      media,
-      file
-    });
+    const getInfo = () => {
+      const result = {
+        progress: progress(),
+        position,
+        duration,
+        status,
+        file
+      };
+
+      return listeners.getInfo && listeners.getInfo(result) || result;
+    };
 
     const emitUpdate = () => storage.emit(UPDATE_PLAYBACK, getInfo());
 
     const emitPlay = () => {
-      trakt.startScrobble(media, progress());
+      listeners.onPlay && listeners.onPlay(progress());
       emitUpdate();
     };
 
     const emitPause = () => {
-      trakt.pauseScrobble(media, progress());
+      listeners.onPause && listeners.onPause(progress());
       emitUpdate();
     };
 
     const emitStop = () => {
-      trakt.pauseScrobble(media, progress());
+      listeners.onStop && listeners.onStop(progress());
       emitUpdate();
       storage.emit(STOP_PLAYBACK);
     };
@@ -100,14 +103,8 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
       emitUpdate();
 
       if (positionCount % 10 === 0) {
-        db.File.update(file, { position, duration })
-          .then(res => {
-            const pos = position / duration * 100;
-
-            if (!res.scrobble && pos !== Infinity && pos > 80) {
-              addToHistory(file, media);
-            }
-          });
+        // @TODO replace with debounce
+        listeners.onPositionUpdate && listeners.onPositionUpdate(position, duration);
       }
 
       positionCount = (positionCount + 1) % 10;
@@ -131,4 +128,26 @@ export default (trakt, addToHistory, db, media, file, prevPosition) => {
 
     return { getInfo };
   });
+}
+
+export default (trakt, addToHistory, db, media, file, prevPosition) => {
+  const listeners = {
+    onPlay: progress => trakt.startScrobble(media, progress),
+    onPause: progress => trakt.pauseScrobble(media, progress),
+    onStop: progress => trakt.pauseScrobble(media, progress),
+    getInfo: result => ({ ...result, media }),
+    onPositionUpdate: (position, duration) => {
+      db.File
+        .update(file, { position, duration })
+        .then(res => {
+          const pos = position / duration * 100;
+
+          if (!res.scrobble && pos !== Infinity && pos > 80) {
+            addToHistory(file, media);
+          }
+        });
+    }
+  };
+
+  return startOmxPlayer(file, prevPosition, listeners);
 };

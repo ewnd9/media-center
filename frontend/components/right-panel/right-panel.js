@@ -3,6 +3,7 @@ import React from 'react';
 import ScreenshotsGallery from './../screenshots-gallery/screenshots-gallery';
 import TraktReport from './../trakt-report/trakt-report';
 import MediaListContainer from '../media-list-container/media-list-container';
+import YoutubeInput from '../youtube-input/youtube-input';
 
 import Tabs from '../ui/tabs/tabs';
 
@@ -13,6 +14,7 @@ export default React.createClass({
     const VIDEO = 'Video';
     const UPCOMING = 'Upcoming';
     const SCREENSHOTS = 'Screenshots';
+    const YOUTUBE = 'Youtube';
 
     const elements = {};
 
@@ -29,6 +31,7 @@ export default React.createClass({
 
     elements[UPCOMING] = { component: TraktReport };
     elements[SCREENSHOTS] = { component: ScreenshotsGallery };
+    elements[YOUTUBE] = { component: YoutubeInput };
 
     return <Tabs className={className} elements={elements} initial={showVideo && VIDEO || UPCOMING} />;
   }
