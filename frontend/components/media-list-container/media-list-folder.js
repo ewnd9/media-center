@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from '../theme.css';
+
 import MediaListItem from './media-list-item';
 
 export default React.createClass({
@@ -14,7 +16,7 @@ export default React.createClass({
     return `folder:${this.props.file.dir}`;
   },
   render: function() {
-    const { level, file } = this.props;
+    const { level, file, rightToLeft } = this.props;
     const summary = file.summary;
 
     if (file.watched && this.props.mode === 'not-watched') {
@@ -28,12 +30,13 @@ export default React.createClass({
                        index={index}
                        level={level + 1}
                        mode={this.props.mode}
+                       rightToLeft={rightToLeft}
                        openModal={this.props.openModal} />
       );
     });
 
     return (
-      <div className={`file-entry level-${level}`}>
+      <div className={`${styles.marginBottom20} ${rightToLeft && styles.textAlignRight || ''} level-${level}`}>
         <a className="title file-title" onClick={this.toggleHidden}>{summary}</a>
         {
           !this.state.hidden && childs || ''

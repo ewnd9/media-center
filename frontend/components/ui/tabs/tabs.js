@@ -9,13 +9,13 @@ export default React.createClass({
     this.setState({ active: value });
   },
   render() {
-    const { elements, rightToLeft } = this.props;
+    const { elements, rightToLeft, className } = this.props;
     const { active } = this.state;
 
     const el = elements[active];
 
     return (
-      <div>
+      <div className={className}>
         <div className={styles.buttons} role="group">
           {
             Object.keys(elements).map(label => {

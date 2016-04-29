@@ -6,14 +6,16 @@ import Tabs from '../ui/tabs/tabs';
 
 export default React.createClass({
   render: function() {
+    const { openModal, files, className } = this.props;
+
     const ALL = 'All';
     const UNWATCHED = 'Unwatched';
 
     const el = {
       component: MediaList,
       getProps: state => ({
-        openModal: this.props.openModal,
-        files: this.props.files,
+        openModal,
+        files,
         level: 0,
         mode: state
       })
@@ -32,8 +34,8 @@ export default React.createClass({
     }
 
     return (
-      <div className={styles.textAlignRight}>
-        <Tabs elements={elements} initial={initial} rightToLeft={true} />
+      <div className={`${className} ${this.props.rightToLeft && styles.textAlignRight || ''}`}>
+        <Tabs elements={elements} initial={initial} rightToLeft={this.props.rightToLeft} />
       </div>
     );
   }

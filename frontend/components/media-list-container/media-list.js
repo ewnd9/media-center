@@ -25,6 +25,7 @@ const MediaList = React.createClass({
                                index={index}
                                level={level + 1}
                                mode={this.props.mode}
+                               rightToLeft={this.props.rightToLeft}
                                openModal={this.props.openModal} />
               );
             }

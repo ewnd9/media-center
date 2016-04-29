@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from './style.css';
+
 import Modal from 'react-modal';
 
 import * as api from './../api';
@@ -35,7 +37,8 @@ export default React.createClass({
     return {
       modalIsOpen: false,
       files: [],
-      socket
+      socket,
+      isWideScreen: Math.max(document.documentElement.clientWidth, window.innerWidth || 0) >= 950
     };
   },
   componentDidMount: function() {
@@ -61,17 +64,25 @@ export default React.createClass({
   render: function() {
     return (
       <div>
-        <div className="my-container container-fluid">
-          <div className="col-md-6 left-panel">
+        { this.state.isWideScreen && (
+          <div className={styles.container}>
             <MediaListContainer
+              className={styles.leftPanel}
               openModal={this.openModal}
               setPlayback={this.setPlayback}
-              files={this.state.files} />
+              files={this.state.files}
+              rightToLeft={true} />
+            <RightPanel
+              className={styles.rightPanel} />
           </div>
-          <div className="col-md-6 right-panel">
-            <RightPanel />
-          </div>
-        </div>
+        ) || (
+          <RightPanel
+            className={styles.rightPanel}
+            openModal={this.openModal}
+            setPlayback={this.setPlayback}
+            files={this.state.files}
+            showVideo={true} />
+        )}
 
         {
           this.state.playback && this.state.playback.status !== STOPPED && (

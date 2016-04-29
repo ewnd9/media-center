@@ -9,7 +9,7 @@
 
   cursor: pointer;
   text-align: left;
-  color: #FFF;
+  color: #EEE;
   text-decoration: none;
 
   border-color: transparent;
@@ -34,8 +34,13 @@
 
 .activeButton {
   font-weight: bold;
+  color: #FFF;
 }
 
 .textAlignRight {
   text-align: right;
+}
+
+.marginBottom20 {
+  margin-bottom: 20px;
 }
