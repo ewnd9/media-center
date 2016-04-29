@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from '../theme.css';
 
 import ScreenshotsGallery from './../screenshots-gallery/screenshots-gallery';
 import TraktReport from './../trakt-report';
@@ -7,7 +8,7 @@ const REPORT = 'REPORT';
 const SCREENSHOTS = 'SCREENSHOTS';
 
 const buttons = [
-  { label: 'Trakt Report', value: REPORT },
+  { label: 'Upcoming', value: REPORT },
   { label: 'Screenshots', value: SCREENSHOTS }
 ];
 
@@ -23,14 +24,14 @@ export default React.createClass({
 
     return (
       <div>
-        <div className="btn-group btn-group-sm top-options" role="group">
+        <div className={styles.buttons} role="group">
           {
             buttons.map(({ label, value }) => {
               return (
                 <button type="button"
                         onClick={this.setMode.bind(this, value)}
                         key={value}
-                        className={`btn btn-default ${this.state.mode === value ? 'active' : ''}`}>
+                        className={`${styles.button} ${this.state.mode === value ? styles.activeButton : ''}`}>
                   { label }
                 </button>
               );

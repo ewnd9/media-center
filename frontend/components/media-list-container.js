@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from './theme.css';
+
 import MediaList from './media-list';
 
 export default React.createClass({
@@ -15,15 +17,15 @@ export default React.createClass({
     return (
       <div>
         <div className="top-options-wrapper">
-          <div className="btn-group btn-group-sm top-options" role="group">
+          <div className={styles.buttons} role="group">
             <button type="button"
                     onClick={this.setMode.bind(this, 'all')}
-                    className={`btn btn-default ${this.state.mode === 'all' ? 'active' : ''}`}>
+                    className={`${styles.button} ${this.state.mode === 'all' ? styles.activeButton : ''}`}>
               All
             </button>
             <button type="button"
                     onClick={this.setMode.bind(this, 'not-watched')}
-                    className={`btn btn-default ${this.state.mode === 'not-watched' ? 'active' : ''}`}>
+                    className={`${styles.button} ${this.state.mode === 'not-watched' ? styles.activeButton : ''}`}>
               Not Watched
             </button>
           </div>
