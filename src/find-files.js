@@ -3,6 +3,7 @@ import fs from 'fs';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import split from 'split-torrent-release';
+import path from 'path';
 
 const exts = '(mkv|mp4|avi)';
 
@@ -20,8 +21,8 @@ function parseVideoFiles(db, allVideos) {
 
     const media = {
       file: video,
-      dir: data.slice(0, data.length - 1).join('/'),
-      fileName: data[data.length - 1],
+      dir: path.dirname(video),
+      fileName: path.basename(video),
       dirName: data[data.length - 2],
       birthtime: fs.statSync(video).birthtime,
     };

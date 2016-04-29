@@ -28,9 +28,7 @@ import {
   pastDate
 } from './fixtures/create-fs';
 
-test('#findFiles', async t => {
-  const db = createDb();
-  
+async function addMockFile(db) {
   const res = await db.File.add([testDir, showFolder, showFile1].join('/'), {
     type: 'show',
     title: showTitle,
@@ -38,6 +36,25 @@ test('#findFiles', async t => {
     e: 1,
     imdb: showImdb
   });
+
+  return res;
+}
+
+test('#findFiles add new file', async t => {
+  const db = createDb();
+  const res = await addMockFile(db);
+
+  const data = await db.Prefix.db.allDocs({
+    include_docs: true
+  });
+
+  t.truthy(data.total_rows === 1);
+  t.truthy(data.rows[0].id === 'prefix:Master of None');
+});
+
+test('#findFiles', async t => {
+  const db = createDb();
+  const res = await addMockFile(db);
 
   mockFs();
 
