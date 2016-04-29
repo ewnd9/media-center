@@ -4,6 +4,7 @@ import styles from './style.css';
 import Modal from 'react-modal';
 
 import * as api from './../api';
+
 import {
   UPDATE_PLAYBACK,
   RELOAD_FILES,
@@ -13,8 +14,8 @@ import {
 } from './../constants';
 
 import MediaListContainer from './media-list-container/media-list-container';
-import MediaDialog from './media-dialog';
-import Playback from './playback';
+import MediaDialog from './media-dialog/media-dialog';
+import Playback from './playback/playback';
 import RightPanel from './right-panel/right-panel';
 
 const customStyles = {

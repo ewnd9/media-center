@@ -1,7 +1,7 @@
 import React from 'react';
 import Spinner from 'react-spinkit';
 
-import * as api from './../api';
+import * as api from '../../api';
 import TraktReportItem from './trakt-report-item';
 
 export default React.createClass({

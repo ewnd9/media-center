@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ScreenshotsGallery from './../screenshots-gallery/screenshots-gallery';
-import TraktReport from './../trakt-report';
+import TraktReport from './../trakt-report/trakt-report';
 import MediaListContainer from '../media-list-container/media-list-container';
 
 import Tabs from '../ui/tabs/tabs';

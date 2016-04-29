@@ -1,12 +1,12 @@
 import React from 'react';
-import { formatTitle } from './../utils';
+import { formatTitle } from '../../utils';
 
 import {
   PLAYING,
   PAUSED
-} from './../constants';
+} from '../../constants';
 
-import IconButton from './icon-button';
+import IconButton from '../ui/icon-button/icon-button';
 
 export default ({ playback, onPlay, onPause, onClose }) => {
   return (

@@ -1,9 +1,9 @@
 import React from 'react';
-import * as api from './../api';
+import * as api from '../../api';
 import Select from 'react-select';
 import { debounce } from 'lodash';
 
-import IconButton from './icon-button';
+import IconButton from '../ui/icon-button/icon-button';
 
 export default React.createClass({
   getInitialState: function() {
