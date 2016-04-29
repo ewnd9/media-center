@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-import * as api from './../api';
-import { formatTitle } from './../utils';
+import * as api from '../../api';
+import { formatTitle } from '../../utils';
 
 export default React.createClass({
   handleClick: function(file, position) {

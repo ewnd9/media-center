@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './theme.css';
+import styles from '../theme.css';
 
 import MediaList from './media-list';
 
