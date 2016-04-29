@@ -1,0 +1,14 @@
+.screenshot {
+  width: 300px;
+  margin-bottom: 20px;
+}
+
+.screenshot > img {
+  width: 100%;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

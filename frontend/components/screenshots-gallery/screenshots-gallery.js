@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from './style.css';
+
 import Spinner from 'react-spinkit';
 
 import * as api from './../../api';
@@ -20,13 +22,13 @@ export default React.createClass({
   render: function() {
     if (this.state.loaded) {
       return (
-        <div className="screenshots-gallery">
+        <div className={styles.gallery}>
           {
             this.state.screenshots.map(url => {
               return (
-                <img className="screenshot"
-                     src={`${api.baseUrl}/screenshots/${url}`}
-                     key={url} />
+                <div key={url} className={styles.screenshot}>
+                  <img src={`${api.baseUrl}/screenshots/${url}`} />
+                </div>
               );
             })
           }
