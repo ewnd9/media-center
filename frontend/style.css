@@ -77,23 +77,6 @@ a.progress-incomplete {
   margin-bottom: 10px;
 }
 
-.bottom-playback-panel-holder {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-.bottom-playback-panel {
-  background-color: black;
-  font-size: 16pt;
-  padding: 10px;
-}
-
-#playback {
-  text-align: center;
-}
-
 .btn-icon {
   margin-right: 10px;
 }

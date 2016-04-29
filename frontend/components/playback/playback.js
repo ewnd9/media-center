@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from './style.css';
+
 import { formatTitle } from '../../utils';
 
 import {
@@ -10,7 +12,7 @@ import IconButton from '../ui/icon-button/icon-button';
 
 export default ({ playback, onPlay, onPause, onClose }) => {
   return (
-    <div id="playback">
+    <div className={styles.container}>
       <IconButton icon="film">
         {playback.progress | 0}{'%'}
         {' '}
