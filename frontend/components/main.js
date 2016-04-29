@@ -10,7 +10,7 @@ import {
   STOPPED
 } from './../constants';
 
-import MediaListContainer from './media-list-container';
+import MediaListContainer from './media-list-container/media-list-container';
 import MediaDialog from './media-dialog';
 import Playback from './playback';
 import RightPanel from './right-panel/right-panel';

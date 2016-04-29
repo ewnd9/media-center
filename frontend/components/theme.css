@@ -29,3 +29,7 @@
 .activeButton {
   font-weight: bold;
 }
+
+.textAlignRight {
+  text-align: right;
+}
