@@ -68,9 +68,11 @@ function setupDb(db, media, [dbFiles, dbPrefixes]) {
   });
 }
 
+const UNRECOGNIZED = 'Unrecognized';
+
 function flattenVideos(rootDir, result) {
   const groupedByImdbObj = _.groupBy(result, item => {
-    return item.db && `${item.db.imdb}-${item.db.s}` || 'unrecognized';
+    return item.db && `${item.db.imdb}-${item.db.s}` || UNRECOGNIZED;
   });
 
   const groupedByImdb = _.map(groupedByImdbObj, (media, key) => ({ key, media }));
@@ -85,7 +87,7 @@ function flattenVideos(rootDir, result) {
   groupedByImdb.forEach(group => {
     _.sortBy(group.media, 'db.ep');
 
-    const media = group.media[0];
+    const media = group.media.find(media => media.db || media.recognition) || group.media[0];
     group.dir = media.dir;
 
     if (media.db && media.db.s) {
@@ -94,8 +96,10 @@ function flattenVideos(rootDir, result) {
 
       group.summary = `${title} (${scrobble} / ${group.media.length})`;
       group.watched = scrobble === group.media.length;
+    } else if (group.key === UNRECOGNIZED) {
+      group.summary = `${UNRECOGNIZED} (${group.media.length})`;
     } else {
-      const title = media.recognition && media.recognition.title || media.fileName;
+      const title = media.db && media.db.title || media.recognition && media.recognition.title || media.fileName;
       group.summary = `${title} ${group.media.length > 1 ? '( 0 / ' + group.media.length + ')' : ''}`;
     }
   });

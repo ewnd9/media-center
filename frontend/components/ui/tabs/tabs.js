@@ -31,7 +31,7 @@ export default React.createClass({
           }
         </div>
 
-        { React.createElement(el.component, el.getProps && el.getProps()) }
+        { React.createElement(el.component, el.getProps && el.getProps(active)) }
       </div>
     );
   }

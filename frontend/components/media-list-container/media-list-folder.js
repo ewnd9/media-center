@@ -2,6 +2,7 @@ import React from 'react';
 import styles from '../theme.css';
 
 import MediaListItem from './media-list-item';
+import { MEDIA_LIST_UNWATCHED } from '../../constants';
 
 export default React.createClass({
   getInitialState: function() {
@@ -16,10 +17,10 @@ export default React.createClass({
     return `folder:${this.props.file.dir}`;
   },
   render: function() {
-    const { level, file, rightToLeft } = this.props;
+    const { file, rightToLeft } = this.props;
     const summary = file.summary;
 
-    if (file.watched && this.props.mode === 'not-watched') {
+    if (file.watched && this.props.mode === MEDIA_LIST_UNWATCHED) {
       return null;
     }
 
@@ -28,7 +29,6 @@ export default React.createClass({
         <MediaListItem key={index}
                        file={media}
                        index={index}
-                       level={level + 1}
                        mode={this.props.mode}
                        rightToLeft={rightToLeft}
                        openModal={this.props.openModal} />
@@ -36,7 +36,7 @@ export default React.createClass({
     });
 
     return (
-      <div className={`${styles.marginBottom20} ${rightToLeft && styles.textAlignRight || ''} level-${level}`}>
+      <div className={`${styles.marginBottom20} ${rightToLeft && styles.textAlignRight || ''}`}>
         <a className="title file-title" onClick={this.toggleHidden}>{summary}</a>
         {
           !this.state.hidden && childs || ''

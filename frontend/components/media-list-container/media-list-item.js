@@ -1,5 +1,6 @@
 import React from 'react';
-import styles from '../theme.css';
+import styles from './style.css';
+import theme from '../theme.css';
 
 import moment from 'moment';
 import * as api from '../../api';
@@ -48,22 +49,23 @@ export default React.createClass({
       item.db.scrobbleAtDiff = moment(item.db.scrobbleAt).fromNow();
     }
 
-    const level = this.props.level || 0;
-
     if (this.props.mode === 'not-watched' && item.db && (item.db.scrobble || item.db.hidden)) {
       return null;
     }
 
     return (
-      <div className={`${styles.marginBottom20} ${rightToLeft && styles.textAlignRight || ''} level-${level}`}
+      <div className={`${theme.marginBottom20} ${rightToLeft && theme.textAlignRight || ''} ${styles.file}`}
            key={file}
            tabIndex={index + 1}>
 
         <div>
-          <a className="title file-title" onClick={this.handleClick.bind(this, item, undefined)}>
-            { title }
-          </a>
-          <div className="fullpath">
+          <div>
+            <a onClick={this.handleClick.bind(this, item, undefined)}>
+              { title }
+            </a>
+            <span className={`glyphicon glyphicon-film ${styles.fileIcon}`} />
+          </div>
+          <div className={styles.filePath}>
             { progress && (
               <a className={progressClass} onClick={this.handleClick.bind(this, item, item.db.position)}>
                 { progress + '%' }

@@ -6,6 +6,7 @@ html, body {
   box-sizing: border-box;
 
   color: #fff;
+  font-size: 18px;
 }
 
 *, *:before, *:after {
@@ -16,37 +17,8 @@ a {
   cursor: pointer;
 }
 
-.container-fluid {
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.my-container {
-  color: #FFF !important;
-  display: flex;
-}
-
 a {
   color: #FFF !important;
-}
-
-.level-2 {
-  margin-top: 20px;
-  margin-right: 20px;
-}
-
-.title, .fullpath {
-  display: block;
-}
-
-.title {
-  font-size: 14pt;
-}
-
-.fullpath {
-  font-size: 10pt;
 }
 
 .MediaDialog {
