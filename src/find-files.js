@@ -89,18 +89,21 @@ function flattenVideos(rootDir, result) {
 
     const media = group.media.find(media => media.db || media.recognition) || group.media[0];
     group.dir = media.dir;
+    group.media.forEach(media => {
+      media.watched = media.db && !!media.db.scrobble;
+    });
 
     if (media.db && media.db.s) {
       const title = `${media.db.title} season ${media.db.s}`;
-      const scrobble = group.media.filter(_ => _.db && _.db.scrobble).length;
+      const unwatchedCount = group.media.filter(_ => !_.watched).length;
 
-      group.summary = `${title} (${scrobble} / ${group.media.length})`;
-      group.watched = scrobble === group.media.length;
+      group.summary = `${title} (${unwatchedCount} / ${group.media.length})`;
+      group.watched = unwatchedCount === 0;
     } else if (group.key === UNRECOGNIZED) {
       group.summary = `${UNRECOGNIZED} (${group.media.length})`;
     } else {
       const title = media.db && media.db.title || media.recognition && media.recognition.title || media.fileName;
-      group.summary = `${title} ${group.media.length > 1 ? '( 0 / ' + group.media.length + ')' : ''}`;
+      group.summary = `${title} ${group.media.length > 1 ? '(' + group.media.length + ')' : ''}`;
     }
   });
 

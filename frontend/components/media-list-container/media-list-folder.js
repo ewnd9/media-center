@@ -17,23 +17,26 @@ export default React.createClass({
     return `folder:${this.props.file.dir}`;
   },
   render: function() {
-    const { file, rightToLeft } = this.props;
+    const { file, rightToLeft, mode } = this.props;
     const summary = file.summary;
+    const isUnwatched = mode === MEDIA_LIST_UNWATCHED;
 
-    if (file.watched && this.props.mode === MEDIA_LIST_UNWATCHED) {
+    if (file.watched && isUnwatched) {
       return null;
     }
 
-    const childs = file.media.map((media, index) => {
-      return (
-        <MediaListItem key={index}
-                       file={media}
-                       index={index}
-                       mode={this.props.mode}
-                       rightToLeft={rightToLeft}
-                       openModal={this.props.openModal} />
-      );
-    });
+    const childs = file.media
+      .filter(_ => !isUnwatched || !_.watched)
+      .map((media, index) => {
+        return (
+          <MediaListItem key={index}
+                         file={media}
+                         index={index}
+                         mode={this.props.mode}
+                         rightToLeft={rightToLeft}
+                         openModal={this.props.openModal} />
+        );
+      });
 
     return (
       <div className={`${styles.marginBottom20} ${rightToLeft && styles.textAlignRight || ''}`}>
