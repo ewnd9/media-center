@@ -1,4 +1,5 @@
-import model from '../libs/pouchdb-repository-factory/';
+import PouchDB from 'pouchdb';
+import createModel from '../libs/pouchdb-repository-factory/';
 
 import File from './file';
 import Prefix from './prefix';
@@ -12,7 +13,9 @@ export default dbPath => {
   const models = Object
     .keys(initializers)
     .reduce((result, key) => {
-      result[key] = model(dbPath, key.toLowerCase(), initializers[key].createId);
+      const db = new PouchDB(`${dbPath}-${key.toLowerCase()}`);
+      result[key] = createModel(db, initializers[key].createId);
+
       return result;
     }, {});
 

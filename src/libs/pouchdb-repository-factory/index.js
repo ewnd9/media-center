@@ -1,7 +1,4 @@
-import PouchDB from 'pouchdb';
-
-export default (dbPath, name, createId) => {
-  const db = new PouchDB(`${dbPath}-${name}`);
+export default (db, createId) => {
   return new Model(db, createId);
 };
 
