@@ -130,15 +130,15 @@ export function startOmxPlayer(file, prevPosition, listeners = {}) {
   });
 }
 
-export default (trakt, addToHistory, db, media, file, prevPosition) => {
+export default (trakt, addToHistory, filesService, media, file, prevPosition) => {
   const listeners = {
     onPlay: progress => trakt.startScrobble(media, progress),
     onPause: progress => trakt.pauseScrobble(media, progress),
     onStop: progress => trakt.pauseScrobble(media, progress),
     getInfo: result => ({ ...result, media }),
     onPositionUpdate: (position, duration) => {
-      db.File
-        .update(file, { position, duration })
+      filesService
+        .updateFile(file, { position, duration })
         .then(res => {
           const pos = position / duration * 100;
 

@@ -1,7 +1,7 @@
 import express from 'express';
 import execa from 'execa';
 
-export default play => {
+export default playerService => {
   const router = express.Router();
 
   router.post('/api/v1/youtube', (req, res, next) => {
@@ -14,7 +14,7 @@ export default play => {
     return execa('youtube-dl', ['-f', '22', '-g', query])
       .then(({ stdout }) => {
         const url = stdout.split('\n')[0];
-        return play(url);
+        return playerService.startYoutube(url);
       })
       .then(() => res.json({ status: 'ok' }))
       .catch(err => next(err));

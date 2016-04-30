@@ -13,6 +13,9 @@ import mkdirp from 'mkdirp';
 import got from 'got';
 import path from 'path';
 
+import FilesService from './services/files-service';
+import PlayerService from './services/player-service';
+
 import {
   UPDATE_PLAYBACK,
   STOP_PLAYBACK,
@@ -45,7 +48,6 @@ const traktId = '412681ab85026009c32dc6e525ba6226ff063aad0c1a374def0c8ee171cf121
 const traktSecret = '714f0cb219791a0ecffec788fd7818c601397b95b2b3e8f486691366954902fb';
 const trakt = new Trakt(traktId, traktSecret, TRAKT_TOKEN);
 
-const db = initDb(DB_PATH + '/' + 'db');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
@@ -55,16 +57,6 @@ app.use(morgan('request: :remote-addr :method :url :status'));
 app.use(express.static('public'));
 app.use('/screenshots', express.static(SCREENSHOTS_PATH));
 app.use(cors());
-
-let play;
-let startOmxPlayer;
-
-if (process.env.NODE_ENV === 'production') {
-  play = require('./players/omx').default;
-  startOmxPlayer = require('./players/omx').startOmxPlayer;
-} else {
-  play = require('./players/mock-player').default;
-}
 
 const analyticsUrl = process.env.ANALYTICS_URL;
 
@@ -101,8 +93,12 @@ import VideoRouter from './routes/index';
 import ScreenshotsRouter from './routes/screenshots';
 import YoutubeRouter from './routes/youtube';
 
-app.use('/', VideoRouter(MEDIA_PATH, db, trakt, play));
-app.use('/', YoutubeRouter(startOmxPlayer));
+const db = initDb(DB_PATH + '/' + 'db');
+const filesService = new FilesService(db, MEDIA_PATH);
+const playerService = new PlayerService();
+
+app.use('/', VideoRouter(filesService, trakt, playerService));
+app.use('/', YoutubeRouter(playerService));
 app.use('/', ScreenshotsRouter(SCREENSHOTS_PATH));
 
 app.use((err, req, res, next) => {
@@ -145,6 +141,7 @@ chokidar
     ignoreInitial: true
   })
   .on('all', () => {
+    process.nextTick(() => filesService.renewFindAllFiles);
     io.emit(RELOAD_FILES);
   });
 

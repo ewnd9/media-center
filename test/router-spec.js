@@ -7,6 +7,7 @@ import Promise from 'bluebird';
 import createServer from './fixtures/create-server';
 import createDb from './fixtures/create-db';
 
+import FilesService from '../src/services/files-service';
 import Router from './../src/routes/index';
 
 const port = 4005;
@@ -33,7 +34,9 @@ test('/api/v1/files/scrobble', async t => {
     getReport
   };
 
-  const router = Router(null, db, trakt, null);
+  const filesService = new FilesService(db, '');
+
+  const router = Router(filesService, trakt, null);
   const server = await createServer(port, router);
 
   const filename = 'movie.avi';
