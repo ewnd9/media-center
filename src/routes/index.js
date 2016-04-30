@@ -51,7 +51,7 @@ export default (filesService, trakt, playerService) => {
 
   router.post('/api/v1/playback/start', (req, res) => {
     filesService
-      .add(req.body.filename, req.body.media);
+      .addFile(req.body.filename, req.body.media);
 
     playerService
       .play(trakt, addToHistory, filesService, req.body.media, req.body.filename, req.body.position);
@@ -61,7 +61,7 @@ export default (filesService, trakt, playerService) => {
 
   router.post('/api/v1/playback/info', (req, res, next) => {
     filesService
-      .add(req.body.filename, req.body.media)
+      .addFile(req.body.filename, req.body.media)
       .then(() => res.json({ status: 'ok '}))
       .catch(err => next(err));
   });
