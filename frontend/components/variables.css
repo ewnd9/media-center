@@ -1,0 +1,4 @@
+@custom-media --full-hd-viewport (min-width: 1401px);
+@custom-media --large-gallery-viewport (max-width: 1400px);
+@custom-media --large-viewport (max-width: 1100px);
+@custom-media --mobile-viewport (max-width: 500px);

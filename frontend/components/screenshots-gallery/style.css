@@ -1,14 +1,44 @@
+/* there was flex but couldn't find how to add margin between items so replaced */
+@import '../variables.css';
+
 .screenshot {
-  width: 300px;
-  margin-bottom: 20px;
+  float: left;
+  position: relative;
+}
+
+@media (--full-hd-viewport) {
+  .screenshot {
+    width: calc(25% - 16px);
+    margin-bottom: 16px;
+  }
+
+  .screenshot:not(:nth-child(4n)) {
+    margin-right: 16px;
+  }
+}
+
+@media (--large-gallery-viewport) {
+  .screenshot {
+    width: calc(33% - 16px);
+    margin-bottom: 16px;
+  }
+
+  .screenshot:not(:nth-child(3n)) {
+    margin-right: 16px;
+  }
+}
+
+@media (--mobile-viewport) {
+  .screenshot {
+    width: calc(50% - 16px);
+    margin-bottom: 16px;
+  }
+
+  .screenshot:not(:nth-child(2n)) {
+    margin-right: 16px;
+  }
 }
 
 .screenshot > img {
   width: 100%;
-}
-
-.gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
 }

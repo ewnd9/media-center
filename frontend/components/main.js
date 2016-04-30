@@ -33,20 +33,31 @@ const customStyles = {
 require('script!socket.io-client/socket.io.js');
 const socket = io(api.baseUrl);
 
+function isWideScreen() {
+  return window.innerWidth >= 950;
+}
+
 export default React.createClass({
   getInitialState: function() {
     return {
       modalIsOpen: false,
       files: [],
       socket,
-      isWideScreen: Math.max(document.documentElement.clientWidth, window.innerWidth || 0) >= 950
+      isWideScreen: isWideScreen()
     };
   },
   componentDidMount: function() {
+    window.addEventListener('resize', this.handleResize);
     socket.on(UPDATE_PLAYBACK, playback => this.setState({ playback }));
     socket.on(RELOAD_FILES, () => this.getFiles());
 
     this.getFiles();
+  },
+  componentWillUnmount: function() {
+    window.removeEventListener('resize', this.handleResize);
+  },
+  handleResize() {
+    this.setState({ isWideScreen: isWideScreen() });
   },
   getFiles: function() {
     api.findFiles().then(files => this.setState({ files }));
