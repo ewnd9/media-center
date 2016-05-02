@@ -1,8 +1,6 @@
 import React from 'react';
 import styles from './style.css';
 
-import Modal from 'react-modal';
-
 import * as api from './../api';
 
 import {
@@ -14,20 +12,9 @@ import {
 } from './../constants';
 
 import MediaListContainer from './media-list-container/media-list-container';
-import MediaDialog from './media-dialog/media-dialog';
 import Playback from './playback/playback';
 import RightPanel from './right-panel/right-panel';
-
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
+import MediaModal from './media-modal/media-modal';
 
 /* global io */
 require('script!socket.io-client/socket.io.js');
@@ -65,8 +52,7 @@ export default React.createClass({
   openModal: function(file) {
     this.setState({ modalIsOpen: true, file });
   },
-  closeModal: function(event) {
-    event.preventDefault();
+  closeModal: function() {
     this.setState({ modalIsOpen: false });
     this.getFiles();
   },
@@ -108,12 +94,10 @@ export default React.createClass({
           )
         }
 
-        <Modal
+        <MediaModal
           isOpen={this.state.modalIsOpen}
-          style={customStyles}
-          onRequestClose={this.closeModal}>
-          <MediaDialog closeModal={this.closeModal} file={this.state.file} />
-        </Modal>
+          onRequestClose={this.closeModal}
+          file={this.state.file} />
       </div>
     );
   }

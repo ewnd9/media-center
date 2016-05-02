@@ -1,0 +1,18 @@
+.container {
+  width: 100%;
+  color: #333;
+}
+
+.container form {
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.container .field-group {
+  margin: 10px;
+}
+
+.controls {
+  margin-top: 50px !important;
+}

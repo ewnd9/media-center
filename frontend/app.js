@@ -11,9 +11,14 @@ import notify from './notify';
 ReactDOM.render(<Main />, document.getElementById('root'));
 
 window.onerror = (msg, url, line, col, err) => {
-  notify.error(err.stack.split('\n').join('<br />'));
+  logError(err);
   return true;
 };
 window.addEventListener('unhandledrejection', event => {
-  notify.error(event.detail.reason.stack.split('\n').join('<br />'));
+  logError(event.detail.reason);
 });
+
+function logError(err) {
+  notify.error(err.stack.split('\n').join('<br />'));
+  console.error(err.stack || err);
+}

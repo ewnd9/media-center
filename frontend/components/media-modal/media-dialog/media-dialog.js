@@ -1,9 +1,11 @@
 import React from 'react';
-import * as api from '../../api';
-import Select from 'react-select';
-import { debounce } from 'lodash';
+import styles from './style.css';
 
-import IconButton from '../ui/icon-button/icon-button';
+import * as api from '../../../api';
+import Select from 'react-select';
+
+import IconButton from '../../ui/icon-button/icon-button';
+import MediaDialogAutosuggest from '../media-dialog-autosuggest/media-dialog-autosuggest';
 
 export default React.createClass({
   getInitialState: function() {
@@ -26,39 +28,6 @@ export default React.createClass({
         }
       };
     }
-  },
-  componentDidMount: function() {
-    if (this.props.file.recognition) {
-      this.getSelectOptions(this.props.file.recognition.title)
-        .then(res => {
-          this.setState({ imdb: res.options[0] });
-        });
-    }
-  },
-  getSelectOptions: function(input, callback) {
-    return api
-      .getMediaSuggestion(input, this.state.type.value)
-      .then(options => {
-        let i = 0;
-
-        options.forEach(item => {
-          item.value = item.value || i++;
-        });
-
-        if (callback) {
-          callback(null, { options });
-        }
-
-        return { options };
-      }, err => {
-        console.log(err);
-
-        if (callback) {
-          callback(err);
-        }
-
-        return { options: [] };
-      });
   },
   onChangeInput: function(field, event) {
     const value = event.label && event.value ? event : event.target.value;
@@ -99,9 +68,12 @@ export default React.createClass({
       fn(event);
     }
   },
+  handleImdbUpdate(value, label) {
+    this.setState({ imdb: { value, label } });
+  },
   render: function() {
     return (
-      <div className="MediaDialog">
+      <div className={styles.container}>
         <h2>{this.props.file.filename}</h2>
         <form>
           <div className="field-group">
@@ -114,13 +86,10 @@ export default React.createClass({
           </div>
 
           <div className="field-group">
-            <Select.Async
-              name="imdb"
-              loadOptions={debounce(this.getSelectOptions, 200)}
-              value={this.state.imdb}
-              minimumInput={1}
-              onChange={this.onChangeInput.bind(this, 'imdb')}
-            />
+            <MediaDialogAutosuggest
+              recognition={this.props.file.recognition}
+              type={this.state.type.value}
+              updateImdb={this.handleImdbUpdate} />
           </div>
 
           {
@@ -139,7 +108,7 @@ export default React.createClass({
             )
           }
 
-          <div className="field-group">
+          <div className={`field-group ${styles.controls}`}>
             <IconButton icon="play" disabled={this.isNotValid()} onClick={this.onSaveClick.bind(this, this.handlePlaying)}>
               Play
             </IconButton>
