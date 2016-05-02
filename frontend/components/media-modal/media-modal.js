@@ -8,11 +8,6 @@ export default React.createClass({
     const { isOpen, onRequestClose, file } = this.props;
 
     const customStyles = {
-      overlay: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      },
       content : {
         position: 'static',
         width: '600px'
