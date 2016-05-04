@@ -1,26 +1,11 @@
-import proxy from '../utils/proxy';
-
 function PlayerService() {
-  if (process.env.NODE_ENV === 'production') {
-    const player = require('../players/omx');
-
-    this.startFs = proxy(player, player.default);
-    this.startYoutube = player.startOmxPlayer;
+  if (process.env.PLAYER === 'vlc') {
+    return require('../players/vlc').default;
+  } else if (process.env.PLAYER === 'mock') {
+    return require('../players/mock-player').default;
   } else {
-    this.startFs = require('../players/mock-player').default;
+    return require('../players/omx').default;
   }
 }
 
-PlayerService.prototype.play = function() {
-  return this.startFs(arguments)
-    .then(player => {
-      this.player = player;
-      return player;
-    });
-};
-
-PlayerService.prototype.getInfo = function() {
-  return this.player && this.player.getInfo() || { status: null };
-};
-
-export default PlayerService;
+export default PlayerService();

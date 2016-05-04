@@ -95,10 +95,7 @@ import YoutubeRouter from './routes/youtube';
 
 const db = initDb(DB_PATH + '/' + 'db');
 const filesService = new FilesService(db, MEDIA_PATH);
-// const playerService = new PlayerService();
-
-import VlcPlayer from './players/vlc';
-const playerService = new VlcPlayer(filesService, trakt);
+const playerService = new PlayerService(filesService, trakt);
 
 storage.on(USER_KEY_PRESS, key => {
   playerService.onKeyPress(key);

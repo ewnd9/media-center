@@ -1,12 +1,15 @@
-import { UPDATE_PLAYBACK, PLAYING, PAUSED, STOPPED } from '../constants';
+import { UPDATE_PLAYBACK, PLAYING, PAUSED, STOPPED, STOP_PLAYBACK } from '../constants';
 import storage from '../storage';
 
 import { registerKeys, unregisterKeys } from '../x11';
+import exitHook from 'exit-hook';
 
 function Player(filesService, trakt) {
   this.filesService = filesService;
   this.status = STOPPED;
   this.trakt = trakt;
+
+  exitHook(() => this.stop());
 }
 
 Player.prototype.play = function({ uri, media, position, traktScrobble }) {
@@ -21,6 +24,8 @@ Player.prototype.play = function({ uri, media, position, traktScrobble }) {
   if (this.traktScrobble) {
     this.trakt.startScrobble(media, this.getProgress());
   }
+
+  setTimeout(() => this.emitUpdate(), 1000);
 };
 
 Player.prototype.togglePlay = function() {
@@ -33,16 +38,20 @@ Player.prototype.togglePlay = function() {
 
 Player.prototype.resume = function() {
   this.status = PLAYING;
-  registerKeys();
+  // registerKeys();
+
+  this.emitUpdate();
 };
 
 Player.prototype.pause = function() {
   this.status = PAUSED;
-  unregisterKeys();
+  // unregisterKeys();
 
   if (this.traktScrobble) {
     this.trakt.pauseScrobble(this.media, this.getProgress());
   }
+
+  this.emitUpdate();
 };
 
 Player.prototype.stop = function() {
@@ -51,6 +60,11 @@ Player.prototype.stop = function() {
   if (this.traktScrobble) {
     this.trakt.pauseScrobble(this.media, this.getProgress());
   }
+
+  this.emitUpdate();
+  storage.emit(STOP_PLAYBACK);
+
+  unregisterKeys();
 };
 
 Player.prototype.getInfo = function() {
@@ -76,6 +90,7 @@ Player.prototype.onKeyPress = function(e) {
 let positionCount = 0;
 
 Player.prototype.updatePosition = function(position) {
+  this.position = position;
   this.emitUpdate();
 
   if (positionCount % 10 === 0) {

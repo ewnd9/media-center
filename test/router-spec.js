@@ -11,7 +11,7 @@ import FilesService from '../src/services/files-service';
 import Router from './../src/routes/index';
 import VlcPlayer from '../src/players/vlc';
 
-const port = 4005;
+const port = 4008;
 const post = async (url, body) => {
   const response = await got(`http://localhost:${port}${url}`, {
     method: 'POST',

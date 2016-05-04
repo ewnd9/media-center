@@ -60,8 +60,7 @@ VlcPlayer.prototype.stop = function () {
 
 VlcPlayer.prototype.startPolling = function() {
   this.poller = setInterval(() => {
-    this.position = this.player.position * this.duration;
-    this.updatePosition(this.position);
+    this.updatePosition(this.player.position * this.duration);
   }, 1000);
 };
 
