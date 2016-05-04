@@ -4,7 +4,7 @@ const findAll = require('./utils/db-find-all');
 
 findAll(process.argv[2], process.argv[3])
   .then(res => {
-    console.log(res.result);
+    console.log(require('util').inspect(res.result, { depth: null }));
   })
   .catch(err => console.log(err.stack || err));
 

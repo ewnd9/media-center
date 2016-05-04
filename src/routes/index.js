@@ -7,15 +7,6 @@ export default (filesService, trakt, playerService) => {
   const router = express.Router();
   const cache = new Cache();
 
-  const addToHistory = (filename, media) => {
-    return trakt
-      .addToHistory(media)
-      .then(() => filesService.updateFile(filename, {
-        scrobble: true,
-        scrobbleAt: new Date().toISOString()
-      }));
-  };
-
   router.get('/api/v1/files', (req, res, next) => {
     filesService
       .findAllFiles()
@@ -54,7 +45,7 @@ export default (filesService, trakt, playerService) => {
       .addFile(req.body.filename, req.body.media);
 
     playerService
-      .play(trakt, addToHistory, filesService, req.body.media, req.body.filename, req.body.position);
+      .play({ media: req.body.media, uri: req.body.filename, position: req.body.position, traktScrobble: true });
 
     res.json({ status: 'ok' });
   });
@@ -67,7 +58,8 @@ export default (filesService, trakt, playerService) => {
   });
 
   router.post('/api/v1/files/scrobble', (req, res, next) => {
-    addToHistory(req.body.filename, req.body.media)
+    playerService
+      .addToHistory(req.body.filename, req.body.media)
       .then(() => res.json({ status: 'ok' }))
       .catch(err => next(err));
   });

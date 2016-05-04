@@ -9,6 +9,7 @@ import createDb from './fixtures/create-db';
 
 import FilesService from '../src/services/files-service';
 import Router from './../src/routes/index';
+import VlcPlayer from '../src/players/vlc';
 
 const port = 4005;
 const post = async (url, body) => {
@@ -35,8 +36,9 @@ test('/api/v1/files/scrobble', async t => {
   };
 
   const filesService = new FilesService(db, '');
+  const player = new VlcPlayer(filesService, trakt);
 
-  const router = Router(filesService, trakt, null);
+  const router = Router(filesService, trakt, player);
   const server = await createServer(port, router);
 
   const filename = 'movie.avi';
@@ -50,7 +52,7 @@ test('/api/v1/files/scrobble', async t => {
     media
   });
 
-  t.is(true, addToHistory.calledOnce);
+  t.truthy(addToHistory.calledOnce === true);
   t.deepEqual(media, addToHistory.firstCall.args[0]);
 
   const d1 = await db.File.get(filename);
