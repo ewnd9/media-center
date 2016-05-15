@@ -1,11 +1,7 @@
 import express from 'express';
-import Cache from '../utils/cache';
 
-const REPORT_CACHE = 'REPORT_CACHE';
-
-export default (filesService, trakt, playerService) => {
+export default ({ filesService, playerService }) => {
   const router = express.Router();
-  const cache = new Cache();
 
   router.get('/api/v1/files', (req, res, next) => {
     filesService
@@ -77,24 +73,6 @@ export default (filesService, trakt, playerService) => {
       .then(() => res.json({ status: 'ok' }))
       .catch(err => next(err));
   });
-
-  const formatSuggestion = media => {
-    return {
-      value: media.ids.imdb,
-      label: `${media.title} (${media.year})`
-    };
-  };
-
-  router.get('/api/v1/suggestions', (req, res) => {
-    trakt
-      .search(req.query.title, req.query.type)
-      .then(data => {
-        res.json(data.map(media => formatSuggestion(media[req.query.type])));
-      })
-      .catch(() => res.json([]));
-  });
-
-  router.get('/api/v1/report', cache.expressResponse(REPORT_CACHE, trakt.getReport.bind(trakt)));
 
   return router;
 };

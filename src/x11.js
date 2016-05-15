@@ -106,7 +106,10 @@ export const registerKeys = () => {
   registerEvents(keyPressEvents);
 };
 
-registerEvents(globalEvents);
+
+if (process.env.NODE_ENV === 'production') {
+  registerEvents(globalEvents);
+}
 
 export const unregisterEvents = events => {
   if (X) {

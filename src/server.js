@@ -89,6 +89,7 @@ storage.on(USER_OPEN_BROWSER, () => {
 import VideoRouter from './routes/index';
 import ScreenshotsRouter from './routes/screenshots';
 import YoutubeRouter from './routes/youtube';
+import TraktRouter from './routes/trakt';
 
 const db = initDb(DB_PATH + '/' + 'db');
 
@@ -99,9 +100,10 @@ storage.on(USER_KEY_PRESS, key => {
   services.playerService.onKeyPress(key);
 });
 
-app.use('/', VideoRouter(services.filesService, trakt, services.playerService));
-app.use('/', YoutubeRouter(services.playerService));
+app.use('/', VideoRouter(services));
+app.use('/', YoutubeRouter(services));
 app.use('/', ScreenshotsRouter(SCREENSHOTS_PATH));
+app.use('/', TraktRouter(services));
 
 app.use((err, req, res, next) => {
   if (!err) {
