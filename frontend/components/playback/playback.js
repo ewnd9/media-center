@@ -16,7 +16,7 @@ export default ({ playback, onPlay, onPause, onClose }) => {
       <IconButton icon="film">
         {playback.progress | 0}{'%'}
         {' '}
-        {formatTitle(playback.media)}
+        {playback.media && formatTitle(playback.media) || playback.file}
       </IconButton>
 
       { playback.status === PAUSED && (

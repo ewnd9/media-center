@@ -41,11 +41,15 @@ export default (filesService, trakt, playerService) => {
   });
 
   router.post('/api/v1/playback/start', (req, res) => {
-    filesService
-      .addFile(req.body.filename, req.body.media);
+    const noScrobble = req.body.noScrobble;
+
+    if (!noScrobble) {
+      filesService
+        .addFile(req.body.filename, req.body.media);
+    }
 
     playerService
-      .play({ media: req.body.media, uri: req.body.filename, position: req.body.position, traktScrobble: true });
+      .play({ media: req.body.media, uri: req.body.filename, position: req.body.position, traktScrobble: !noScrobble });
 
     res.json({ status: 'ok' });
   });

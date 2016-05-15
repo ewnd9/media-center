@@ -42,10 +42,10 @@ export default React.createClass({
       ep: this.state.ep
     };
   },
-  handlePlaying: function(event) {
+  handlePlaying: function(event, noScrobble) {
     event.preventDefault();
 
-    api.playFile(this.props.file.file, this.getInfo())
+    api.playFile(this.props.file.file, noScrobble ? {} : this.getInfo(), null, noScrobble)
       .then(() => this.props.closeModal(event));
   },
   handleSaveInfo: function(event) {
@@ -109,16 +109,19 @@ export default React.createClass({
           }
 
           <div className={`field-group ${styles.controls}`}>
-            <IconButton icon="play" disabled={this.isNotValid()} onClick={this.onSaveClick.bind(this, this.handlePlaying)}>
+            <IconButton className={styles.buttonMarginBottom} icon="play" disabled={this.isNotValid()} onClick={this.onSaveClick.bind(this, this.handlePlaying)}>
               Play
             </IconButton>
-            <IconButton icon="floppy-saved" disabled={this.isNotValid()} onClick={this.onSaveClick.bind(this, this.handleSaveInfo)}>
+            <IconButton className={styles.buttonMarginBottom} icon="floppy-saved" disabled={this.isNotValid()} onClick={this.onSaveClick.bind(this, this.handleSaveInfo)}>
               Save & Close
             </IconButton>
-            <IconButton icon="tree-conifer" onClick={this.handleHide}>
+            <IconButton className={styles.buttonMarginBottom} icon="eye-close" onClick={e => this.handlePlaying(e, true)}>
+              Play Without Scrobble
+            </IconButton>
+            <IconButton className={styles.buttonMarginBottom} icon="tree-conifer" onClick={this.handleHide}>
               Hide File
             </IconButton>
-            <IconButton icon="remove" onClick={this.props.closeModal}>
+            <IconButton className={styles.buttonMarginBottom} icon="remove" onClick={this.props.closeModal}>
               Close
             </IconButton>
           </div>

@@ -34,11 +34,12 @@ export const post = (url, body) => {
   .catch(err => notify.error(err.message));
 };
 
-export const playFile = (filename, media, position) => {
+export const playFile = (filename, media, position, noScrobble) => {
   return post('/api/v1/playback/start', {
     filename,
     media,
-    position
+    position,
+    noScrobble
   });
 };
 
