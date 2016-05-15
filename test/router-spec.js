@@ -24,7 +24,7 @@ const post = async (url, body) => {
   return response.body;
 };
 
-test('/api/v1/files/scrobble', async t => {
+test.skip('/api/v1/files/scrobble', async t => {
   const db = createDb();
 
   const addToHistory = sinon.stub().returns(Promise.resolve());

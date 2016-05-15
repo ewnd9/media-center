@@ -28,6 +28,7 @@
   "author": "ewnd9 <ewndnine@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@ewnd9/registry": "^1.0.1",
     "bluebird": "^2.10.2",
     "body-parser": "^1.14.2",
     "chokidar": "^1.4.2",

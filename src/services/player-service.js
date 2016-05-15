@@ -1,4 +1,4 @@
-function PlayerService() {
+function getPlayer() {
   if (process.env.PLAYER === 'vlc') {
     return require('../players/vlc').default;
   } else if (process.env.PLAYER === 'mock') {
@@ -8,4 +8,7 @@ function PlayerService() {
   }
 }
 
-export default PlayerService();
+export default function(trakt) {
+  const PlayerService = getPlayer();
+  return new PlayerService(trakt);
+}

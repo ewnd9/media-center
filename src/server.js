@@ -13,9 +13,6 @@ import mkdirp from 'mkdirp';
 import got from 'got';
 import path from 'path';
 
-import FilesService from './services/files-service';
-import PlayerService from './services/player-service';
-
 import {
   UPDATE_PLAYBACK,
   STOP_PLAYBACK,
@@ -94,15 +91,16 @@ import ScreenshotsRouter from './routes/screenshots';
 import YoutubeRouter from './routes/youtube';
 
 const db = initDb(DB_PATH + '/' + 'db');
-const filesService = new FilesService(db, MEDIA_PATH);
-const playerService = new PlayerService(filesService, trakt);
+
+import initServices from './services/index';
+const services = initServices(db, MEDIA_PATH, trakt);
 
 storage.on(USER_KEY_PRESS, key => {
-  playerService.onKeyPress(key);
+  services.playerService.onKeyPress(key);
 });
 
-app.use('/', VideoRouter(filesService, trakt, playerService));
-app.use('/', YoutubeRouter(playerService));
+app.use('/', VideoRouter(services.filesService, trakt, services.playerService));
+app.use('/', YoutubeRouter(services.playerService));
 app.use('/', ScreenshotsRouter(SCREENSHOTS_PATH));
 
 app.use((err, req, res, next) => {
@@ -145,7 +143,7 @@ chokidar
     ignoreInitial: true
   })
   .on('all', () => {
-    process.nextTick(() => filesService.renewFindAllFiles);
+    process.nextTick(() => services.filesService.renewFindAllFiles);
     io.emit(RELOAD_FILES);
   });
 

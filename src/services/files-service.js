@@ -35,4 +35,6 @@ FilesService.prototype.updateFile = function() {
   return this._updateFile(arguments).then(this.renewFindAllFiles);
 };
 
-export default FilesService;
+export default function(db, mediaPath) {
+  return new FilesService(db, mediaPath);
+}

@@ -4,8 +4,7 @@ import storage from '../storage';
 import { registerKeys, unregisterKeys } from '../x11';
 import exitHook from 'exit-hook';
 
-function Player(filesService, trakt) {
-  this.filesService = filesService;
+function Player(trakt) {
   this.status = STOPPED;
   this.trakt = trakt;
 
@@ -95,7 +94,7 @@ Player.prototype.updatePosition = function(position) {
 
   if (positionCount % 10 === 0) {
     if (this.traktScrobble) {
-      this.filesService
+      this.services.filesService
         .updateFile(this.uri, { position, duration: this.duration })
         .then(res => {
           const pos = position / this.duration * 100;
@@ -121,7 +120,7 @@ Player.prototype.emitUpdate = function() {
 Player.prototype.addToHistory = function(filename, media) {
   return this.trakt
     .addToHistory(media)
-    .then(() => this.filesService.updateFile(filename, {
+    .then(() => this.services.filesService.updateFile(filename, {
       scrobble: true,
       scrobbleAt: new Date().toISOString()
     }));
