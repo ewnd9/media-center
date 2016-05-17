@@ -37,9 +37,14 @@ MarksService.prototype.add = function(data) {
     }));
 };
 
-MarksService.prototype.findAll = function() {
+MarksService.prototype.findAll = function(limit, since) {
   return this
-    .query(this.Mark.indexes.UPDATED_AT.name, { descending: true });
+    .query(this.Mark.indexes.UPDATED_AT.name, {
+      descending: true,
+      skip: since ? 1 : 0,
+      endkey: since, 
+      limit
+    });
 };
 
 export default function(models, storage) {
