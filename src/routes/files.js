@@ -10,28 +10,6 @@ export default ({ filesService, playerService }) => {
       .catch(err => next(err));
   });
 
-  router.post('/api/v1/files/existence', (req, res, next) => {
-    const query = req.body.query.reduce((total, curr) => {
-      total[curr] = false;
-      return total;
-    }, {});
-
-    filesService
-      .findAllFiles()
-      .then(folders => {
-        folders.forEach(folder => {
-          folder.media.forEach(media => {
-            if (typeof query[media.file] !== 'undefined') {
-              query[media.file] = true;
-            }
-          });
-        });
-
-        res.json(query);
-      })
-      .catch(err => next(err));
-  });
-
   router.get('/api/v1/playback/status', (req, res) => {
     res.json(playerService.getInfo());
   });

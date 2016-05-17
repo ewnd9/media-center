@@ -6,7 +6,7 @@ import HTTP from 'http';
 import socketIO from 'socket.io';
 import Bus from './bus';
 
-import VideoRouter from './routes/index';
+import FilesRouter from './routes/files';
 import ScreenshotsRouter from './routes/screenshots';
 import YoutubeRouter from './routes/youtube';
 import TraktRouter from './routes/trakt';
@@ -23,7 +23,7 @@ function createServer({ db, services, screenshotPath, port }) {
   app.use('/screenshots', express.static(screenshotPath));
   app.use(cors());
 
-  app.use('/', VideoRouter(services));
+  app.use('/', FilesRouter(services));
   app.use('/', YoutubeRouter(services));
   app.use('/', ScreenshotsRouter(screenshotPath));
   app.use('/', TraktRouter(services));
