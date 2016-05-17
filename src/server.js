@@ -10,7 +10,6 @@ import Trakt from 'trakt-utils';
 import { exec } from 'child_process';
 import chokidar from 'chokidar';
 import mkdirp from 'mkdirp';
-import got from 'got';
 import path from 'path';
 
 import {
@@ -22,7 +21,6 @@ import {
   USER_SCREEN_OFF,
   USER_OPEN_BROWSER,
   USER_KEY_PRESS,
-  USER_ANALYTICS,
   OMX_KEYS,
   RELOAD_FILES
 } from './constants';
@@ -55,30 +53,11 @@ app.use(express.static('public'));
 app.use('/screenshots', express.static(SCREENSHOTS_PATH));
 app.use(cors());
 
-const analyticsUrl = process.env.ANALYTICS_URL;
-
 storage.on(USER_SCREENSHOT, () => {
   // https://github.com/info-beamer/tools/tree/master/screenshot
   exec(`DISPLAY=:0 /home/pi/tools/screenshot/screenshot > ${SCREENSHOTS_PATH}/${new Date().toISOString()}.jpg`);
 });
-storage.on(USER_ANALYTICS, () => {
-  if (!analyticsUrl) {
-    return;
-  }
 
-  const params = {
-    json: true,
-    headers: {
-      'Content-type': 'application/json'
-    },
-    method: 'POST',
-    body: JSON.stringify(lastPlaybackStatus)
-  };
-
-  got(analyticsUrl, params)
-    .then(res => console.log(res.body))
-    .catch(err => console.log(err));
-});
 storage.on(USER_SCREEN_OFF, () => {
   exec(`DISPLAY=:0 xset dpms force suspend`);
 });
@@ -90,65 +69,68 @@ import VideoRouter from './routes/index';
 import ScreenshotsRouter from './routes/screenshots';
 import YoutubeRouter from './routes/youtube';
 import TraktRouter from './routes/trakt';
-
-const db = initDb(DB_PATH + '/' + 'db');
+import MarksRouter from './routes/marks';
 
 import initServices from './services/index';
-const services = initServices(db, MEDIA_PATH, trakt);
 
-storage.on(USER_KEY_PRESS, key => {
-  services.playerService.onKeyPress(key);
-});
+initDb(DB_PATH + '/' + 'db')
+  .then(db => {
+    const services = initServices(db, MEDIA_PATH, trakt, storage);
 
-app.use('/', VideoRouter(services));
-app.use('/', YoutubeRouter(services));
-app.use('/', ScreenshotsRouter(SCREENSHOTS_PATH));
-app.use('/', TraktRouter(services));
+    storage.on(USER_KEY_PRESS, key => {
+      services.playerService.onKeyPress(key);
+    });
 
-app.use((err, req, res, next) => {
-  if (!err) {
-    next();
-    return;
-  }
+    app.use('/', VideoRouter(services));
+    app.use('/', YoutubeRouter(services));
+    app.use('/', ScreenshotsRouter(SCREENSHOTS_PATH));
+    app.use('/', TraktRouter(services));
+    app.use('/', MarksRouter(services));
 
-  console.log(err, err.stack);
-  res.status(500);
-  res.json({ error: err.stack.split('\n') });
-});
+    app.use((err, req, res, next) => {
+      if (!err) {
+        next();
+        return;
+      }
 
-const http = HTTP.Server(app);
-const io = socketIO(http);
+      console.log(err, err.stack);
+      res.status(500);
+      res.json({ error: err.stack.split('\n') });
+    });
 
-let lastPlaybackStatus;
+    const http = HTTP.Server(app);
+    const io = socketIO(http);
 
-io.on('connection', socket => {
-  socket.emit(UPDATE_PLAYBACK, lastPlaybackStatus);
+    io.on('connection', socket => {
+      socket.emit(UPDATE_PLAYBACK, storage.lastPlaybackStatus);
 
-  socket.on(USER_PAUSE_MEDIA, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.pause));
-  socket.on(USER_CLOSE, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.stop));
-});
+      socket.on(USER_PAUSE_MEDIA, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.pause));
+      socket.on(USER_CLOSE, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.stop));
+    });
 
-storage.on(UPDATE_PLAYBACK, data => {
-  lastPlaybackStatus = data;
-  io.emit(UPDATE_PLAYBACK, data);
-});
+    storage.on(UPDATE_PLAYBACK, data => {
+      storage.lastPlaybackStatus = data;
+      io.emit(UPDATE_PLAYBACK, data);
+    });
 
-storage.on(STOP_PLAYBACK, data => {
-  lastPlaybackStatus = data;
-  io.emit(RELOAD_FILES);
-});
+    storage.on(STOP_PLAYBACK, data => {
+      storage.lastPlaybackStatus = data;
+      io.emit(RELOAD_FILES);
+    });
 
-chokidar
-  .watch(MEDIA_PATH, {
-    ignored: /\.part$/,
-    persistent: true,
-    ignoreInitial: true
+    chokidar
+      .watch(MEDIA_PATH, {
+        ignored: /\.part$/,
+        persistent: true,
+        ignoreInitial: true
+      })
+      .on('all', () => {
+        process.nextTick(() => services.filesService.renewFindAllFiles);
+        io.emit(RELOAD_FILES);
+      });
+
+    http.listen(PORT, () => {
+      console.log(`listen localhost:${PORT}`);
+    });
   })
-  .on('all', () => {
-    process.nextTick(() => services.filesService.renewFindAllFiles);
-    io.emit(RELOAD_FILES);
-  });
-
-http.listen(PORT, () => {
-  console.log(`listen localhost:${PORT}`);
-});
+  .catch(err => console.log(err.stack || err));

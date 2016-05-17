@@ -1,29 +1,32 @@
 import PouchDB from 'pouchdb';
-import createModel from '../libs/pouchdb-repository-factory/';
+import Repository from '../libs/pouchdb-repository-factory/';
 
 import File from './file';
 import Prefix from './prefix';
+import Mark from './mark';
 
 export default dbPath => {
   const initializers = {
     File,
-    Prefix
+    Prefix,
+    Mark
   };
 
   const models = Object
     .keys(initializers)
     .reduce((result, key) => {
       const db = new PouchDB(`${dbPath}-${key.toLowerCase()}`);
-      result[key] = createModel(db, initializers[key].createId);
+      result[key] = new Repository(db, initializers[key].createId, initializers[key].indexes);
 
       return result;
     }, {});
 
-  Object
+  const promises = Object
     .keys(models)
-    .forEach(key => {
+    .map(key => {
       initializers[key].associate(models);
+      return models[key].ensureIndexes();
     });
 
-  return models;
+  return Promise.all(promises).then(() => models);
 };
