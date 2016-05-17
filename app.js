@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 
 require('source-map-support').install();
-require('./lib/server');
+require('./lib/index').default();

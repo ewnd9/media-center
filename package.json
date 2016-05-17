@@ -97,6 +97,8 @@
     "show-episode-format": "^1.0.3",
     "sinon": "^1.17.2",
     "socket.io-client": "^1.4.2",
+    "supertest": "^1.2.0",
+    "test-listen": "^1.0.0",
     "webpackman": "^0.5.0"
   }
 }

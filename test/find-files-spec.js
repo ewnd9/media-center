@@ -4,6 +4,12 @@ import 'babel-core/register';
 import findFiles from './../src/find-files';
 import createDb from './fixtures/create-db';
 
+/*
+
+testing `findFiles` logic (map fs files with local db metadata)
+
+*/
+
 import {
   mockFs,
   unmockFs,
@@ -41,7 +47,7 @@ async function addMockFile(db) {
 }
 
 test('#findFiles add new file', async t => {
-  const db = createDb();
+  const db = await createDb();
   const res = await addMockFile(db);
 
   const data = await db.Prefix.db.allDocs({
@@ -53,7 +59,7 @@ test('#findFiles add new file', async t => {
 });
 
 test('#findFiles', async t => {
-  const db = createDb();
+  const db = await createDb();
   const res = await addMockFile(db);
 
   mockFs();
