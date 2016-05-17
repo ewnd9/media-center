@@ -7,7 +7,7 @@ import Promise from 'bluebird';
 import { agent } from 'supertest';
 import createApp from './fixtures/create-app';
 
-test('/api/v1/files/scrobble', async t => {
+test.beforeEach(async t => {
   const addToHistory = sinon.stub().returns(Promise.resolve());
   const getReport = sinon.stub().returns(Promise.resolve());
   const search = sinon.stub().returns(Promise.resolve());
@@ -18,24 +18,36 @@ test('/api/v1/files/scrobble', async t => {
     search
   };
 
-  const { server, db } = await createApp({ traktMock });
-  const request = agent(server);
+  const { db, server } = await createApp({ traktMock });
 
+  t.context.db = db;
+  t.context.server = server;
+  t.context.request = agent(server);
+
+  t.context.traktMock = traktMock;
+});
+
+test.afterEach(t => {
+  t.context.server.close();
+});
+
+test('/api/v1/files/scrobble', async t => {
   const filename = 'movie.avi';
   const media = { imdb: 'tt0' };
 
-  const d0 = await db.File.update(filename, media);
+  const d0 = await t.context.db.File.update(filename, media);
   t.is(media.imdb, d0.imdb);
 
-  const result = await request.post('/api/v1/files/scrobble').send({
+  const result = await t.context.request.post('/api/v1/files/scrobble').send({
     filename,
     media
   });
 
-  t.truthy(addToHistory.calledOnce === true);
-  t.deepEqual(media, addToHistory.firstCall.args[0]);
+  t.truthy(t.context.traktMock.addToHistory.calledOnce === true);
+  t.deepEqual(media, t.context.traktMock.addToHistory.firstCall.args[0]);
 
-  const d1 = await db.File.get(filename);
+  const d1 = await t.context.db.File.get(filename);
+
   t.is(true, d1.scrobble);
   t.not(d0.updatedAt, d1.updatedAt);
 });
