@@ -15,9 +15,6 @@
 .filesList {
   width: 100%;
   padding: var(--padding);
-  transition: height .2s;
-  height: 0;
-  overflow: hidden;
 }
 
 .img {
@@ -48,4 +45,22 @@
   .poster {
     width: 50%;
   }
+}
+
+.exampleEnter {
+  opacity: 0.01;
+}
+
+.exampleEnterActive {
+  opacity: 1;
+  transition: opacity 0.2s ease-in;
+}
+
+.exampleLeave {
+  opacity: 1;
+}
+
+.exampleLeaveActive {
+  opacity: 0.01;
+  transition: opacity 0.2s ease-in;
 }

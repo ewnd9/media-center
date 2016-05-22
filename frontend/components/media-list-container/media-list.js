@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './style.css';
 
-import TransitionGroup from 'react-addons-transition-group';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { MEDIA_LIST_UNWATCHED } from '../../constants';
 
@@ -44,19 +44,38 @@ const MediaList = React.createClass({
 
     const isUnwatched = mode === MEDIA_LIST_UNWATCHED;
 
-    const createChilds = activeChilds => (
-      <MediaListChildrenContainer
-        key={activeKey}
-        rightToLeft={rightToLeft}
-        openModal={openModal}
-        mode={mode}
-        activeChilds={activeChilds} />
-    );
-
     const renderFolders = () => {
       let activeChilds;
       let nextRowFounded;
       let i = 0;
+
+      const transitionClasses = {
+        enter: styles.exampleEnter,
+        enterActive: styles.exampleEnterActive,
+        leave: styles.exampleLeave,
+        leaveActive: styles.exampleLeaveActive
+      };
+
+      const renderChildren = hasChildren => (
+        <ReactCSSTransitionGroup
+          component='div'
+          key={i++}
+          style={{width: hasChildren ? '100%' : 'auto'}}
+          transitionName={transitionClasses}
+          transitionEnterTimeout={200}
+          transitionLeaveTimeout={200}>
+
+          { hasChildren && (
+            <MediaListChildrenContainer
+              key={activeKey}
+              rightToLeft={rightToLeft}
+              openModal={openModal}
+              mode={mode}
+              activeChilds={activeChilds} />
+          ) || null }
+
+        </ReactCSSTransitionGroup>
+      );
 
       const files = this.props.files
         .filter(file => {
@@ -76,11 +95,7 @@ const MediaList = React.createClass({
             currActiveChilds = true;
           }
 
-          total.push(
-            <TransitionGroup key={i++} style={{textAlign: 'left'}}>
-              { currActiveChilds && createChilds(activeChilds) }
-            </TransitionGroup>
-          );
+          total.push(renderChildren(currActiveChilds));
 
           total.push(
             <MediaListFolder
@@ -98,11 +113,7 @@ const MediaList = React.createClass({
         }, []);
 
       if (!nextRowFounded) {
-        files.push(
-          <TransitionGroup key={i++}>
-            { activeChilds && createChilds(activeChilds) }
-          </TransitionGroup>
-        );
+        files.push(renderChildren(activeChilds));
       }
 
       return files;
