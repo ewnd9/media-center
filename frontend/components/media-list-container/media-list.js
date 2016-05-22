@@ -22,18 +22,17 @@ const MediaList = React.createClass({
       activeKey: activeKey !== file.key ? file.key : null
     });
   },
-  setPosition(file, position) {
-    this.setState({
-      positions: {
-        ...this.state.positions,
-        [file.key]: position
-      }
-    });
+  setRef(el) {
+    this.el = el;
+  },
+  retrieveDomChildren() {
+    return Array.prototype.slice
+      .call(this.el.children)
+      .filter(el => el.className.indexOf('poster') > -1);
   },
   render() {
     const {
-      activeKey,
-      positions
+      activeKey
     } = this.state;
 
     const {
@@ -45,8 +44,10 @@ const MediaList = React.createClass({
     const isUnwatched = mode === MEDIA_LIST_UNWATCHED;
 
     const renderFolders = () => {
-      let activeChilds;
-      let nextRowFounded;
+      let activeChildren;
+      let activeOffset = null;
+
+      let isNextRowFounded;
       let i = 0;
 
       const transitionClasses = {
@@ -71,37 +72,34 @@ const MediaList = React.createClass({
               rightToLeft={rightToLeft}
               openModal={openModal}
               mode={mode}
-              activeChilds={activeChilds} />
+              activeChildren={activeChildren} />
           ) || null }
 
         </ReactCSSTransitionGroup>
       );
 
+      const domChildren = activeKey ? this.retrieveDomChildren() : [];
+
       const files = this.props.files
         .filter(file => {
           return !isUnwatched || !file.watched;
         })
-        .reduce((total, file) => {
+        .reduce((total, file, index) => {
           const key = file.key;
 
-          if (key === activeKey) {
-            activeChilds = file.media;
+          let isNextRowAfterActive;
+
+          if (activeOffset !== null && !isNextRowFounded && domChildren[index].offsetTop > activeOffset) {
+            isNextRowAfterActive = true;
+            isNextRowFounded = true;
           }
 
-          let currActiveChilds;
-
-          if (positions[key] > positions[activeKey] && !nextRowFounded) {
-            nextRowFounded = true;
-            currActiveChilds = true;
-          }
-
-          total.push(renderChildren(currActiveChilds));
+          total.push(renderChildren(isNextRowAfterActive));
 
           total.push(
             <MediaListFolder
               file={file}
               key={i++}
-              currActiveChilds={currActiveChilds}
               activeKey={activeKey}
               setActive={this.setActive}
               setPosition={this.setPosition}
@@ -109,18 +107,23 @@ const MediaList = React.createClass({
               openModal={openModal} />
           );
 
+          if (key === activeKey) {
+            activeOffset = domChildren[index].offsetTop;
+            activeChildren = file.media;
+          }
+
           return total;
         }, []);
 
-      if (!nextRowFounded) {
-        files.push(renderChildren(activeChilds));
+      if (activeChildren && !isNextRowFounded) {
+        files.push(renderChildren(true));
       }
 
       return files;
     };
 
     return (
-      <div className={styles.flex}>
+      <div className={styles.flex} ref={this.setRef}>
         {renderFolders()}
       </div>
     );

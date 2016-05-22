@@ -16,7 +16,7 @@ const ChildrenContainer = React.createClass({
       rightToLeft,
       openModal,
       mode,
-      activeChilds
+      activeChildren
     } = this.props;
 
     const isUnwatched = mode === MEDIA_LIST_UNWATCHED;
@@ -26,7 +26,7 @@ const ChildrenContainer = React.createClass({
         className={styles.filesList}
         ref={this.setRef}>
         {
-          activeChilds
+          activeChildren
             .filter(media => {
               return !isUnwatched || !media.watched;
             })

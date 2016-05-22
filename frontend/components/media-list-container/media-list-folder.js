@@ -8,20 +8,6 @@ export default React.createClass({
   toggleHidden: function() {
     this.props.setActive(this.props.file);
   },
-  componentDidMount() {
-    setTimeout(() => {
-      this.props.setPosition(this.props.file, this.top);
-    }, this.props.index * 50); // ¯\_(ツ)_/¯
-  },
-  setEl(el) {
-    if (el) {
-      const rect = el.getBoundingClientRect();
-
-      if (this.top !== rect.top) {
-        this.top = rect.top;
-      }
-    }
-  },
   render: function() {
     const {
       file,
@@ -32,7 +18,6 @@ export default React.createClass({
 
     return (
       <div
-        ref={el => this.setEl(el)}
         onClick={this.toggleHidden}
         className={`${styles.poster} ${rightToLeft && themeStyles.textAlignRight || ''}`}>
 
