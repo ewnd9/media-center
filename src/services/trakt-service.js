@@ -19,6 +19,10 @@ function TraktService(trakt, filePath) {
   this.search = this.trakt.search.bind(this.trakt);
 }
 
+TraktService.prototype.prefetch = function() {
+  return this.getReport();
+};
+
 TraktService.prototype.getReport = function() {
   return this.cache.getOrInit(REPORT_CACHE, this._getReport);
 };

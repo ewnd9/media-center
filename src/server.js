@@ -53,6 +53,18 @@ function createServer({ db, services, screenshotPath, port }) {
   const bus = new Bus(services, io);
   const server = http.listen(port, () => console.log(`listen localhost:${server.address().port}`));
 
+  if (process.env.NODE_ENV === 'production') {
+    Object
+      .keys(services)
+      .forEach(key => {
+        const service = services[key];
+
+        if (service.prefetch) {
+          service.prefetch();
+        }
+      });
+  }
+
   return { server, bus, db, services };
 }
 

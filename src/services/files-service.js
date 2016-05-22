@@ -18,6 +18,10 @@ function FilesService(models, rootDir) {
   this.renewFindAllFiles = this.renewFindAllFiles.bind(this);
 }
 
+FilesService.prototype.prefetch = function() {
+  return this.findAllFiles();
+};
+
 FilesService.prototype.findAllFiles = function() {
   return this.cache.getOrInit(FIND_FILES, this.findFiles);
 };
