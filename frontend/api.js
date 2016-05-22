@@ -83,3 +83,11 @@ export const getReport = () => {
 export const playYoutubeLink = query => {
   return post('/api/v1/youtube', { query });
 };
+
+export const getPosterUrl = (type, imdb, s) => {
+  if (type && imdb) {
+    return `${baseUrl}/api/v1/posters/${type}/${imdb}/${s}`;
+  } else {
+    return `${baseUrl}/api/v1/posters/placeholder.jpg`;
+  }
+};

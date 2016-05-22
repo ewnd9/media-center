@@ -97,6 +97,12 @@ function flattenVideos(rootDir, result) {
     const unwatchedCount = group.media.filter(_ => !_.watched).length;
     group.watched = unwatchedCount === 0;
 
+    if (media.db) {
+      group.imdb = media.db.imdb;
+      group.s = media.db.s;
+      group.type = media.db.type;
+    }
+
     if (media.db && media.db.s) {
       const title = `${media.db.title} season ${media.db.s}`;
       group.summary = `${title} (${unwatchedCount} / ${group.media.length})`;

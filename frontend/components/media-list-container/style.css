@@ -1,6 +1,4 @@
-.file {
-  margin-top: 20px;
-}
+@import '../variables.css';
 
 .filePath {
   font-size: 0.8em;
@@ -8,4 +6,37 @@
 
 .fileIcon {
   margin-left: 10px;
+}
+
+.filesList {
+  float: left;
+  width: 100%;
+  transition: height .2s;
+  height: 0;
+  overflow: hidden;
+}
+
+.img {
+  height: 200px;
+  width: auto;
+  cursor: pointer;
+}
+
+.poster {
+  float: left;
+  width: 33.3%;
+  padding: 0 10px;
+  text-align: center;
+}
+
+@media (--full-hd-viewport) {
+  .poster {
+    width: 25%;
+  }
+}
+
+@media (--mobile-viewport) {
+  .poster {
+    width: 50%;
+  }
 }

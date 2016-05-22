@@ -1,49 +1,42 @@
 import React from 'react';
-import styles from '../theme.css';
+import styles from './style.css';
+import themeStyles from '../theme.css';
 
-import MediaListItem from './media-list-item';
-import { MEDIA_LIST_UNWATCHED } from '../../constants';
+import { getPosterUrl } from '../../api';
 
 export default React.createClass({
-  getInitialState: function() {
-    const val = localStorage[this.getLocalStorageKey()];
-    return { hidden: typeof val !== 'undefined' ? val === 'true' : true };
-  },
   toggleHidden: function() {
-    this.setState({ hidden: !this.state.hidden });
-    localStorage[this.getLocalStorageKey()] = !this.state.hidden;
+    this.props.setActive(this.props.file);
   },
-  getLocalStorageKey: function() {
-    return `folder:${this.props.file.dir}`;
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.setPosition(this.props.file, this.top);
+    }, this.props.index * 50); // ¯\_(ツ)_/¯
+  },
+  setEl(el) {
+    if (el) {
+      const rect = el.getBoundingClientRect();
+
+      if (this.top !== rect.top) {
+        this.top = rect.top;
+      }
+    }
   },
   render: function() {
-    const { file, rightToLeft, mode } = this.props;
-    const summary = file.summary;
-    const isUnwatched = mode === MEDIA_LIST_UNWATCHED;
+    const {
+      file,
+      rightToLeft
+    } = this.props;
 
-    if (file.watched && isUnwatched) {
-      return null;
-    }
-
-    const childs = file.media
-      .filter(_ => !isUnwatched || !_.watched)
-      .map((media, index) => {
-        return (
-          <MediaListItem key={index}
-                         file={media}
-                         index={index}
-                         mode={this.props.mode}
-                         rightToLeft={rightToLeft}
-                         openModal={this.props.openModal} />
-        );
-      });
+    const { imdb, s, type } = file;
 
     return (
-      <div className={`${styles.marginBottom20} ${rightToLeft && styles.textAlignRight || ''}`}>
-        <a className="title file-title" onClick={this.toggleHidden}>{summary}</a>
-        {
-          !this.state.hidden && childs || ''
-        }
+      <div
+        ref={el => this.setEl(el)}
+        onClick={this.toggleHidden}
+        className={`${styles.poster} ${themeStyles.marginBottom20} ${rightToLeft && themeStyles.textAlignRight || ''}`}>
+
+        <img src={getPosterUrl(type, imdb, s)} className={styles.img} />
       </div>
     );
   }

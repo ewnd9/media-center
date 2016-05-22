@@ -13,6 +13,7 @@ import ScreenshotsRouter from './routes/screenshots';
 import YoutubeRouter from './routes/youtube';
 import TraktRouter from './routes/trakt';
 import MarksRouter from './routes/marks';
+import PostersRouter from './routes/posters';
 
 function createServer({ db, services, screenshotPath, port }) {
   const app = express();
@@ -26,12 +27,13 @@ function createServer({ db, services, screenshotPath, port }) {
   app.use(cors());
 
   app.use('/', PaginationMiddleware);
-  
+
   app.use('/', FilesRouter(services));
   app.use('/', YoutubeRouter(services));
   app.use('/', ScreenshotsRouter(screenshotPath));
   app.use('/', TraktRouter(services));
   app.use('/', MarksRouter(services));
+  app.use('/', PostersRouter(services));
 
   app.use((err, req, res, next) => {
     if (!err) {

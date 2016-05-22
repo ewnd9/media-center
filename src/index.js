@@ -15,7 +15,7 @@ import {
 function createApp() {
   return createDb(dbPath + '/db')
     .then(db => {
-      const services = createServices(db, mediaPath, trakt, storage);
+      const services = createServices(db, mediaPath, trakt, storage, dbPath);
       return createServer({ db, services, screenshotPath, port });
     });
 }
