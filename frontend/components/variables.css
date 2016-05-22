@@ -2,3 +2,8 @@
 @custom-media --large-gallery-viewport (max-width: 1400px);
 @custom-media --large-viewport (max-width: 1100px);
 @custom-media --mobile-viewport (max-width: 500px);
+
+:root {
+  --padding: 10px 10px;
+  --marginBottom: 10px;
+}

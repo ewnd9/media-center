@@ -1,4 +1,5 @@
 import React from 'react';
+import themeStyles from '../theme.css';
 
 import { playYoutubeLink } from '../../api';
 
@@ -36,7 +37,7 @@ export default React.createClass({
   },
   render() {
     return (
-      <div className={`form-group ${this.state.status}`}>
+      <div className={`form-group ${this.state.status} ${themeStyles.container}`}>
         <label htmlFor="youtube-input">Youtube link</label>
         <input type="text" className="form-control" id="youtube-input" placeholder="Youtube link" onChange={this.onChange} />
       </div>

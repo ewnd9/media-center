@@ -22,7 +22,7 @@ export default React.createClass({
   render: function() {
     if (this.state.loaded) {
       return (
-        <div className={styles.gallery}>
+        <div className={`${styles.gallery}`}>
           {
             this.state.screenshots.map(url => {
               return (

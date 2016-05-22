@@ -1,4 +1,6 @@
 import React from 'react';
+import themeStyles from '../theme.css';
+
 import Spinner from 'react-spinkit';
 
 import * as api from '../../api';
@@ -38,7 +40,7 @@ export default React.createClass({
 
     if (this.state.loaded) {
       return (
-        <div>
+        <div className={themeStyles.container}>
           { renderReport(this.state.report) }
         </div>
       );

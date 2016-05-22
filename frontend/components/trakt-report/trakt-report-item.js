@@ -1,4 +1,7 @@
 import React from 'react';
+import styles from './style.css';
+
+
 import moment from 'moment';
 import { formatEpisode as format } from 'show-episode-format';
 
@@ -40,9 +43,9 @@ export default ({ report, show }) => {
   }
 
   return (
-    <div className="trakt-report-item">
+    <div className={styles.marginBottom}>
       <div>
-        <a className="title" href={`https://trakt.tv/shows/${showId}`} target="_blank">
+        <a href={`https://trakt.tv/shows/${showId}`} target="_blank">
           {show}
         </a>
       </div>

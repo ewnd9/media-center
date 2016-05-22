@@ -1,5 +1,11 @@
+@import './variables.css';
+
 .buttons {
-  margin-bottom: 30px;
+  padding: var(--padding);
+}
+
+.container {
+  padding: var(--padding);
 }
 
 .button {

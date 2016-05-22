@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './style.css';
 
 import TransitionGroup from 'react-addons-transition-group';
 
@@ -41,12 +42,9 @@ const MediaList = React.createClass({
       openModal
     } = this.props;
 
-    let activeChilds;
-    let nextRowFounded;
-
     const isUnwatched = mode === MEDIA_LIST_UNWATCHED;
 
-    const createChilds = () => (
+    const createChilds = activeChilds => (
       <MediaListChildrenContainer
         key={activeKey}
         rightToLeft={rightToLeft}
@@ -55,50 +53,64 @@ const MediaList = React.createClass({
         activeChilds={activeChilds} />
     );
 
+    const renderFolders = () => {
+      let activeChilds;
+      let nextRowFounded;
+      let i = 0;
+
+      const files = this.props.files
+        .filter(file => {
+          return !isUnwatched || !file.watched;
+        })
+        .reduce((total, file) => {
+          const key = file.key;
+
+          if (key === activeKey) {
+            activeChilds = file.media;
+          }
+
+          let currActiveChilds;
+
+          if (positions[key] > positions[activeKey] && !nextRowFounded) {
+            nextRowFounded = true;
+            currActiveChilds = true;
+          }
+
+          total.push(
+            <TransitionGroup key={i++} style={{textAlign: 'left'}}>
+              { currActiveChilds && createChilds(activeChilds) }
+            </TransitionGroup>
+          );
+
+          total.push(
+            <MediaListFolder
+              file={file}
+              key={i++}
+              currActiveChilds={currActiveChilds}
+              activeKey={activeKey}
+              setActive={this.setActive}
+              setPosition={this.setPosition}
+              rightToLeft={rightToLeft}
+              openModal={openModal} />
+          );
+
+          return total;
+        }, []);
+
+      if (!nextRowFounded) {
+        files.push(
+          <TransitionGroup key={i++}>
+            { activeChilds && createChilds(activeChilds) }
+          </TransitionGroup>
+        );
+      }
+
+      return files;
+    };
+
     return (
-      <div>
-        {
-          this.props.files
-            .filter(file => {
-              return !isUnwatched || !file.watched;
-            })
-            .map((file, index) => {
-              const key = file.key;
-
-              if (key === activeKey) {
-                activeChilds = file.media;
-              }
-
-              let currActiveChilds;
-
-              if (positions[key] > positions[activeKey] && !nextRowFounded) {
-                nextRowFounded = true;
-                currActiveChilds = true;
-              }
-
-              return (
-                <div key={index}>
-                  {
-                    <TransitionGroup>
-                      { currActiveChilds && createChilds() }
-                    </TransitionGroup>
-                  }
-                  <MediaListFolder
-                    index={index}
-                    file={file}
-                    currActiveChilds={currActiveChilds}
-                    activeKey={activeKey}
-                    setActive={this.setActive}
-                    setPosition={this.setPosition}
-                    rightToLeft={rightToLeft}
-                    openModal={openModal} />
-                </div>
-              );
-            })
-        }
-        <TransitionGroup>
-          { !nextRowFounded && activeChilds && createChilds() }
-        </TransitionGroup>
+      <div className={styles.flex}>
+        {renderFolders()}
       </div>
     );
   }

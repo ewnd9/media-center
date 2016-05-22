@@ -54,7 +54,7 @@ export default React.createClass({
     }
 
     return (
-      <div className={`${theme.marginBottom20} ${rightToLeft && theme.textAlignRight || ''} ${styles.file}`}
+      <div className={`${styles.file} ${rightToLeft && theme.textAlignRight || ''} ${styles.file}`}
            key={file}
            tabIndex={index + 1}>
 

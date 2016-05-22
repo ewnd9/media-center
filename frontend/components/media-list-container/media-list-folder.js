@@ -34,7 +34,7 @@ export default React.createClass({
       <div
         ref={el => this.setEl(el)}
         onClick={this.toggleHidden}
-        className={`${styles.poster} ${themeStyles.marginBottom20} ${rightToLeft && themeStyles.textAlignRight || ''}`}>
+        className={`${styles.poster} ${rightToLeft && themeStyles.textAlignRight || ''}`}>
 
         <img src={getPosterUrl(type, imdb, s)} className={styles.img} />
       </div>

@@ -4,38 +4,24 @@
 .screenshot {
   float: left;
   position: relative;
+  padding: var(--padding);
 }
 
 @media (--full-hd-viewport) {
   .screenshot {
-    width: calc(25% - 16px);
-    margin-bottom: 16px;
-  }
-
-  .screenshot:not(:nth-child(4n)) {
-    margin-right: 16px;
+    width: 25%;
   }
 }
 
 @media (--large-gallery-viewport) {
   .screenshot {
-    width: calc(33% - 16px);
-    margin-bottom: 16px;
-  }
-
-  .screenshot:not(:nth-child(3n)) {
-    margin-right: 16px;
+    width: 33.3%;
   }
 }
 
 @media (--mobile-viewport) {
   .screenshot {
-    width: calc(50% - 16px);
-    margin-bottom: 16px;
-  }
-
-  .screenshot:not(:nth-child(2n)) {
-    margin-right: 16px;
+    width: 50%;
   }
 }
 

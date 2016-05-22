@@ -1,5 +1,9 @@
 @import '../variables.css';
 
+.file:not(:last-child) {
+  margin-bottom: var(--marginBottom);
+}
+
 .filePath {
   font-size: 0.8em;
 }
@@ -9,23 +13,28 @@
 }
 
 .filesList {
-  float: left;
   width: 100%;
+  padding: var(--padding);
   transition: height .2s;
   height: 0;
   overflow: hidden;
 }
 
 .img {
-  height: 200px;
-  width: auto;
+  width: 100%;
+  height: auto;
   cursor: pointer;
 }
 
+.flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .poster {
-  float: left;
   width: 33.3%;
-  padding: 0 10px;
+  padding: var(--padding);
   text-align: center;
 }
 
