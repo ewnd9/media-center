@@ -91,3 +91,7 @@ export const getPosterUrl = (type, imdb, s) => {
     return `${baseUrl}/api/v1/posters/placeholder.jpg`;
   }
 };
+
+export const getMarks = since => {
+  return get(`/api/v1/marks?since=${since || ''}`); // @TODO migrate to superagent@latest 
+};

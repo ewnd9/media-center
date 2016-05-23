@@ -4,6 +4,7 @@ import ScreenshotsGallery from './../screenshots-gallery/screenshots-gallery';
 import TraktReport from './../trakt-report/trakt-report';
 import MediaListContainer from '../media-list-container/media-list-container';
 import YoutubeInput from '../youtube-input/youtube-input';
+import MarksList from '../marks-list/marks-list';
 
 import Tabs from '../ui/tabs/tabs';
 
@@ -15,6 +16,7 @@ export default React.createClass({
     const UPCOMING = 'Upcoming';
     const SCREENSHOTS = 'Screenshots';
     const YOUTUBE = 'Youtube';
+    const MARKS = 'Marks';
 
     const elements = {};
 
@@ -32,7 +34,9 @@ export default React.createClass({
     elements[UPCOMING] = { component: TraktReport };
     elements[SCREENSHOTS] = { component: ScreenshotsGallery };
     elements[YOUTUBE] = { component: YoutubeInput };
+    elements[MARKS] = { component: MarksList };
 
-    return <Tabs className={className} elements={elements} initial={showVideo && VIDEO || UPCOMING} />;
+    // return <Tabs className={className} elements={elements} initial={showVideo && VIDEO || UPCOMING} />;
+    return <Tabs className={className} elements={elements} initial={showVideo && VIDEO || MARKS} />;
   }
 });

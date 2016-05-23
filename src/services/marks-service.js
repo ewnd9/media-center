@@ -42,7 +42,7 @@ MarksService.prototype.findAll = function(limit, since) {
     .query(this.Mark.indexes.UPDATED_AT.name, {
       descending: true,
       skip: since ? 1 : 0,
-      endkey: since, 
+      startkey: since || undefined, 
       limit
     });
 };

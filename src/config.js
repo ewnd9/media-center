@@ -2,16 +2,18 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 import Trakt from 'trakt-utils';
 
-const getPath = (variable, defaultFolder) => {
-  const result = process.env[variable] || path.resolve(__dirname, '..', '..', defaultFolder);
+const ensureDirectory = (parentDirectory, directory) => {
+  const result = path.join(parentDirectory, directory);
   mkdirp.sync(result);
 
   return result;
 };
 
-export const mediaPath = getPath('MEDIA_PATH', 'Downloads');
-export const dbPath = getPath('DB_PATH', 'media-center-db');
-export const screenshotPath = getPath('SCREENSHOTS_PATH', 'media-center-screenshots');
+export const mediaPath = process.env.MEDIA_PATH;
+export const dataPath = process.env.DATA_PATH;
+
+export const dbPath = ensureDirectory(dataPath, 'media-center-db');
+export const screenshotPath = ensureDirectory(dataPath, 'media-center-screenshots');
 
 export const port = process.env.PORT || 3000;
 
