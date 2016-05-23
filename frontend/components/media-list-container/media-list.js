@@ -8,6 +8,13 @@ import { MEDIA_LIST_UNWATCHED } from '../../constants';
 import MediaListFolder from './media-list-folder';
 import MediaListChildrenContainer from './media-list-children-container';
 
+const FirstChild = React.createClass({
+  render: function() {
+    const children = React.Children.toArray(this.props.children);
+    return children[0] || null;
+  }
+});
+
 const MediaList = React.createClass({
   getInitialState() {
     return {
@@ -58,17 +65,20 @@ const MediaList = React.createClass({
       };
 
       const renderChildren = hasChildren => (
+        // key={activeKey} for MediaListChildrenContainer
+        // causes https://github.com/facebook/react/issues/4876
+        // without key there is no animation on changing files on the same group
+        
         <ReactCSSTransitionGroup
           component='div'
           key={i++}
-          style={{width: hasChildren ? '100%' : 'auto'}}
           transitionName={transitionClasses}
           transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}>
+          transitionLeaveTimeout={200}
+          component={FirstChild}>
 
           { hasChildren && (
             <MediaListChildrenContainer
-              key={activeKey}
               rightToLeft={rightToLeft}
               openModal={openModal}
               mode={mode}

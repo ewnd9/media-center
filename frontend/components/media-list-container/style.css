@@ -53,7 +53,7 @@
 
 .exampleEnterActive {
   opacity: 1;
-  transition: opacity 0.2s ease-in;
+  transition: all 0.2s ease-in;
 }
 
 .exampleLeave {
@@ -62,5 +62,5 @@
 
 .exampleLeaveActive {
   opacity: 0.01;
-  transition: opacity 0.2s ease-in;
+  transition: all 0.2s ease-in;
 }
