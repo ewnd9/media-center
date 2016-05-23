@@ -68,9 +68,8 @@ const MediaList = React.createClass({
         // key={activeKey} for MediaListChildrenContainer
         // causes https://github.com/facebook/react/issues/4876
         // without key there is no animation on changing files on the same group
-        
+
         <ReactCSSTransitionGroup
-          component='div'
           key={i++}
           transitionName={transitionClasses}
           transitionEnterTimeout={200}
