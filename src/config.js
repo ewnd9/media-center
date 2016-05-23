@@ -3,7 +3,7 @@ import mkdirp from 'mkdirp';
 import Trakt from 'trakt-utils';
 
 const ensureDirectory = (parentDirectory, directory) => {
-  const result = path.join(parentDirectory, directory);
+  const result = path.join(parentDirectory || '/tmp', directory);
   mkdirp.sync(result);
 
   return result;

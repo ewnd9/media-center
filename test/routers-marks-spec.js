@@ -38,7 +38,7 @@ test('GET /api/v1/marks', async t => {
   t.truthy(body[0]._id = markEntity1._id);
   t.truthy(body[1]._id = markEntity0._id);
 
-  var { body } = await t.context.request.get('/api/v1/marks').query({ limit: 1, since: body[1]._key });
+  var { body } = await t.context.request.get('/api/v1/marks').query({ limit: 1, since: body[0]._key });
   t.truthy(body.length === 1);
   t.truthy(body[0]._id === markEntity0._id);
 });
