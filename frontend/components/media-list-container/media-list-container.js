@@ -10,19 +10,20 @@ export default React.createClass({
   render: function() {
     const { openModal, files, className } = this.props;
 
-    const el = {
+    const el = label => ({
+      label,
       component: MediaList,
       getProps: mode => ({
         openModal,
         files,
         mode
       })
-    };
+    });
 
-    const elements = {
-      [MEDIA_LIST_ALL]: el,
-      [MEDIA_LIST_UNWATCHED]: el
-    };
+    const elements = [
+      el(MEDIA_LIST_ALL),
+      el(MEDIA_LIST_UNWATCHED)
+    ];
 
     let initial = localStorage.mode;
 

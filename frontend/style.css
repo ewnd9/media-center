@@ -21,6 +21,11 @@ a {
   color: #FFF !important;
 }
 
+a:hover, a:focus {
+  /* bootstrap override */
+  text-decoration: none !important;
+}
+
 a.progress-complete, .scrobble {
   color: #1B5E20 !important;
   background: white;

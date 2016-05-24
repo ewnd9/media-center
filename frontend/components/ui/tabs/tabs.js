@@ -9,30 +9,41 @@ export default React.createClass({
     this.setState({ active: value });
   },
   render() {
-    const { elements, rightToLeft, className } = this.props;
+    const { elements, rightToLeft, className, children } = this.props;
     const { active } = this.state;
 
-    const el = elements[active];
+    const linkStyle = !rightToLeft && styles.button || styles.buttonLeftMargin;
+    const el = elements.find(el => el.label === active);
 
     return (
       <div className={className}>
         <div className={styles.container} role="group">
           {
-            Object.keys(elements).map(label => {
-              return (
-                <button type="button"
-                        onClick={this.setActive.bind(this, label)}
-                        key={label}
-                        className={`${!rightToLeft && styles.button || styles.buttonLeftMargin} ${active === label ? styles.activeButton : ''}`}>
-                  { label }
-                </button>
-              );
-            })
+            elements
+              .map(element => {
+                const label = element.label;
+
+                if (element.link) {
+                  const Link = element.link;
+                  return <Link key={label} className={linkStyle} />;
+                } else {
+                  return (
+                    <button type="button"
+                      onClick={this.setActive.bind(this, label)}
+                      key={label}
+                      className={`${linkStyle} ${active === label ? styles.activeButton : ''}`}>
+                      { label }
+                    </button>
+                  );
+                }
+              })
           }
         </div>
 
         <div className={styles.container}>
-          { React.createElement(el.component, el.getProps && el.getProps(active)) }
+          { el && el.type !== 'router' &&
+            React.createElement(el.component, el.getProps && el.getProps(active)) ||
+            children }
         </div>
       </div>
     );
