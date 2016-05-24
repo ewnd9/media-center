@@ -17,10 +17,31 @@
   padding: var(--padding);
 }
 
-.img {
+.summary {
+  margin-top: 10px;
+  padding: 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.imgWrapper {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.placeholderImg {
   width: 100%;
   height: auto;
   cursor: pointer;
+}
+
+.img {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .flex {

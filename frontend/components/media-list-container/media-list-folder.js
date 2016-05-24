@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './style.css';
 import themeStyles from '../theme.css';
 
-import { getPosterUrl } from '../../api';
+import { getPosterUrl, getPosterPlaceholderUrl } from '../../api';
 
 export default React.createClass({
   toggleHidden: function() {
@@ -14,14 +14,19 @@ export default React.createClass({
       rightToLeft
     } = this.props;
 
-    const { imdb, s, type } = file;
+    const { title, imdb, s, type } = file;
 
     return (
       <div
         onClick={this.toggleHidden}
         className={`${styles.poster} ${rightToLeft && themeStyles.textAlignRight || ''}`}>
 
-        <img src={getPosterUrl(type, imdb, s)} className={styles.img} />
+        <div className={styles.imgWrapper}>
+          <img src={getPosterPlaceholderUrl()} className={styles.placeholderImg} />
+          <img src={getPosterUrl(type, imdb, s)} className={styles.img} />
+        </div>
+
+        <div className={styles.summary}>{(type === 'show' ? `S${s > 10 ? s : '0' + s}` : '') + ' ' + file.title}</div>
       </div>
     );
   }

@@ -88,10 +88,14 @@ export const getPosterUrl = (type, imdb, s) => {
   if (type && imdb) {
     return `${baseUrl}/api/v1/posters/${type}/${imdb}/${s}`;
   } else {
-    return `${baseUrl}/api/v1/posters/placeholder.jpg`;
+    return getPosterPlaceholderUrl();
   }
 };
 
+export const getPosterPlaceholderUrl = () => {
+  return `${baseUrl}/api/v1/posters/placeholder.jpg`;
+};
+
 export const getMarks = since => {
-  return get(`/api/v1/marks?since=${since || ''}`); // @TODO migrate to superagent@latest 
+  return get(`/api/v1/marks?since=${since || ''}`); // @TODO migrate to superagent@latest
 };
