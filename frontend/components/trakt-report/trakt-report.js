@@ -40,7 +40,7 @@ export default React.createClass({
 
     if (this.state.loaded) {
       return (
-        <div className={themeStyles.container}>
+        <div>
           { renderReport(this.state.report) }
         </div>
       );

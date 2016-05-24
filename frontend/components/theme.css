@@ -1,52 +1,14 @@
 @import './variables.css';
-
-.buttons {
-  padding: var(--padding);
-}
+@import './theme-buttons.css';
 
 .container {
   padding: var(--padding);
 }
 
-.button {
-  padding: 0;
-  border: none;
-  background: 0 0;
-
-  cursor: pointer;
-  text-align: left;
-  color: #EEE;
-  text-decoration: none;
-
-  border-color: transparent;
-  background: none;
-  box-shadow: none;
-
-  text-transform: uppercase;
-
-  font-size: 20px;
-  margin-right: 20px;
-}
-
-.buttonLeftMargin {
-  composes: button;
-  margin-left: 20px;
-  margin-right: 0;
-}
-
-.button:focus {
-  outline:0;
-}
-
-.activeButton {
-  font-weight: bold;
-  color: #FFF;
+.imageContainer {
+  margin: var(--negativeMargin);
 }
 
 .textAlignRight {
   text-align: right;
-}
-
-.marginBottom20 {
-  margin-bottom: 20px;
 }

@@ -16,7 +16,7 @@ export default React.createClass({
 
     return (
       <div className={className}>
-        <div className={styles.buttons} role="group">
+        <div className={styles.container} role="group">
           {
             Object.keys(elements).map(label => {
               return (
@@ -31,7 +31,9 @@ export default React.createClass({
           }
         </div>
 
-        { React.createElement(el.component, el.getProps && el.getProps(active)) }
+        <div className={styles.container}>
+          { React.createElement(el.component, el.getProps && el.getProps(active)) }
+        </div>
       </div>
     );
   }

@@ -38,18 +38,16 @@ export default React.createClass({
     const { marks, isLoading, hasMore } = this.state;
 
     return (
-      <div className={themeStyles.container}>
-        <InfiniteScroll
-            pageStart={0}
-            loadMore={this.loadMore}
-            hasMore={!isLoading && hasMore}
-            loader={<div className="loader">Loading ...</div>}
-            useWindow={false}>
+      <InfiniteScroll
+          pageStart={0}
+          loadMore={this.loadMore}
+          hasMore={!isLoading && hasMore}
+          loader={<div className="loader">Loading ...</div>}
+          useWindow={false}>
 
-          {marks.map(renderMark)}
+        {marks.map(renderMark)}
 
-        </InfiniteScroll>
-      </div>
+      </InfiniteScroll>
     );
   }
 });

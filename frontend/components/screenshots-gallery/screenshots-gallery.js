@@ -1,4 +1,6 @@
 import React from 'react';
+
+import themeStyles from '../theme.css';
 import styles from './style.css';
 
 import Spinner from 'react-spinkit';
@@ -22,7 +24,7 @@ export default React.createClass({
   render: function() {
     if (this.state.loaded) {
       return (
-        <div className={`${styles.gallery}`}>
+        <div className={`${themeStyles.imageContainer}`}>
           {
             this.state.screenshots.map(url => {
               return (

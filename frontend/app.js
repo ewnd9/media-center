@@ -5,7 +5,7 @@ require('./style.css');
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Main from './components/main';
+import Main from './components/main/main';
 import notify from './notify';
 
 ReactDOM.render(<Main />, document.getElementById('root'));
@@ -14,8 +14,8 @@ window.onerror = (msg, url, line, col, err) => {
   logError(err);
   return true;
 };
-window.addEventListener('unhandledrejection', event => {
-  logError(event.detail.reason);
+window.addEventListener('unhandledrejection', reason => {
+  logError(reason.message || reason);
 });
 
 function logError(err) {

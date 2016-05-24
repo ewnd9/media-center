@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './style.css';
 
-import * as api from './../api';
+import * as api from '../../api';
 
 import {
   UPDATE_PLAYBACK,
@@ -9,12 +9,12 @@ import {
   USER_PAUSE_MEDIA,
   USER_CLOSE,
   STOPPED
-} from './../constants';
+} from '../../constants';
 
-import MediaListContainer from './media-list-container/media-list-container';
-import Playback from './playback/playback';
-import RightPanel from './right-panel/right-panel';
-import MediaModal from './media-modal/media-modal';
+import MediaListContainer from '../media-list-container/media-list-container';
+import Playback from '../playback/playback';
+import RightPanel from '../right-panel/right-panel';
+import MediaModal from '../media-modal/media-modal';
 
 /* global io */
 require('script!socket.io-client/socket.io.js');
