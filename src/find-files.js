@@ -101,6 +101,7 @@ function flattenVideos(rootDir, result) {
       group.imdb = media.db.imdb;
       group.s = media.db.s;
       group.type = media.db.type;
+      group.title = media.db.title;
       group.unwatchedCount = unwatchedCount;
     }
 

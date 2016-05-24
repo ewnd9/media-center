@@ -1,24 +1,44 @@
-import isomorphicFetch from 'isomorphic-fetch';
+import superagent from 'superagent';
 import notify from './notify';
 
 export const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 
-const fetch = (url, options = {}) => (
-  isomorphicFetch(url, options)
-    .then(response => {
-      if (response.status !== 200) {
-        return response.json()
-          .then(body => {
-            throw new Error(`${options.method || 'GET'} ${url} returned ${response.status}<br />${body.error.join('<br />')}`); // xss :-(
-          });
-      } else {
-        return response.json();
-      }
-    })
-);
+const fetch = (url, options = {}) => {
+  let req = (
+    options.method === 'post' ?
+      superagent.post(url).send(options.body) :
+      superagent.get(url)
+  );
 
-export const get = url => {
-  return fetch(baseUrl + url)
+  if (options.query) {
+    req = req.query(options.query);
+  }
+
+  if (options.headers) {
+    req = req.set(options.headers);
+  }
+
+  return new Promise((resolve, reject) => {
+    req.end((err, { status, body }) => {
+      if (err) {
+        reject(new Error(`${options.method || 'GET'} ${url} returned ${status}<br />${body.error.join('<br />')}`)); // possible xss :-(
+      } else {
+        resolve(body);
+      }
+    });
+  });
+  // return req
+  //   .then(({ body }) => {
+  //     return body;
+  //   })
+  //   .catch((err, a) => {
+  //     throw err; // @TODO figure out where is body in catch function
+  //                         https://github.com/visionmedia/superagent/pull/925
+  //   })
+};
+
+export const get = (url, query = {}) => {
+  return fetch(baseUrl + url, { query })
     .catch(err => notify.error(err.message));
 };
 
@@ -97,5 +117,5 @@ export const getPosterPlaceholderUrl = () => {
 };
 
 export const getMarks = since => {
-  return get(`/api/v1/marks?since=${since || ''}`); // @TODO migrate to superagent@latest
+  return get(`/api/v1/marks`, { since });
 };
