@@ -1,3 +1,4 @@
+import path from 'path';
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
@@ -34,6 +35,9 @@ function createServer({ db, services, screenshotPath, port }) {
   app.use('/', TraktRouter(services));
   app.use('/', MarksRouter(services));
   app.use('/', PostersRouter(services));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
+  });
 
   app.use((err, req, res, next) => {
     if (!err) {
