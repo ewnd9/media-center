@@ -17,7 +17,7 @@ export default React.createClass({
 
     return (
       <div className={className}>
-        <div className={styles.container} role="group">
+        <div className={`${styles.container} ${styles.verticalMenuOnSmallScreens}`} role="group">
           {
             elements
               .map(element => {

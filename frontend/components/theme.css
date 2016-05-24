@@ -12,3 +12,9 @@
 .textAlignRight {
   text-align: right;
 }
+
+@media (--mobile-viewport) {
+  .verticalMenuOnSmallScreens > a, .verticalMenuOnSmallScreens > button {
+    display: block;
+  }
+}
