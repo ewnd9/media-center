@@ -1,9 +1,10 @@
 import React from 'react';
 import styles from './style.css';
 
-
 import moment from 'moment';
 import { formatEpisode as format } from 'show-episode-format';
+
+import { getPosterUrl } from '../../api';
 
 export default ({ report, show }) => {
   const titles = [];
@@ -11,17 +12,17 @@ export default ({ report, show }) => {
   const formatInterval = eps =>
     `${format(eps[0].episode)} - ${format(eps[eps.length - 1].episode)} (${eps.length})`;
 
-  let showId;
+  let showIds;
 
   if (report.aired.length > 0) {
-    showId = report.aired[0].show.ids.slug;
+    showIds = report.aired[0].show.ids;
     titles.push(`${formatInterval(report.aired)} available`);
   }
 
   const now = new Date();
 
   if (report.future.length > 0) {
-    showId = report.future[0].episodes[0].show.ids.slug;
+    showIds = report.future[0].episodes[0].show.ids;
 
     report.future.forEach(report => {
       const length = report.episodes.length;
@@ -42,10 +43,14 @@ export default ({ report, show }) => {
     });
   }
 
+
   return (
     <div className={styles.marginBottom}>
-      <div>
-        <a href={`https://trakt.tv/shows/${showId}`} target="_blank">
+      <div className={styles.marginBottom}>
+        <div className={styles.imgWrapper}>
+          <img src={getPosterUrl('show', showIds.imdb)} className={styles.img} />
+        </div>
+        <a href={`https://trakt.tv/shows/${showIds.slug}`} target="_blank">
           {show}
         </a>
       </div>
