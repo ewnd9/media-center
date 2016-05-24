@@ -3,33 +3,35 @@ import React from 'react';
 import themeStyles from '../theme.css';
 import styles from './style.css';
 
-import Spinner from 'react-spinkit';
+import { connect } from 'react-redux';
+import { fetchScreenshots } from '../../actions/screenshots-actions';
 
-import * as api from './../../api';
+import { baseUrl } from '../../api';
+import Spinner from '../ui/spinner/spinner';
 
-export default React.createClass({
-  getInitialState: () => ({
-    loaded: false
-  }),
-  getScreenshots: function() {
-    api
-      .getScreenshots()
-      .then(({ files }) => {
-        this.setState({ screenshots: files, loaded: true });
-      });
-  },
+function mapStateToProps(state) {
+  const { screenshots } = state;
+
+  return {
+    screenshots
+  };
+};
+
+export const ScreenshotsGallery = React.createClass({
   componentDidMount: function() {
-    this.getScreenshots();
+    this.props.dispatch(fetchScreenshots());
   },
   render: function() {
-    if (this.state.loaded) {
+    const { screenshots: { screenshots, isFetching } } = this.props;
+
+    if (!isFetching) {
       return (
         <div className={`${themeStyles.imageContainer}`}>
           {
-            this.state.screenshots.map(url => {
+            screenshots.map(url => {
               return (
                 <div key={url} className={styles.screenshot}>
-                  <img src={`${api.baseUrl}/screenshots/${url}`} />
+                  <img src={`${baseUrl}/screenshots/${url}`} />
                 </div>
               );
             })
@@ -37,17 +39,9 @@ export default React.createClass({
         </div>
       );
     } else {
-      const style = {
-        height: '200px',
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      };
-
-      return (
-        <Spinner spinnerName="three-bounce" noFadeIn style={style} />
-      );
+      return <Spinner />;
     }
   }
 });
+
+export default connect(mapStateToProps)(ScreenshotsGallery);

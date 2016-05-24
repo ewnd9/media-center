@@ -95,6 +95,8 @@
     "react-modal": "^0.6.1",
     "react-select": "^1.0.0-beta8",
     "react-spinkit": "^1.1.4",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0",
     "script-loader": "^0.6.1",
     "show-episode-format": "^1.0.3",
     "sinon": "^1.17.2",

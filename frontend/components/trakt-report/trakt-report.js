@@ -1,7 +1,7 @@
 import React from 'react';
 import themeStyles from '../theme.css';
 
-import Spinner from 'react-spinkit';
+import Spinner from '../ui/spinner/spinner';
 
 import * as api from '../../api';
 import TraktReportItem from './trakt-report-item';
@@ -45,17 +45,7 @@ export default React.createClass({
         </div>
       );
     } else {
-      const style = {
-        height: '200px',
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      };
-
-      return (
-        <Spinner spinnerName="three-bounce" noFadeIn style={style} />
-      );
+      return <Spinner />;
     }
   }
 });
