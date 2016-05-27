@@ -5,8 +5,18 @@
   padding: var(--padding);
 }
 
+.mainContainer {
+  padding: var(--mainContainerPadding);
+}
+
 .imageContainer {
   margin: var(--negativeMargin);
+}
+
+.verticallyCenteredContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .textAlignRight {
@@ -17,4 +27,9 @@
   .verticalMenuOnSmallScreens > a, .verticalMenuOnSmallScreens > button {
     display: block;
   }
+}
+
+.panel {
+  min-height: 100%;
+  flex: 1;
 }

@@ -1,0 +1,11 @@
+.logo {
+  background-image: url(../../film.svg);
+  background-color: transparent;
+  background-size: 100% 100%;
+  border: 0;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  margin-right: 20px;
+  display: inline-block;
+}

@@ -6,14 +6,9 @@ import { MEDIA_LIST_UNWATCHED } from '../../constants';
 import MediaListItem from './media-list-item';
 
 const ChildrenContainer = React.createClass({
-  setRef(el) {
-    if (el) {
-      this.el = el;
-    }
-  },
   render() {
     const {
-      rightToLeft,
+      isLeftPanel,
       openModal,
       mode,
       activeChildren
@@ -23,8 +18,7 @@ const ChildrenContainer = React.createClass({
 
     return (
       <div
-        className={styles.filesList}
-        ref={this.setRef}>
+        className={`${styles.filesList} ${isLeftPanel ? styles.textAlignRight : ''}`}>
         {
           activeChildren
             .filter(media => {
@@ -36,7 +30,6 @@ const ChildrenContainer = React.createClass({
                   key={index}
                   file={media}
                   index={index}
-                  rightToLeft={rightToLeft}
                   openModal={openModal} />
               );
             })

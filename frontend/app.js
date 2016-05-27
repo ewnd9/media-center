@@ -27,11 +27,11 @@ import Main from './components/main/main';
 import configureStore from './configure-store';
 
 const store = configureStore();
+
 const app = (
   <Provider store={store}>
     <Main />
   </Provider>
 );
-
 
 ReactDOM.render(app, document.getElementById('root'));

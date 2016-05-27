@@ -58,6 +58,7 @@ $ chmod +x deploy.sh
 ### Credits
 
 Mockup image from [placeit](https://placeit.net/stages/flat-screen-and-ipad-mini-mockup-at-home-a4667?f_devices=tv)
+Icon from http://www.flaticon.com/free-icon/film_148716
 
 ## License
 

@@ -46,8 +46,9 @@ const MediaList = React.createClass({
 
     const {
       mode,
-      rightToLeft,
-      openModal
+      isLeftPanel,
+      files,
+      mediaListProps: { openModal }
     } = this.props;
 
     const isUnwatched = mode === MEDIA_LIST_UNWATCHED;
@@ -80,8 +81,8 @@ const MediaList = React.createClass({
 
           { hasChildren && (
             <MediaListChildrenContainer
-              rightToLeft={rightToLeft}
               openModal={openModal}
+              isLeftPanel={isLeftPanel}
               mode={mode}
               activeChildren={activeChildren} />
           ) || null }
@@ -91,7 +92,7 @@ const MediaList = React.createClass({
 
       const domChildren = activeKey ? this.retrieveDomChildren() : [];
 
-      const files = this.props.files
+      const renderedFiles = files
         .filter(file => {
           return !isUnwatched || !file.watched;
         })
@@ -114,7 +115,6 @@ const MediaList = React.createClass({
               activeKey={activeKey}
               setActive={this.setActive}
               setPosition={this.setPosition}
-              rightToLeft={rightToLeft}
               openModal={openModal} />
           );
 
@@ -127,10 +127,10 @@ const MediaList = React.createClass({
         }, []);
 
       if (activeChildren && !isNextRowFounded) {
-        files.push(renderChildren(true));
+        renderedFiles.push(renderChildren(true));
       }
 
-      return files;
+      return renderedFiles;
     };
 
     return (

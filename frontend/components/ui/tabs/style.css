@@ -1,0 +1,38 @@
+@import "../../variables.css";
+
+.rightPanel {
+  composes: panel from '../../theme.css';
+  background-color: rgba(79, 92, 121, 1);
+}
+
+.leftPanelMenu {
+  justify-content: flex-end;
+}
+
+.navigationBar {
+  padding: 20px;
+  background: #FAFAFA;
+
+  position: fixed;
+  width: 100%;
+  height: var(--navigationBarHeight);
+  top: 0;
+
+  z-index: 100;
+
+  @media (--full-hd-viewport), (--large-gallery-viewport) {
+    width: 50%;
+  }
+}
+
+.navigationBar.stacked {
+  top: var(--navigationBarHeight);
+}
+
+.navigationBar:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.navigationBar * {
+  color: rgba(0, 0, 0, 0.701961) !important;
+}

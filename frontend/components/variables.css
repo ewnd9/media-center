@@ -1,10 +1,16 @@
 @custom-media --full-hd-viewport (min-width: 1401px);
-@custom-media --large-gallery-viewport (min-width: 1101px, max-width: 1400px);
-@custom-media --large-viewport (min-width: 501px, max-width: 1100px);
+@custom-media --large-gallery-viewport (min-width: 1101px) and (max-width: 1400px);
+@custom-media --large-viewport (min-width: 501px) and (max-width: 1100px);
 @custom-media --mobile-viewport (max-width: 500px);
 
 :root {
-  --padding: 10px 10px;
-  --negativeMargin: -10px -10px;
-  --marginBottom: 10px;
+  --paddingValue: 20;
+
+  --padding: var(--paddingValue)px;
+  --negativeMargin: -var(--paddingValue)px;
+  --marginBottom: var(--paddingValue)px;
+
+  --navigationBarHeightValue: 70;
+  --navigationBarHeight: var(--navigationBarHeightValue)px;
+  --mainContainerPadding: calc(var(--navigationBarHeightValue) + var(--paddingValue))px var(--padding) var(--padding);
 }

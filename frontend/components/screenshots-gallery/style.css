@@ -5,22 +5,16 @@
   float: left;
   position: relative;
   padding: var(--padding);
-}
 
-@media (--full-hd-viewport) {
-  .screenshot {
+  @media (--full-hd-viewport) {
     width: 25%;
   }
-}
 
-@media (--large-gallery-viewport) {
-  .screenshot {
+  @media (--large-gallery-viewport) {
     width: 33.3%;
   }
-}
 
-@media (--mobile-viewport) {
-  .screenshot {
+  @media (--mobile-viewport) {
     width: 50%;
   }
 }

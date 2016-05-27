@@ -21,7 +21,7 @@ require('script!socket.io-client/socket.io.js');
 const socket = io(api.baseUrl);
 
 function isWideScreen() {
-  return window.innerWidth >= 950;
+  return window.innerWidth > 1100; // large-viewport from theme.css
 }
 
 export default React.createClass({
@@ -60,24 +60,26 @@ export default React.createClass({
     this.state.socket.emit(event, data);
   },
   render: function() {
+    const mediaListProps = {
+      openModal: this.openModal,
+      setPlayback: this.setPlayback,
+      files: this.state.files
+    };
+
     return (
       <div>
         { this.state.isWideScreen && (
           <div className={styles.container}>
             <MediaListContainer
-              className={styles.leftPanel}
-              openModal={this.openModal}
-              setPlayback={this.setPlayback}
+              isLeftPanel={true}
               files={this.state.files}
-              rightToLeft={true} />
+              mediaListProps={mediaListProps} />
             <RightPanel
-              className={styles.rightPanel} />
+              files={this.state.files} />
           </div>
         ) || (
           <RightPanel
-            className={styles.rightPanel}
-            openModal={this.openModal}
-            setPlayback={this.setPlayback}
+            mediaListProps={mediaListProps}
             files={this.state.files}
             showVideo={true} />
         )}

@@ -1,5 +1,6 @@
 import React from 'react';
 import themeStyles from '../theme.css';
+import styles from './style.css';
 
 import Tabs from '../ui/tabs/tabs';
 import Router from '../../routes';
@@ -14,7 +15,7 @@ import { Link } from 'react-router';
 
 const RightPanel = React.createClass({
   render: function() {
-    const { showVideo, className } = this.props;
+    const { showVideo, mediaListProps } = this.props;
 
     const MEDIA = 'Media';
     const UPCOMING = 'Upcoming';
@@ -25,13 +26,15 @@ const RightPanel = React.createClass({
     const elements = [];
 
     if (showVideo) {
-      elements.push(createRouterElement('/media', MEDIA, () => (
+      // don't move this.props.files above, references issue
+      
+      const render = () => (
         <MediaListContainer
-          className={themeStyles.imageContainer}
-          openModal={this.props.openModal}
-          setPlayback={this.props.setPlayback}
-          files={this.props.files} />
-      )));
+          files={this.props.files}
+          mediaListProps={mediaListProps} />
+      );
+
+      elements.push(createRouterElement('/media', MEDIA, render));
     }
 
     elements.push(createRouterElement('/trakt', UPCOMING, TraktReport));
@@ -41,8 +44,10 @@ const RightPanel = React.createClass({
 
     const defaultRoute = showVideo && '/media' || '/trakt';
 
+    const Head = (<div className={styles.logo}></div>);
+
     const Shell = ({ children }) => (
-      <Tabs className={className} elements={elements} initial={defaultRoute}>
+      <Tabs elements={elements} initial={defaultRoute} head={Head}>
         { children }
       </Tabs>
     );

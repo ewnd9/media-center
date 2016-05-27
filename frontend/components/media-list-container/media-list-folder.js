@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './style.css';
-import themeStyles from '../theme.css';
 
 import { getPosterUrl, getPosterPlaceholderUrl } from '../../api';
 
@@ -19,7 +18,7 @@ export default React.createClass({
     return (
       <div
         onClick={this.toggleHidden}
-        className={`${styles.poster} ${rightToLeft && themeStyles.textAlignRight || ''}`}>
+        className={`${styles.poster}`}>
 
         <div className={styles.imgWrapper}>
           <img src={getPosterPlaceholderUrl()} className={styles.placeholderImg} />

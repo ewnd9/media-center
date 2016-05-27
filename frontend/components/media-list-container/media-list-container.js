@@ -1,4 +1,5 @@
 import React from 'react';
+import mainStyles from './style.css';
 import styles from '../theme.css';
 
 import MediaList from './media-list';
@@ -8,13 +9,15 @@ import { MEDIA_LIST_ALL, MEDIA_LIST_UNWATCHED } from '../../constants';
 
 export default React.createClass({
   render: function() {
-    const { openModal, files, className } = this.props;
+    const { mediaListProps, files, isLeftPanel } = this.props;
 
+    const className = isLeftPanel ? mainStyles.leftPanel : styles.imageContainer;
     const el = label => ({
       label,
       component: MediaList,
       getProps: mode => ({
-        openModal,
+        mediaListProps,
+        isLeftPanel,
         files,
         mode
       })
@@ -33,8 +36,12 @@ export default React.createClass({
     }
 
     return (
-      <div className={`${className} ${this.props.rightToLeft && styles.textAlignRight || ''}`}>
-        <Tabs elements={elements} initial={initial} rightToLeft={this.props.rightToLeft} />
+      <div className={`${className}`}>
+        <Tabs
+          isLeftPanel={isLeftPanel}
+          isStacked={!isLeftPanel}
+          elements={elements}
+          initial={initial} />
       </div>
     );
   }

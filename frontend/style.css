@@ -54,3 +54,7 @@ a.progress-incomplete {
   align-items: center;
   justify-content: center;
 }
+
+.alertify-logs {
+  z-index: 100;
+}

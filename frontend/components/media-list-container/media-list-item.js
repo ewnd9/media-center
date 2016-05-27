@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './style.css';
-import theme from '../theme.css';
 
 import moment from 'moment';
 import * as api from '../../api';
@@ -23,7 +22,6 @@ export default React.createClass({
   render: function() {
     const item = this.props.file;
     const index = this.props.index;
-    const rightToLeft = this.props.rightToLeft;
 
     const file = item.fileName || item.dir;
     const data = file.split('/');
@@ -54,7 +52,7 @@ export default React.createClass({
     }
 
     return (
-      <div className={`${styles.file} ${rightToLeft && theme.textAlignRight || ''} ${styles.file}`}
+      <div className={`${styles.file} ${styles.file}`}
            key={file}
            tabIndex={index + 1}>
 

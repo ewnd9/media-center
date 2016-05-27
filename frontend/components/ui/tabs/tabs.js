@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../../theme.css';
+import mainStyles from './style.css';
 
 export default React.createClass({
   getInitialState() {
@@ -9,15 +10,28 @@ export default React.createClass({
     this.setState({ active: value });
   },
   render() {
-    const { elements, rightToLeft, className, children } = this.props;
+    const { elements, children, head, isLeftPanel, isStacked } = this.props;
     const { active } = this.state;
 
-    const linkStyle = !rightToLeft && styles.button || styles.buttonLeftMargin;
+    const linkStyle = isLeftPanel ? styles.buttonLeftMargin : styles.button;
     const el = elements.find(el => el.label === active);
 
+    const menuClassName = isLeftPanel ? mainStyles.leftPanelMenu : '';
+    const className = isLeftPanel ? '' : mainStyles.rightPanel;
+
+    const cx = [
+      styles.container,
+      styles.verticalMenuOnSmallScreens,
+      styles.verticallyCenteredContainer,
+      mainStyles.navigationBar,
+      (isStacked ? mainStyles.stacked : ''),
+      menuClassName
+    ].join(' ');
+
     return (
-      <div className={className}>
-        <div className={`${styles.container} ${styles.verticalMenuOnSmallScreens}`} role="group">
+      <div className={`${className}`}>
+        <div className={cx} role="group">
+          { head }
           {
             elements
               .map(element => {
@@ -40,7 +54,7 @@ export default React.createClass({
           }
         </div>
 
-        <div className={styles.container}>
+        <div className={`${styles.container} ${styles.mainContainer}`}>
           { el && el.type !== 'router' &&
             React.createElement(el.component, el.getProps && el.getProps(active)) ||
             children }
