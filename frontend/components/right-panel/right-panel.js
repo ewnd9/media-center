@@ -19,7 +19,7 @@ const RightPanel = React.createClass({
 
     const MEDIA = 'Media';
     const UPCOMING = 'Upcoming';
-    const SCREENSHOTS = 'Screenshots';
+    const SCREENSHOTS = 'Screens';
     const YOUTUBE = 'Youtube';
     const MARKS = 'Marks';
 

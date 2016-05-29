@@ -5,10 +5,6 @@
   padding: var(--padding);
 }
 
-.mainContainer {
-  padding: var(--mainContainerPadding);
-}
-
 .imageContainer {
   margin: var(--negativeMargin);
 }

@@ -40,7 +40,7 @@ export default React.createClass({
           linkStyle={linkStyle}
           elements={elements} />
 
-        <div className={`${styles.container} ${styles.mainContainer}`}>
+        <div className={`${styles.container} ${mainStyles.mainContainer} ${isStacked ? mainStyles.stacked : ''}`}>
           { el && el.type !== 'router' &&
             React.createElement(el.component, el.getProps && el.getProps(active)) ||
             children }

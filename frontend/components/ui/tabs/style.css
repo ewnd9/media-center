@@ -1,5 +1,14 @@
 @import "../../variables.css";
 
+.mainContainer {
+  padding: var(--mainContainerPadding);
+}
+.mainContainer.stacked {
+  margin: 0 auto;
+  max-width: 600px;
+  width: 100%;
+}
+
 .rightPanel {
   composes: panel from '../../theme.css';
   background-color: rgba(79, 92, 121, 1);
@@ -13,7 +22,7 @@
 .verticallyCenteredContainer {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   border-bottom: 1px solid var(--greyBorderColor);
 
   @media (--mobile-viewport) {
@@ -40,7 +49,6 @@
     min-height: var(--navigationBarHeight);
   }
 }
-
 
 .navigationBar.stacked {
   z-index: 1;

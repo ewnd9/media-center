@@ -43,6 +43,7 @@ export default React.createClass({
           { head }
           <div className={styles.toggleButton} onClick={this.setOpened}>Menu</div>
         </div>
+        <div className={styles.menuSpace}></div>
         <div className={`${styles.menu} ${isOpened ? styles.opened : ''}`}>
           { this.renderMenu(elements, active, linkStyle, setActive) }
         </div>

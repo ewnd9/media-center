@@ -21,7 +21,7 @@ require('script!socket.io-client/socket.io.js');
 const socket = io(api.baseUrl);
 
 function isWideScreen() {
-  return window.innerWidth > 1100; // large-viewport from theme.css
+  return window.innerWidth > 1080; // large-viewport from theme.css
 }
 
 export default React.createClass({
