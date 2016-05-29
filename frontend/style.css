@@ -13,6 +13,10 @@ html, body {
   box-sizing: inherit;
 }
 
+#root {
+  overflow: hidden;
+}
+
 a {
   cursor: pointer;
 }
@@ -47,12 +51,6 @@ a.progress-incomplete {
 
 .clearfix:after {
   clear: both;
-}
-
-.ReactModal__Overlay {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .alertify-logs {
