@@ -1,5 +1,4 @@
 import React from 'react';
-import themeStyles from '../theme.css';
 
 import InfiniteScroll from 'react-infinite-scroller';
 import { formatEpisode } from 'show-episode-format';
@@ -27,7 +26,7 @@ export default React.createClass({
         const xs = this.state.marks.length > 0 ?
           this.state.marks.concat(marks) : marks;
 
-        this.setState({ marks: xs, isLoading: false, hasMore: marks.length > 0 })
+        this.setState({ marks: xs, isLoading: false, hasMore: marks.length > 0 });
       })
       .catch(err => {
         console.log(err.stack || err);

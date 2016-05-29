@@ -7,17 +7,17 @@ function requestScreenshots() {
   return {
     type: REQUEST_SCREENSHOTS
   };
-};
+}
 
 function recieveScreenshots(screenshots) {
   return {
     type: RECIEVE_SCREENSHOTS,
     screenshots
   };
-};
+}
 
 export function fetchScreenshots() {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch(requestScreenshots());
 
     return api
@@ -26,4 +26,4 @@ export function fetchScreenshots() {
         return dispatch(recieveScreenshots(files));
       });
   };
-};
+}

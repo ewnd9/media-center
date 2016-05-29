@@ -15,7 +15,7 @@ function mapStateToProps(state) {
   return {
     screenshots
   };
-};
+}
 
 export const ScreenshotsGallery = React.createClass({
   componentDidMount: function() {

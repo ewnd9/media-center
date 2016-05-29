@@ -8,11 +8,7 @@ export default React.createClass({
     this.props.setActive(this.props.file);
   },
   render: function() {
-    const {
-      file,
-      rightToLeft
-    } = this.props;
-
+    const { file } = this.props;
     const { title, imdb, s, type } = file;
 
     return (
@@ -25,7 +21,7 @@ export default React.createClass({
           <img src={getPosterUrl(type, imdb, s)} className={styles.img} />
         </div>
 
-        <div className={styles.summary}>{(type === 'show' ? `S${s > 10 ? s : '0' + s}` : '') + ' ' + file.title}</div>
+        <div className={styles.summary}>{(type === 'show' ? `S${s > 10 ? s : '0' + s}` : '') + ' ' + title}</div>
       </div>
     );
   }

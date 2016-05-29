@@ -1,5 +1,4 @@
 import React from 'react';
-import themeStyles from '../theme.css';
 
 import Spinner from '../ui/spinner/spinner';
 

@@ -22,6 +22,6 @@ function screenshots(state = {
     default:
       return state;
   }
-};
+}
 
 export default screenshots;

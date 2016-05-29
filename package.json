@@ -12,7 +12,7 @@
     "build:backend": "babel -s -d lib src",
     "build:backend:watch": "babel --watch -s -d lib src",
     "build:frontend": "rm -rf public/* && NODE_ENV=production wbuild --x-entry frontend/app.js --x-html frontend/index.html --x-dist public",
-    "style": "eslint 'src/**/*.js' 'frontend/**/*.js'",
+    "lint": "eslint 'src/**/*.js' 'frontend/**/*.js'",
     "test": "ava ./test/*.js",
     "test:watch": "nodemon test/*.js --exec ava"
   },
