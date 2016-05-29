@@ -4,6 +4,8 @@
 @custom-media --mobile-viewport (max-width: 500px);
 
 :root {
+  --backgroundColor: #FAFAFA;
+  --greyBorderColor: #CFD8DC;
   --paddingValue: 20;
 
   --padding: var(--paddingValue)px;

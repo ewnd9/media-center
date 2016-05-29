@@ -13,15 +13,12 @@
   box-shadow: none;
 
   text-transform: uppercase;
-
   font-size: 20px;
-  margin-right: 20px;
+  padding: 5px;
 }
 
 .buttonLeftMargin {
   composes: button;
-  margin-left: 20px;
-  margin-right: 0;
 }
 
 .button:focus {

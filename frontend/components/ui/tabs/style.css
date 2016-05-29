@@ -7,25 +7,43 @@
 
 .leftPanelMenu {
   justify-content: flex-end;
+  align-items: center;
+}
+
+.verticallyCenteredContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--greyBorderColor);
+
+  @media (--mobile-viewport) {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
 }
 
 .navigationBar {
   padding: 20px;
-  background: #FAFAFA;
+  background: var(--backgroundColor);
 
   position: fixed;
   width: 100%;
   height: var(--navigationBarHeight);
   top: 0;
-
   z-index: 100;
 
   @media (--full-hd-viewport), (--large-gallery-viewport) {
     width: 50%;
   }
+  @media (--mobile-viewport) {
+    min-height: var(--navigationBarHeight);
+  }
 }
 
+
 .navigationBar.stacked {
+  z-index: 1;
   top: var(--navigationBarHeight);
 }
 

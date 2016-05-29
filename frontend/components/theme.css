@@ -13,20 +13,8 @@
   margin: var(--negativeMargin);
 }
 
-.verticallyCenteredContainer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
 .textAlignRight {
   text-align: right;
-}
-
-@media (--mobile-viewport) {
-  .verticalMenuOnSmallScreens > a, .verticalMenuOnSmallScreens > button {
-    display: block;
-  }
 }
 
 .panel {

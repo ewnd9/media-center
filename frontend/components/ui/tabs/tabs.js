@@ -2,6 +2,8 @@ import React from 'react';
 import styles from '../../theme.css';
 import mainStyles from './style.css';
 
+import NavBar from '../nav-bar/nav-bar';
+
 export default React.createClass({
   getInitialState() {
     return { active: this.props.initial };
@@ -21,8 +23,7 @@ export default React.createClass({
 
     const cx = [
       styles.container,
-      styles.verticalMenuOnSmallScreens,
-      styles.verticallyCenteredContainer,
+      mainStyles.verticallyCenteredContainer,
       mainStyles.navigationBar,
       (isStacked ? mainStyles.stacked : ''),
       menuClassName
@@ -30,29 +31,14 @@ export default React.createClass({
 
     return (
       <div className={`${className}`}>
-        <div className={cx} role="group">
-          { head }
-          {
-            elements
-              .map(element => {
-                const label = element.label;
-
-                if (element.link) {
-                  const Link = element.link;
-                  return <Link key={label} className={linkStyle} />;
-                } else {
-                  return (
-                    <button type="button"
-                      onClick={this.setActive.bind(this, label)}
-                      key={label}
-                      className={`${linkStyle} ${active === label ? styles.activeButton : ''}`}>
-                      { label }
-                    </button>
-                  );
-                }
-              })
-          }
-        </div>
+        <NavBar
+          head={head}
+          className={cx}
+          isStacked={isStacked}
+          active={active}
+          setActive={this.setActive}
+          linkStyle={linkStyle}
+          elements={elements} />
 
         <div className={`${styles.container} ${styles.mainContainer}`}>
           { el && el.type !== 'router' &&

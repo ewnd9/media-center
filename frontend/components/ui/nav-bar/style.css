@@ -1,0 +1,68 @@
+@import "../../variables.css";
+
+.activeButton {
+  composes: activeButton from "../../theme-buttons.css";
+}
+
+.navBar .menu {
+  display: inline;
+
+  @media (--mobile-viewport) {
+    display: block;
+    text-align: center;
+    width: 100%;
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--backgroundColor);
+    transform: translateY(-100%);
+
+    opacity: 0;
+    transition: transform .2s,opacity .2s;
+    will-change: opacity, transform;
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+.navBar .menu.opened {
+  @media (--mobile-viewport) {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.menu > a, .menu > button {
+  margin-right: 20px;
+  @media (--mobile-viewport) {
+    margin-right: 0;
+  }
+}
+.navBar .menu > a, .navBar.menu > button {
+  @media (--mobile-viewport) {
+    display: block;
+    text-align: center;
+  }
+}
+
+.navBar .head {
+  @media (--mobile-viewport) {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.toggleButton {
+  display: none;
+  cursor: pointer;
+}
+
+.navBar .toggleButton {
+  @media (--mobile-viewport) {
+    display: block;
+  }
+}

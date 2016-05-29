@@ -27,7 +27,7 @@ const RightPanel = React.createClass({
 
     if (showVideo) {
       // don't move this.props.files above, references issue
-      
+
       const render = () => (
         <MediaListContainer
           files={this.props.files}
@@ -68,8 +68,8 @@ function createRouterElement(to, label, component) {
   return {
     label,
     type: 'router',
-    link: ({ className }) => (
-      <Link activeClassName={themeStyles.activeButton} to={to} className={className}>{label}</Link>
+    link: ({ className, onClick }) => (
+      <Link activeClassName={themeStyles.activeButton} to={to} className={className} onClick={onClick}>{label}</Link>
     ),
     url: to,
     component
