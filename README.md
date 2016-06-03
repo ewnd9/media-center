@@ -55,7 +55,19 @@ $ cp example.deploy.sh deploy.sh # replace user@ip to yours
 $ chmod +x deploy.sh
 ```
 
-### Credits
+## Filesize report
+
+- html
+  - index.html 438 B
+
+- css
+  - app.b6683ed4f07f91255ba983e0175c9dd0.css 141.5 kB
+
+- js
+  - app.bundle.c6f6f212213c4c83db62.js 550.06 kB
+  - vendors.c6f6f212213c4c83db62.js 201.11 kB
+
+## Credits
 
 Mockup image from [placeit](https://placeit.net/stages/flat-screen-and-ipad-mini-mockup-at-home-a4667?f_devices=tv)
 Icon from http://www.flaticon.com/free-icon/film_148716

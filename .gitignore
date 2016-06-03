@@ -9,3 +9,4 @@ play.js
 !/public/.keep
 /ecosystem.json
 /start-dev.sh
+stats.json
