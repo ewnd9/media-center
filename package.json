@@ -11,7 +11,7 @@
     "start:nodemon": "nodemon --watch lib app.js",
     "build:backend": "babel -s -d lib src",
     "build:backend:watch": "babel --watch -s -d lib src",
-    "build:frontend": "rm -rf \"public/*\" && NODE_ENV=production node scripts/build",
+    "build:frontend": "rm -f 'public/*' && NODE_ENV=production node scripts/build",
     "lint": "eslint 'src/**/*.js' 'frontend/**/*.js'",
     "test": "ava ./test/*.js",
     "test:watch": "nodemon test/*.js --exec ava",

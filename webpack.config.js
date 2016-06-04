@@ -76,7 +76,6 @@ const config = {
   ],
   postcss: function(webpack) {
     return [
-      require('autoprefixer'),
       require('postcss-import')({
         addDependencyTo: webpack
       }),

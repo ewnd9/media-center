@@ -8,6 +8,10 @@ const simpleStats = require('./simple-stats');
 config.profile = true;
 
 webpack(config, function(err, stats) {
+  if (err) {
+    throw err;
+  }
+  
   const assets = stats.compilation.assets;
   const files = Object.keys(assets)
     .map(file => {
