@@ -29,9 +29,9 @@ Model.prototype.validate = function(obj) {
       }
 
       resolve(result);
-    })
+    });
   });
-}
+};
 
 Model.prototype.on404 = function(err, fn) {
   if (err.status === 404) {
@@ -53,7 +53,7 @@ Model.prototype.getOrInit = function(id, init) {
   return this.get(id).catch(err => {
     return this.on404(err, init);
   });
-}
+};
 
 Model.prototype.put = function(id, data) {
   const doc = {

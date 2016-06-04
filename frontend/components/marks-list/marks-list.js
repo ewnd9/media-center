@@ -4,6 +4,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { formatEpisode } from 'show-episode-format';
 
 import { getMarks } from '../../api';
+import { Link } from 'react-router';
 
 export default React.createClass({
   getInitialState() {
@@ -55,7 +56,13 @@ function renderMark(mark, index) {
   return (
     <div key={index}>
       <div>{`${mark.title} ${formatEpisode(mark.s, mark.ep)}`}</div>
-      <div>{mark.marks.length} marks</div>
+      <div>
+        {mark.marks.length} marks
+        {' '}
+        <Link to={`/marks/${mark._id.replace(/:/g, '-')}`}>
+          (Open)
+        </Link>
+      </div>
     </div>
   );
 }

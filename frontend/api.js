@@ -119,3 +119,7 @@ export const getPosterPlaceholderUrl = () => {
 export const getMarks = since => {
   return get(`/api/v1/marks`, { since });
 };
+
+export const getMark = id => {
+  return get(`/api/v1/marks/${id}`);
+};

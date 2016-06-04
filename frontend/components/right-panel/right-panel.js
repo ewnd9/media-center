@@ -9,13 +9,15 @@ import ScreenshotsGallery from '../screenshots-gallery/screenshots-gallery';
 import TraktReport from '../trakt-report/trakt-report';
 import MediaList from '../media-list/media-list';
 import YoutubeInput from '../youtube-input/youtube-input';
-import MarksList from '../marks-list/marks-list';
 
-import { Link } from 'react-router';
+import MarksList from '../marks-list/marks-list';
+import MarksView from '../marks-view/marks-view';
+
+import { Link, IndexRoute, Route } from 'react-router';
 
 const RightPanel = React.createClass({
   render: function() {
-    const { showVideo, mediaListProps } = this.props;
+    const { isFullWidth, mediaListProps } = this.props;
 
     const MEDIA = 'Media';
     const UPCOMING = 'Upcoming';
@@ -25,7 +27,7 @@ const RightPanel = React.createClass({
 
     const elements = [];
 
-    if (showVideo) {
+    if (isFullWidth) {
       // don't move this.props.files above, references issue
 
       const render = () => (
@@ -40,9 +42,12 @@ const RightPanel = React.createClass({
     elements.push(createRouterElement('/trakt', UPCOMING, TraktReport));
     elements.push(createRouterElement('/screenshots', SCREENSHOTS, ScreenshotsGallery));
     elements.push(createRouterElement('/youtube', YOUTUBE, YoutubeInput));
-    elements.push(createRouterElement('/marks', MARKS, MarksList));
+    elements.push(createRouterElement('/marks', MARKS, null, [
+      React.createElement(IndexRoute, { key: '/marks', component: MarksList }),
+      React.createElement(Route, { key: '/marks/:id', path: '/marks/:id', component: MarksView, isFullWidth })
+    ]));
 
-    const defaultRoute = showVideo && '/media' || '/trakt';
+    const defaultRoute = isFullWidth && '/media' || '/trakt';
 
     const Head = (<div className={styles.logo}></div>);
 
@@ -64,7 +69,7 @@ const RightPanel = React.createClass({
 
 export default RightPanel;
 
-function createRouterElement(to, label, component) {
+function createRouterElement(to, label, component, children) {
   return {
     label,
     type: 'router',
@@ -72,6 +77,7 @@ function createRouterElement(to, label, component) {
       <Link activeClassName={themeStyles.activeButton} to={to} className={className} onClick={onClick}>{label}</Link>
     ),
     url: to,
-    component
+    component,
+    children
   };
 }

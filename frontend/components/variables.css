@@ -6,6 +6,8 @@
 :root {
   --backgroundColor: #FAFAFA;
   --greyBorderColor: #CFD8DC;
+  --darkTextColor: #333;
+
   --paddingValue: 20;
 
   --padding: var(--paddingValue)px;

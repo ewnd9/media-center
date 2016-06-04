@@ -81,18 +81,16 @@ export default React.createClass({
           <RightPanel
             mediaListProps={mediaListProps}
             files={this.state.files}
-            showVideo={true} />
+            isFullWidth={true} />
         )}
 
         {
           this.state.playback && this.state.playback.status !== STOPPED && (
-            <div className={styles.playbackPanel}>
-              <Playback
-                playback={this.state.playback}
-                onPlay={this.socketEmit.bind(this, USER_PAUSE_MEDIA, {})}
-                onPause={this.socketEmit.bind(this, USER_PAUSE_MEDIA, {})}
-                onClose={this.socketEmit.bind(this, USER_CLOSE, {})} />
-            </div>
+            <Playback
+              playback={this.state.playback}
+              onPlay={this.socketEmit.bind(this, USER_PAUSE_MEDIA, {})}
+              onPause={this.socketEmit.bind(this, USER_PAUSE_MEDIA, {})}
+              onClose={this.socketEmit.bind(this, USER_CLOSE, {})} />
           )
         }
 

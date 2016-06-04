@@ -15,7 +15,7 @@
     "lint": "eslint 'src/**/*.js' 'frontend/**/*.js'",
     "test": "ava ./test/*.js",
     "test:watch": "nodemon test/*.js --exec ava",
-    "precommit": "npm test && npm run build:frontend"
+    "precommit": "npm run lint && npm test && npm run build:frontend"
   },
   "preferGlobal": "true",
   "repository": {
@@ -50,7 +50,7 @@
     "morgan": "^1.6.1",
     "node-cache": "^3.1.0",
     "omxplayer": "0.0.1",
-    "opensubtitles-universal-api": "^1.0.0",
+    "opensubtitles-universal-api": "^1.1.0",
     "pouchdb": "^5.1.0",
     "socket.io": "^1.4.2",
     "source-map-support": "^0.4.0",
@@ -113,11 +113,13 @@
     "react-spinkit": "^1.1.4",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
+    "sanitize-html": "^1.11.4",
     "script-loader": "^0.6.1",
     "show-episode-format": "^1.0.3",
     "sinon": "^1.17.2",
     "socket.io-client": "^1.4.2",
     "style-loader": "^0.12.3",
+    "subtitles-parser": "0.0.2",
     "supertest": "^1.2.0",
     "test-listen": "^1.0.0",
     "url-loader": "^0.5.6",
