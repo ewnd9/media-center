@@ -1,8 +1,13 @@
 import { USER_ANALYTICS } from '../constants';
+import OpenSubtitles from 'opensubtitles-universal-api';
+import got from 'got';
 
-function MarksService({ Mark }, storage) {
+function MarksService({ Mark, Subtitles }, storage) {
   this.Mark = Mark;
+  this.Subtitles = Subtitles;
+
   this.storage = storage;
+  this.api = new OpenSubtitles('OSTestUserAgent');
 
   this.query = this.Mark.query.bind(this.Mark);
 
@@ -42,10 +47,54 @@ MarksService.prototype.findAll = function(limit, since) {
     .query(this.Mark.indexes.UPDATED_AT.name, {
       descending: true,
       skip: since ? 1 : 0,
-      startkey: since || undefined, 
+      startkey: since || undefined,
       limit
     });
 };
+
+MarksService.prototype.findOne = function(id) {
+  let mark;
+
+  return this.Mark
+    .getById(id)
+    .then(_mark => {
+      mark = _mark;
+      return this.getSubtitles(mark.imdb, mark.s, mark.ep);
+    })
+    .then(subtitles => {
+      mark.subtitles = subtitles.text;
+      return mark;
+    });
+};
+
+MarksService.prototype.getSubtitles = function(imdb, s, ep) {
+  return this.Subtitles.getOrInit({ imdb, s, ep }, this.fetchSubtitlesFromApi.bind(this, imdb, s, ep));
+};
+
+MarksService.prototype.fetchSubtitlesFromApi = function(imdb, s, ep) {
+  const query = {
+    imdbid: imdb,
+    season: s + '',
+    episode: ep + ''
+  };
+
+  return this.api.searchEpisode(query)
+    .then(result => {
+      const url = result.en[0].url;
+      return got(url);
+    })
+    .then(({ body }) => {
+      const subtitles = {
+        imdb,
+        s,
+        ep,
+        text: body,
+        lang: 'en'
+      };
+
+      return this.Subtitles.put(subtitles, subtitles);
+    });
+}
 
 export default function(models, storage) {
   return new MarksService(models, storage);

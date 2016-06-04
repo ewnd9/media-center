@@ -12,5 +12,12 @@ export default ({ marksService }) => {
       .catch(err => next(err));
   });
 
+  router.get('/api/v1/marks/:id', (req, res, next) => {
+    marksService
+      .findOne(req.params.id)
+      .then(data => res.json(data))
+      .catch(err => next(err));
+  });
+
   return router;
 };

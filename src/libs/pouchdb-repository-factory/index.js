@@ -1,10 +1,37 @@
-function Model(db, createId, indexes) {
+import Joi from 'joi';
+export default Model;
+
+function Model(db, createId, indexes, schema) {
   this.createId = createId;
   this.db = db;
   this.indexes = indexes || {};
+
+  this.schema = schema ? Joi
+    .object()
+    .options({ abortEarly: false })
+    .keys({
+      ...schema,
+      _id: Joi.string(),
+      updatedAt: Joi.string()
+    }) : null;
 }
 
-export default Model;
+Model.prototype.validate = function(obj) {
+  if (!this.schema) {
+    return Promise.resolve(obj);
+  }
+
+  return new Promise((resolve, reject) => {
+    Joi.validate(obj, this.schema, (err, result) => {
+      if (err) {
+        reject(err.details);
+        return;
+      }
+
+      resolve(result);
+    })
+  });
+}
 
 Model.prototype.on404 = function(err, fn) {
   if (err.status === 404) {
@@ -14,9 +41,19 @@ Model.prototype.on404 = function(err, fn) {
   }
 };
 
+Model.prototype.getById = function(id) {
+  return this.db.get(id);
+};
+
 Model.prototype.get = function(id) {
   return this.db.get(this.createId(id));
 };
+
+Model.prototype.getOrInit = function(id, init) {
+  return this.get(id).catch(err => {
+    return this.on404(err, init);
+  });
+}
 
 Model.prototype.put = function(id, data) {
   const doc = {
@@ -25,16 +62,21 @@ Model.prototype.put = function(id, data) {
     updatedAt: new Date().toISOString()
   };
 
-  return this.db.put(doc).then(() => doc);
+  return this.validate(doc)
+    .then(doc => this.db.put(doc))
+    .then(() => doc);
 };
 
 Model.prototype.update = function(id, data) {
-  return this
-    .get(id)
-    .then(
-      dbData => this.put(id, { ...dbData, ...data }),
-      err => this.on404(err, () => this.put(id, data))
-    );
+  return this.validate(data)
+    .then(data => {
+      return this
+        .get(id)
+        .then(
+          dbData => this.put(id, { ...dbData, ...data }),
+          err => this.on404(err, () => this.put(id, data))
+        );
+    });
 };
 
 Model.prototype.findAll = function() {
