@@ -17,8 +17,8 @@
   padding: 5px;
 }
 
-.buttonLeftMargin {
-  composes: button;
+.buttonLink {
+  padding: 0;
 }
 
 .button:focus {

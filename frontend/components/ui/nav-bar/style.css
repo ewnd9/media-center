@@ -51,13 +51,14 @@
   }
 }
 
-.menu > a, .menu > button {
-  margin-right: 10px;
+.navBar .menu > a, .navBar .menu > button {
+  margin: 0 10px 0 0;
 
   @media (--mobile-viewport) {
     margin-right: 0;
   }
 }
+
 .navBar .menu > a, .navBar.menu > button {
   @media (--mobile-viewport) {
     display: block;

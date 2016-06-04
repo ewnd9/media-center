@@ -15,7 +15,7 @@ export default React.createClass({
     const { elements, children, head, isLeftPanel, isStacked } = this.props;
     const { active } = this.state;
 
-    const linkStyle = isLeftPanel ? styles.buttonLeftMargin : styles.button;
+    const linkStyle = `${styles.button} ${styles.buttonLink} ${isLeftPanel ? mainStyles.buttonLeftMargin : ''}`;
     const el = elements.find(el => el.label === active);
 
     const menuClassName = isLeftPanel ? mainStyles.leftPanelMenu : '';

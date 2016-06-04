@@ -62,3 +62,7 @@
 .navigationBar * {
   color: rgba(0, 0, 0, 0.701961) !important;
 }
+
+.buttonLeftMargin {
+  margin: 0 0 0 10px !important;
+}
