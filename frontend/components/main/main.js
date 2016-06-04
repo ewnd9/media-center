@@ -11,7 +11,7 @@ import {
   STOPPED
 } from '../../constants';
 
-import MediaListContainer from '../media-list-container/media-list-container';
+import MediaList from '../media-list/media-list';
 import Playback from '../playback/playback';
 import RightPanel from '../right-panel/right-panel';
 import MediaModal from '../media-modal/media-modal';
@@ -70,7 +70,7 @@ export default React.createClass({
       <div>
         { this.state.isWideScreen && (
           <div className={styles.container}>
-            <MediaListContainer
+            <MediaList
               isLeftPanel={true}
               files={this.state.files}
               mediaListProps={mediaListProps} />

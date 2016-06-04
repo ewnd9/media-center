@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './style.css';
 
-import { MEDIA_LIST_UNWATCHED } from '../../constants';
+import { MEDIA_LIST_UNWATCHED } from '../../../constants';
 
-import MediaListItem from './media-list-item';
+import MediaListItem from '../media-list-item/media-list-item';
 
 const ChildrenContainer = React.createClass({
   render() {

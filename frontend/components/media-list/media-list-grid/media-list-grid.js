@@ -1,14 +1,14 @@
 import React from 'react';
 
-import themeStyles from '../theme.css';
+import themeStyles from '../../theme.css';
 import styles from './style.css';
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-import { MEDIA_LIST_UNWATCHED } from '../../constants';
+import { MEDIA_LIST_UNWATCHED } from '../../../constants';
 
-import MediaListFolder from './media-list-folder';
-import MediaListChildrenContainer from './media-list-children-container';
+import MediaListDirectory from '../media-list-directory/media-list-directory';
+import MediaListChildrenContainer from '../media-list-children-container/media-list-children-container';
 
 const FirstChild = React.createClass({
   render: function() {
@@ -109,7 +109,7 @@ const MediaList = React.createClass({
           total.push(renderChildren(isNextRowAfterActive));
 
           total.push(
-            <MediaListFolder
+            <MediaListDirectory
               file={file}
               key={i++}
               activeKey={activeKey}

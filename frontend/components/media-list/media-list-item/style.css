@@ -1,0 +1,13 @@
+@import "../../variables.css";
+
+.file:not(:last-child) {
+  margin-bottom: var(--marginBottom);
+}
+
+.filePath {
+  font-size: 0.8em;
+}
+
+.fileIcon {
+  margin-left: 10px;
+}

@@ -7,7 +7,7 @@ import Router from '../../routes';
 
 import ScreenshotsGallery from '../screenshots-gallery/screenshots-gallery';
 import TraktReport from '../trakt-report/trakt-report';
-import MediaListContainer from '../media-list-container/media-list-container';
+import MediaList from '../media-list/media-list';
 import YoutubeInput from '../youtube-input/youtube-input';
 import MarksList from '../marks-list/marks-list';
 
@@ -29,7 +29,7 @@ const RightPanel = React.createClass({
       // don't move this.props.files above, references issue
 
       const render = () => (
-        <MediaListContainer
+        <MediaList
           files={this.props.files}
           mediaListProps={mediaListProps} />
       );

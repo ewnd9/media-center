@@ -1,0 +1,10 @@
+@import "../../variables.css";
+
+.textAlignRight {
+  text-align: right;
+}
+
+.filesList {
+  width: 100%;
+  padding: var(--padding);
+}

@@ -1,0 +1,43 @@
+@import "../../variables.css";
+
+.imgWrapper {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.placeholderImg {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+}
+
+.img {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.poster {
+  width: 33.3%;
+  padding: var(--padding);
+  text-align: center;
+  cursor: pointer;
+
+  @media (--full-hd-viewport) {
+    width: 25%;
+  }
+
+  @media (--mobile-viewport) {
+    width: 50%;
+  }
+}
+
+.summary {
+  margin-top: 10px;
+  padding: 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

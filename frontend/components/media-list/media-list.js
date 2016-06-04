@@ -2,7 +2,7 @@ import React from 'react';
 import mainStyles from './style.css';
 import styles from '../theme.css';
 
-import MediaList from './media-list';
+import MediaList from './media-list-grid/media-list-grid';
 import Tabs from '../ui/tabs/tabs';
 
 import { MEDIA_LIST_ALL, MEDIA_LIST_UNWATCHED } from '../../constants';

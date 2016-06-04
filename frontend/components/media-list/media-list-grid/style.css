@@ -1,0 +1,23 @@
+.flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.exampleEnter {
+  opacity: 0.01;
+}
+
+.exampleEnterActive {
+  opacity: 1;
+  transition: all 0.2s ease-in;
+}
+
+.exampleLeave {
+  opacity: 1;
+}
+
+.exampleLeaveActive {
+  opacity: 0.01;
+  transition: all 0.2s ease-in;
+}

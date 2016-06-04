@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './style.css';
 
-import { getPosterUrl, getPosterPlaceholderUrl } from '../../api';
+import { getPosterUrl, getPosterPlaceholderUrl } from '../../../api';
 
 export default React.createClass({
   toggleHidden: function() {
