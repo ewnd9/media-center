@@ -63,7 +63,7 @@ const config = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: path.join(cwd, 'frontend/index.html'),
-      favicon: path.join(cwd, 'frontend/favicon.ico'),
+      favicon: path.join(cwd, 'frontend/assets/favicon.ico'),
       inject: 'body'
     }),
     new webpack.DefinePlugin({

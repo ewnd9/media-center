@@ -89,6 +89,11 @@ export default React.createClass({
                 </span>
               )
             }
+            { item.streamUrl && (
+              <a target="_blank" href={item.streamUrl}>
+                [Stream]
+              </a>
+            ) || '' }
           </div>
         </div>
 

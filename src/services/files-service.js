@@ -1,6 +1,7 @@
 import findFiles from '../find-files';
 import Cache from '../utils/cache';
 import proxy from '../utils/proxy';
+import dlnaQuery from '../libs/dlna-query';
 
 export const FIND_FILES = 'FIND_FILES';
 
@@ -10,13 +11,47 @@ function FilesService(models, rootDir) {
   this.models = models;
   this.rootDir = rootDir;
 
-  this.findFiles = findFiles.bind(null, this.models, this.rootDir);
-
   this._addFile = proxy(models.File, models.File.add);
   this._updateFile = proxy(models.File, models.File.update);
 
   this.renewFindAllFiles = this.renewFindAllFiles.bind(this);
+  this.findFiles = this.findFiles.bind(this);
 }
+
+FilesService.prototype.findFiles = function() {
+  return Promise
+    .all([
+      findFiles(this.models, this.rootDir),
+      this.findDlnaFiles()
+    ])
+    .then(([ files, dlna ]) => {
+
+      files.forEach(file => {
+        file.media.forEach(media => {
+          const parts = media.fileName.split('.');
+          const baseName = parts.slice(0, parts.length - 1).join('.');
+
+          const result = dlna.find(item => item.file === baseName);
+
+          if (result) {
+            media.streamUrl = result.url;
+          }
+        });
+      });
+
+      return files;
+
+    });
+};
+
+FilesService.prototype.findDlnaFiles = function() {
+  return process.env.NODE_ENV === 'production' ?
+    dlnaQuery().then(null, err => {
+      console.error(err);
+      Promise.resolve([]);
+    }) :
+    Promise.resolve([]);
+};
 
 FilesService.prototype.prefetch = function() {
   return this.findAllFiles();

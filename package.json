@@ -59,7 +59,8 @@
     "trakt-utils": "^0.4.0",
     "user-home": "^2.0.0",
     "vlc": "github:fenwick67/node-vlc",
-    "x11": "^2.0.2"
+    "x11": "^2.0.2",
+    "xml2js": "^0.4.16"
   },
   "devDependencies": {
     "alertify.js": "^1.0.8",
