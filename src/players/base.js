@@ -86,7 +86,7 @@ Player.prototype.onKeyPress = function(e) {
   console.log('keyPress', e);
 };
 
-let positionCount = 0;
+let positionCount = 0; // @TODO replace with proper throttle
 
 Player.prototype.updatePosition = function(position) {
   this.position = position;
@@ -94,15 +94,7 @@ Player.prototype.updatePosition = function(position) {
 
   if (positionCount % 10 === 0) {
     if (this.traktScrobble) {
-      this.services.filesService
-        .updateFile(this.uri, { position, duration: this.duration })
-        .then(res => {
-          const pos = position / this.duration * 100;
-
-          if (!res.scrobble && pos !== Infinity && pos > 80) {
-            this.addToHistory(this.uri, this.media);
-          }
-        });
+      this.services.filesService.updatePosition(this.uri, this.media, position, this.duration);
     }
   }
 
@@ -118,12 +110,7 @@ Player.prototype.emitUpdate = function() {
 };
 
 Player.prototype.addToHistory = function(filename, media) {
-  return this.trakt
-    .addToHistory(media)
-    .then(() => this.services.filesService.updateFile(filename, {
-      scrobble: true,
-      scrobbleAt: new Date().toISOString()
-    }));
+  return this.services.filesService.addToHistory(filename, media);
 };
 
 export default Player;

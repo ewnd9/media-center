@@ -17,6 +17,7 @@ function TraktService(trakt, filePath) {
 
   this._getReport = this.trakt.getReport.bind(this.trakt);
   this.search = this.trakt.search.bind(this.trakt);
+  this.addToHistory = this.trakt.addToHistory.bind(this.trakt);
 }
 
 TraktService.prototype.prefetch = function() {

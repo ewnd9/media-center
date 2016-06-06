@@ -52,5 +52,19 @@ export default ({ filesService, playerService }) => {
       .catch(err => next(err));
   });
 
+  router.post('/api/v1/files/position', (req, res, next) => {
+    const {
+      filename,
+      media,
+      position,
+      duration
+    } = req.body;
+
+    filesService
+      .updatePosition(filename, media, position, duration)
+      .then(() => res.json({ status: 'ok' }))
+      .catch(err => next(err));
+  });
+
   return router;
 };

@@ -74,6 +74,27 @@ FilesService.prototype.updateFile = function() {
   return this._updateFile(arguments).then(this.renewFindAllFiles);
 };
 
+FilesService.prototype.updatePosition = function(uri, media, position, duration) {
+  return this
+    .updateFile(uri, { position, duration })
+    .then(res => {
+      const pos = position / duration * 100;
+      
+      if (!res.scrobble && pos !== Infinity && pos > 80) {
+        return this.addToHistory(uri, media);
+      }
+    });
+};
+
+FilesService.prototype.addToHistory = function(uri, media) {
+  return this.services.traktService
+    .addToHistory(media)
+    .then(() => this.updateFile(uri, {
+      scrobble: true,
+      scrobbleAt: new Date().toISOString()
+    }));
+};
+
 export default function(db, mediaPath) {
   return new FilesService(db, mediaPath);
 }

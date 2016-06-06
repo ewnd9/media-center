@@ -4,7 +4,8 @@ import mkdirp from 'mkdirp';
 
 const defaultTrackMock = {
   getReport: () => {},
-  search: () => {}
+  search: () => {},
+  addToHistory: () => {}
 };
 
 export default ({ traktMock = defaultTrackMock }) => {
