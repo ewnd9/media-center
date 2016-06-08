@@ -3,7 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import HTTP from 'http';
+import http from 'http';
 import socketIO from 'socket.io';
 import Bus from './bus';
 
@@ -16,7 +16,7 @@ import TraktRouter from './routes/trakt';
 import MarksRouter from './routes/marks';
 import PostersRouter from './routes/posters';
 
-function createServer({ db, services, screenshotPath, port }) {
+function createServer({ db, services, screenshotPath, port, errorBoardPath }) {
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
@@ -35,6 +35,22 @@ function createServer({ db, services, screenshotPath, port }) {
   app.use('/', TraktRouter(services));
   app.use('/', MarksRouter(services));
   app.use('/', PostersRouter(services));
+
+  let agent;
+
+  const httpServer = http.createServer(app);
+  const io = socketIO(httpServer);
+
+  if (process.env.NODE_ENV === 'production') {
+    const mount = '/error-board';
+    const errorBoard = require('embedded-error-board')(errorBoardPath, mount);
+
+    agent = errorBoard.agent;
+
+    app.use(mount, errorBoard.app);
+    errorBoard.ws.installHandlers(httpServer, { prefix: `${mount}/ws` });
+  }
+
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
   });
@@ -47,15 +63,16 @@ function createServer({ db, services, screenshotPath, port }) {
 
     console.log(err, err.stack);
 
+    if (agent) {
+      agent.report(err);
+    }
+
     res.status(500);
     res.json({ error: err.stack.split('\n') });
   });
 
-  const http = HTTP.Server(app);
-  const io = socketIO(http);
-
   const bus = new Bus(services, io);
-  const server = http.listen(port, () => console.log(`listen localhost:${server.address().port}`));
+  const server = httpServer.listen(port, () => console.log(`listen localhost:${server.address().port}`));
 
   if (process.env.NODE_ENV === 'production') {
     Object
