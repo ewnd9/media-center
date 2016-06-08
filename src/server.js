@@ -16,7 +16,7 @@ import TraktRouter from './routes/trakt';
 import MarksRouter from './routes/marks';
 import PostersRouter from './routes/posters';
 
-function createServer({ db, services, screenshotPath, port, errorBoardPath }) {
+function createServer({ db, services, screenshotPath, port, errorBoard, errorBoardMount }) {
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
@@ -41,14 +41,10 @@ function createServer({ db, services, screenshotPath, port, errorBoardPath }) {
   const httpServer = http.createServer(app);
   const io = socketIO(httpServer);
 
-  if (process.env.NODE_ENV === 'production') {
-    const mount = '/error-board';
-    const errorBoard = require('embedded-error-board')(errorBoardPath, mount);
-
+  if (errorBoard) {
     agent = errorBoard.agent;
-
-    app.use(mount, errorBoard.app);
-    errorBoard.ws.installHandlers(httpServer, { prefix: `${mount}/ws` });
+    app.use(errorBoardMount, errorBoard.app);
+    errorBoard.ws.installHandlers(httpServer, { prefix: `${errorBoardMount}/ws` });
   }
 
   app.get('*', (req, res) => {

@@ -8,17 +8,15 @@ import {
   dbPath,
   mediaPath,
   screenshotPath,
-  errorBoardPath,
+  errorBoardMount,
   trakt,
   port
 } from './config';
 
-function createApp() {
+export default function start(errorBoard) {
   return createDb(dbPath + '/db')
     .then(db => {
       const services = createServices(db, mediaPath, trakt, storage, dbPath);
-      return createServer({ db, services, screenshotPath, port, errorBoardPath });
+      return createServer({ db, services, screenshotPath, port, errorBoard, errorBoardMount });
     });
 }
-
-export default createApp;
