@@ -101,6 +101,7 @@
     "postcss-cssnext": "^2.4.0",
     "postcss-import": "^8.0.2",
     "postcss-loader": "^0.8.1",
+    "pretty-bytes": "^3.0.1",
     "proxyquire": "^1.7.3",
     "raw-loader": "^0.5.1",
     "react": "^0.14.4",
