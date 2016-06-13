@@ -7,7 +7,8 @@
         "MEDIA_PATH": "/home/user/media"
       },
       "env_production": {
-        "MEDIA_PATH": "/home/user/media"
+        "MEDIA_PATH": "/home/user/media",
+        "NODE_DISABLE_X11_SUPPORT": "true"
       }
     }
   ]
