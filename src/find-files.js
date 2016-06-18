@@ -9,30 +9,33 @@ const exts = '(mkv|mp4|avi)';
 
 export default (db, rootDir) => {
   return globby([`**/*.+${exts}`], { cwd: rootDir, realpath: true })
-    .then(parseVideoFiles.bind(null, db))
+    .then(parseVideoFiles.bind(null, db, rootDir))
     .then(flattenVideos.bind(null, rootDir));
 };
 
-function parseVideoFiles(db, allVideos) {
-  const videos = allVideos.filter(item => !((/(?:\.|\/)(?:sample|rarbg\.com)\./i).test(item)));
+function parseVideoFiles(db, rootDir, allVideos) {
+  const media = allVideos
+    .filter(item => !((/(?:\.|\/)(?:sample|rarbg\.com)\./i).test(item)))
+    .map(canonicalPath => {
+      const video = canonicalPath
+        .replace(new RegExp('^' + rootDir + '/'), '');
 
-  const media = videos.map(video => {
-    const data = video.split('/');
+      const data = video.split('/');
 
-    const media = {
-      file: video,
-      dir: path.dirname(video),
-      fileName: path.basename(video),
-      dirName: data[data.length - 2],
-      birthtime: fs.statSync(video).birthtime,
-    };
+      const media = {
+        file: video,
+        dir: path.dirname(video),
+        fileName: path.basename(video),
+        dirName: data[data.length - 2],
+        birthtime: fs.statSync(canonicalPath).birthtime,
+      };
 
-    media.recognition = split(media.fileName || media.dirName);
-    return media;
-  });
+      media.recognition = split(media.fileName || media.dirName);
+      return media;
+    });
 
   return Promise
-    .all([db.File.getAll(videos), db.Prefix.getAll(media.filter(_ => !!_.recognition))])
+    .all([db.File.getAll(media.map(_ => _.file)), db.Prefix.getAll(media.filter(_ => !!_.recognition))])
     .then(setupDb.bind(null, db, media));
 }
 

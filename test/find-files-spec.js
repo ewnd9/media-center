@@ -35,7 +35,7 @@ import {
 } from './fixtures/create-fs';
 
 async function addMockFile(db) {
-  const res = await db.File.add([testDir, showFolder, showFile1].join('/'), {
+  const res = await db.File.add([showFolder, showFile1].join('/'), {
     type: 'show',
     title: showTitle,
     s: 1,
@@ -68,19 +68,19 @@ test('#findFiles', async t => {
   const r0 = result[0].media[0];
 
   t.is(r0.birthtime, nearestDate);
-  t.is(r0.dir, [testDir, movieFolder].join('/'));
-  t.is(r0.file, [testDir, movieFolder, movieFile].join('/'));
+  t.is(r0.dir, movieFolder);
+  t.is(r0.file, [movieFolder, movieFile].join('/'));
   t.is(r0.db, undefined);
   t.is(r0.recognition.type, 'movie');
   t.is(r0.recognition.title, movieTitle);
   t.is(r0.recognition.year, 2015);
 
-  t.is(result[1].dir, [testDir, showFolder].join('/'));
+  t.is(result[1].dir, showFolder);
   t.is(result[1].media[0].birthtime, pastDate);
 
   const items = result[1].media;
   t.is(items.length, 2);
-  t.is(items[0].file, [testDir, showFolder, showFile1].join('/'));
+  t.is(items[0].file, [showFolder, showFile1].join('/'));
 
   t.is(items[0].db.title, showTitle);
   t.is(items[0].db.imdb, showImdb);
@@ -91,7 +91,7 @@ test('#findFiles', async t => {
   t.is(items[0].recognition.s, 1);
   t.is(items[0].recognition.ep, 1);
 
-  t.is(items[1].file, [testDir, showFolder, showFile2].join('/'));
+  t.is(items[1].file, [showFolder, showFile2].join('/'));
 
   t.is(items[1].db.title, showTitle);
   t.is(items[1].db.imdb, showImdb);

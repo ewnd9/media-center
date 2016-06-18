@@ -16,7 +16,7 @@ import TraktRouter from './routes/trakt';
 import MarksRouter from './routes/marks';
 import PostersRouter from './routes/posters';
 
-function createServer({ db, services, screenshotPath, port, errorBoard, errorBoardMount }) {
+function createServer({ db, services, errorBoard, config: { screenshotPath, port, errorBoardMount } }) {
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));

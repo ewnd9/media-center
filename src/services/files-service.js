@@ -79,7 +79,7 @@ FilesService.prototype.updatePosition = function(uri, media, position, duration)
     .updateFile(uri, { position, duration })
     .then(res => {
       const pos = position / duration * 100;
-      
+
       if (!res.scrobble && pos !== Infinity && pos > 80) {
         return this.addToHistory(uri, media);
       }

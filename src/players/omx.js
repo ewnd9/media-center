@@ -28,7 +28,7 @@ OmxPlayer.prototype.play = function({ uri, position }) {
 
   this.player = new OMXPlayer(configuration);
 
-  this.player.start(uri, err => {
+  this.player.start(this.getFsUri(uri), err => {
     if (err) {
       console.log(err);
     }

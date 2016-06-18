@@ -17,7 +17,7 @@ VlcPlayer.prototype.play = function({ uri, position }) {
     '--verbose', '1'
   ]);
 
-  this.media = this.vlcProcess.mediaFromFile(uri);
+  this.media = this.vlcProcess.mediaFromFile(this.getFsUri(uri));
   this.media.parseSync();
 
   this.duration = this.media.duration;

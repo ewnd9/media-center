@@ -29,6 +29,10 @@ Player.prototype.play = function({ uri, media, position, traktScrobble }) {
   setTimeout(() => this.emitUpdate(), 1000);
 };
 
+Player.prototype.getFsUri = function(uri) {
+  return this.services.configService.MEDIA_PATH + '/' + uri;
+};
+
 Player.prototype.togglePlay = function() {
   if (this.status === PLAYING) {
     this.pause();

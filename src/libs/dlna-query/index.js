@@ -53,7 +53,7 @@ function dlnaRequest() {
     body
   };
 
-  return got('localhost:8200/ctl/ContentDir', params)
+  return got('http://minidlna:8200/ctl/ContentDir', params)
     .then(data => {
       return data.body;
     });
