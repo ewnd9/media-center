@@ -58,6 +58,7 @@
     "split-torrent-release": "^1.1.0",
     "superagent": "^2.0.0-alpha.2",
     "trakt-utils": "^0.4.0",
+    "url-parse": "^1.1.1",
     "user-home": "^2.0.0",
     "vlc": "github:fenwick67/node-vlc",
     "x11": "^2.0.2",

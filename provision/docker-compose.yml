@@ -20,7 +20,7 @@ services:
       - "51413:51413"
       - "51413:51413/udp"
   app:
-    image: ewnd9/media-center:0.1.8
+    image: ewnd9/media-center:0.1.9
     restart: always
     ports:
       - "4000:3000"
