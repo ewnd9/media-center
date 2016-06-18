@@ -1,0 +1,41 @@
+version: '2'
+services:
+  minidlna:
+    # https://github.com/besn0847/arm-minidlna
+    image: besn0847/arm-minidlna
+    restart: always
+    volumes:
+      - ${CACHE}:/data/db
+      - ${DATA}:/data/media
+    ports:
+      - "8200:8200"
+      - "1900:1900/udp"
+  transmission:
+    image: ewnd9/rpi-transmission
+    restart: always
+    volumes:
+      - ${DATA}:/var/lib/transmission-daemon/downloads
+    ports:
+      - "9091:9091"
+      - "51413:51413"
+      - "51413:51413/udp"
+  app:
+    image: ewnd9/media-center:0.1.8
+    restart: always
+    ports:
+      - "4000:3000"
+    volumes:
+      - ${DATA}:/data
+      - ${DB}:/db
+    links:
+      - minidlna
+    environment:
+      - NODE_ENV=production
+      - MEDIA_PATH=/data
+      - DATA_PATH=/db
+      - NODE_DISABLE_X11_SUPPORT=true
+      - TRAKT_TOKEN=95d9052aa473f1ec48a323b86fab90578a109175aad927a66b2819510a99b0a1
+    devices:
+      - "/dev/vchiq:/dev/vchiq"
+      - "/dev/fb0:/dev/fb0"
+    command: node /app/app.js

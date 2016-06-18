@@ -3,10 +3,12 @@
 *.log
 play.js
 /deploy.sh
+/deploy-docker-machine.sh
 /test.sh
 /lib
 /public/*
 !/public/.keep
 /ecosystem.json
 /start-dev.sh
+/start-docker-compose-production.sh
 stats.json

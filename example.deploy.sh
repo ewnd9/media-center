@@ -1,10 +1,15 @@
 #!/bin/sh
 
-npm run build:backend
-NODE_ENV=production webpack
+set -e
 
-REMOTE=user@ip
-DEST=/home/pi/media-center
-rsync --exclude node_modules --exclude .git -av ./ $REMOTE:$DEST
+HOST="pi@<your-pi-ip>"
 
-ssh $REMOTE "cd $DEST && time npm install --production && ~/.npm-packages/bin/pm2 startOrRestart $DEST/ecosystem.json --env production"
+DOCKERFILE="~/mc/docker-compose.yml"
+
+START_SCRIPT="start-docker-compose-production.sh"
+START_SCRIPT_DEST="~/mc/$START_SCRIPT"
+
+scp ./provision/docker-compose.yml $HOST:$DOCKERFILE
+scp ./$START_SCRIPT $HOST:$START_SCRIPT_DEST
+
+ssh $HOST -t "$START_SCRIPT_DEST $DOCKERFILE"
