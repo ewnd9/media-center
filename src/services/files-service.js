@@ -13,6 +13,7 @@ function FilesService(models, rootDir) {
 
   this._addFile = proxy(models.File, models.File.add);
   this._updateFile = proxy(models.File, models.File.update);
+  this._putFile = proxy(models.File, models.File.put);
 
   this.renewFindAllFiles = this.renewFindAllFiles.bind(this);
   this.findFiles = this.findFiles.bind(this);
@@ -90,6 +91,7 @@ FilesService.prototype.addToHistory = function(uri, media) {
   return this.services.traktService
     .addToHistory(media)
     .then(() => this.updateFile(uri, {
+      ...media,
       scrobble: true,
       scrobbleAt: new Date().toISOString()
     }));

@@ -33,7 +33,11 @@ test.afterEach(t => {
 
 test('/api/v1/files/scrobble', async t => {
   const filename = 'movie.avi';
-  const media = { imdb: 'tt0' };
+  const media = {
+    imdb: 'tt0',
+    type: 'show',
+    title: 'First Imdb Movie'
+  };
 
   const d0 = await t.context.db.File.update(filename, media);
   t.is(media.imdb, d0.imdb);

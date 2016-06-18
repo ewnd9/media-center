@@ -39,7 +39,7 @@ async function addMockFile(db) {
     type: 'show',
     title: showTitle,
     s: 1,
-    e: 1,
+    ep: 1,
     imdb: showImdb
   });
 

@@ -1,15 +1,34 @@
-const createId = ({ imdb, s, ep }) => [imdb, s, ep].join(':');
-const associate = () => {};
+import t from 'tcomb-validation';
 
-const indexes = {
-  UPDATED_AT: {
-    name: 'UPDATED_AT_1',
-    /*eslint-disable */
-    fn: (doc) => {
-      emit(doc.updatedAt + '$' + doc._id);
+const Mark = {
+  createId: ({ imdb, s, ep }) => [imdb, s, ep].join(':'),
+  schema: t.struct({
+    _id: t.maybe(t.String),
+    _rev: t.maybe(t.String),
+    imdb: t.String,
+    s: t.maybe(t.Number),
+    ep: t.maybe(t.Number),
+    marks: t.list(
+      t.struct({
+        position: t.Number,
+        duration: t.Number,
+        progress: t.Number,
+        file: t.String
+      })
+    ),
+    updatedAt: t.String
+  }),
+  indexes: {
+    UPDATED_AT: {
+      name: 'UPDATED_AT_1',
+      /*eslint-disable */
+      fn: (doc) => {
+        emit(doc.updatedAt + '$' + doc._id);
+      }
+      /*eslint-enable */
     }
-    /*eslint-enable */
-  }
+  },
+  associate: () => {}
 };
 
-export default { createId, associate, indexes };
+export default Mark;

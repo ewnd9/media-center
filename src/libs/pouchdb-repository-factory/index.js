@@ -44,7 +44,9 @@ Model.prototype.getOrInit = function(id, init) {
   });
 };
 
-Model.prototype.put = function(id, data) {
+Model.prototype.put = function(id, _data) {
+  const data = _data || id;
+
   const doc = {
     ...data,
     _id: this.createId(id),
@@ -56,7 +58,10 @@ Model.prototype.put = function(id, data) {
     .then(() => doc);
 };
 
-Model.prototype.update = function(id, data) {
+Model.prototype.update = function(id, _data) {
+  const data = _data || id;
+  data.updatedAt = new Date().toISOString();
+
   return this.validate(data)
     .then(data => {
       return this
