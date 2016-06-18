@@ -1,19 +1,11 @@
-import Joi from 'joi';
+import t from 'tcomb-validation';
 export default Model;
 
 function Model(db, createId, indexes, schema) {
   this.createId = createId;
   this.db = db;
   this.indexes = indexes || {};
-
-  this.schema = schema ? Joi
-    .object()
-    .options({ abortEarly: false })
-    .keys({
-      ...schema,
-      _id: Joi.string(),
-      updatedAt: Joi.string()
-    }) : null;
+  this.schema = schema;
 }
 
 Model.prototype.validate = function(obj) {
@@ -21,16 +13,13 @@ Model.prototype.validate = function(obj) {
     return Promise.resolve(obj);
   }
 
-  return new Promise((resolve, reject) => {
-    Joi.validate(obj, this.schema, (err, result) => {
-      if (err) {
-        reject(err.details);
-        return;
-      }
+  const result = t.validate(obj, this.schema, { strict: true });
 
-      resolve(result);
-    });
-  });
+  if (result.isValid()) {
+    return Promise.resolve(obj);
+  }
+
+  return Promise.reject(result.errors);
 };
 
 Model.prototype.on404 = function(err, fn) {

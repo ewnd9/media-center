@@ -1,17 +1,18 @@
-import Joi from 'joi';
+import t from 'tcomb-validation';
 
-const createId = ({ imdb, s, ep, lang = 'en' }) => `${imdb}:${s}:${ep}:${lang}`;
-
-const associate = () => {
-  // noop
+const Subtitles = {
+  createId: ({ imdb, s, ep, lang = 'en' }) => `${imdb}:${s}:${ep}:${lang}`,
+  schema: t.struct({
+    _id: t.String,
+    _rev: t.maybe(t.String),
+    imdb: t.String,
+    ep: t.maybe(t.Number), // not required
+    s: t.maybe(t.Number),
+    lang: t.String,
+    text: t.String,
+    updatedAt: t.String
+  }),
+  associate: () => {}
 };
 
-const schema = {
-  imdb: Joi.string().required(),
-  ep: Joi.number(),
-  s: Joi.number(),
-  lang: Joi.string().required(),
-  text: Joi.string().required()
-};
-
-export default { createId, associate, schema };
+export default Subtitles;
