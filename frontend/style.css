@@ -40,6 +40,10 @@ a.progress-incomplete {
   background: white;
 }
 
+label {
+  font-weight: inherit !important;
+}
+
 .btn-icon {
   margin-right: 10px;
 }

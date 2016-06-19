@@ -4,6 +4,7 @@ import styles from './style.css';
 import * as api from '../../../api';
 import Autosuggest from 'react-autosuggest';
 import { debounce } from 'lodash';
+import { t, propTypes } from 'tcomb-react';
 
 function getSuggestionValue(suggestion) {
   return suggestion.label;
@@ -65,17 +66,15 @@ const MediaDialogAutosuggest = React.createClass({
       value: newValue
     });
   },
-  onSuggestionSelected(event, { suggestion, suggestionValue }) {
-    this.loadSuggestions(suggestionValue);
-
+  onSuggestionSelected(event, { suggestion }) {
     this.setState({ valid: true });
-    this.props.updateImdb(suggestion.value, suggestion.label);
+    this.props.onUpdate(suggestion.value, suggestion.label);
   },
   onSuggestionsUpdateRequested({ value, reason }) {
     if (reason !== 'click') {
       this.setState({ valid: false });
+      this.loadSuggestions(value);
     }
-    this.loadSuggestions(value);
   },
   render() {
     const { value, suggestions } = this.state;
@@ -110,5 +109,18 @@ const MediaDialogAutosuggest = React.createClass({
     );
   }
 });
+
+MediaDialogAutosuggest.propTypes = propTypes({
+  type: t.String,
+  onUpdate: t.Function,
+  loadSuggestions: t.maybe(t.Function),
+  recognition: t.struct({
+    imdb: t.maybe(t.String),
+    type: t.String,
+    s: t.maybe(t.Number),
+    ep: t.maybe(t.Number)
+  })
+});
+
 
 export default MediaDialogAutosuggest;

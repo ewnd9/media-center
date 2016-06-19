@@ -61,11 +61,11 @@ $ chmod +x deploy.sh
   - index.html 363 B gziped
 
 - css
-  - app.css 25.54 kB gziped
+  - app.css 25.57 kB gziped
 
 - js
   - vendors.js 61.67 kB gziped
-  - app.bundle.js 181.97 kB gziped
+  - app.bundle.js 179.06 kB gziped
 
 ## Credits
 

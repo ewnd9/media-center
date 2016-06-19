@@ -7,17 +7,36 @@
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
-  text-align: center;
 }
 
-.container .field-group {
+.container .fieldGroup {
   margin: 10px;
 }
 
 .controls {
-  margin-top: 50px !important;
+  text-align: center;
 }
 
 .buttonMarginBottom {
   margin-bottom: 10px !important;
+}
+
+.select {
+  composes: input from '../media-dialog-autosuggest/style.css';
+  background-color: white;
+  text-align: center;
+}
+
+.selectContainer {
+  composes: container from '../media-dialog-autosuggest/style.css';
+}
+
+.label {
+  display: block;
+  margin: 10px 0 0;
+}
+
+.input {
+  composes: input from '../media-dialog-autosuggest/style.css';
+  display: block;
 }

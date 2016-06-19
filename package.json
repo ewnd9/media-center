@@ -125,6 +125,7 @@
     "style-loader": "^0.12.3",
     "subtitles-parser": "0.0.2",
     "supertest": "^1.2.0",
+    "tcomb-react": "^0.9.1",
     "test-listen": "^1.0.0",
     "url-loader": "^0.5.6",
     "webpack": "^1.12.13",

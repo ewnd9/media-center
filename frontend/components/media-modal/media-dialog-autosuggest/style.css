@@ -4,12 +4,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px;
 }
 
 .input {
   width: 100%;
-  text-align: center;
   padding: 10px 20px;
   border: 1px solid #aaa;
   border-radius: 4px;
@@ -34,7 +32,6 @@
 .suggestionsContainer {
   position: fixed;
   width: 380px;
-  text-align: center;
   margin: 0;
   padding: 0;
   list-style-type: none;
@@ -51,7 +48,6 @@
 .suggestion {
   cursor: pointer;
   padding: 10px 20px;
-  text-align: center;
 }
 
 .suggestionFocused {
