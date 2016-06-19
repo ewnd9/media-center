@@ -34,7 +34,7 @@ services:
       - MEDIA_PATH=/data
       - DATA_PATH=/db
       - NODE_DISABLE_X11_SUPPORT=true
-      - TRAKT_TOKEN=95d9052aa473f1ec48a323b86fab90578a109175aad927a66b2819510a99b0a1
+      - TRAKT_TOKEN=${TRAKT_TOKEN}
     devices:
       - "/dev/vchiq:/dev/vchiq"
       - "/dev/fb0:/dev/fb0"
