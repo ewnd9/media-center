@@ -8,7 +8,7 @@ import Router from '../../routes';
 import ScreenshotsGallery from '../screenshots-gallery/screenshots-gallery';
 import TraktReport from '../trakt-report/trakt-report';
 import MediaList from '../media-list/media-list';
-import YoutubeInput from '../youtube-input/youtube-input';
+import YoutubeInput from '../youtube/youtube';
 
 import MarksList from '../marks-list/marks-list';
 import MarksView from '../marks-view/marks-view';

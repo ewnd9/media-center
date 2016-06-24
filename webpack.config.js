@@ -3,6 +3,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CarteBlanche = require('carte-blanche');
+const ReactPlugin = require('carte-blanche-react-plugin');
 
 const cwd = process.cwd();
 
@@ -72,7 +74,26 @@ const config = {
         APP_ENV: JSON.stringify('browser')
       },
     }),
-    new webpack.ContextReplacementPlugin(/node_modules\/moment\/locale/, /en/)
+    new webpack.ContextReplacementPlugin(/node_modules\/moment\/locale/, /en/),
+    // new CarteBlanche({
+    //   componentRoot: './frontend/components',
+    //   filter: /(.*)\/(\1)\.js$/,
+    //   plugins: [
+    //     new ReactPlugin({
+    //       variationFolderName: './frontend/carte-blanche',
+    //       injectTags: [
+    //         './node_modules/bootstrap/dist/css/bootstrap.min.css',
+    //         './frontend/style.css'
+    //       ]
+    //       .map(fileName => require('fs').readFileSync(fileName))
+    //       .map(styles => `<style>${styles}</style>`),
+    //       // files: [
+    //       //   './node_modules/bootstrap/dist/css/bootstrap.min.css',
+    //       //   './frontend/style.css'
+    //       // ]
+    //     })
+    //   ]
+    // })
   ],
   postcss: function(webpack) {
     return [

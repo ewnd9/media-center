@@ -1,10 +1,13 @@
 import { createStore, applyMiddleware } from 'redux';
 
 import thunkMiddleware from 'redux-thunk';
+import { actionSideEffectMiddleware } from 'redux-side-effect';
+
 import rootReducer from './reducers/index';
 
 const createStoreWithMiddleware = applyMiddleware(
-  thunkMiddleware
+  thunkMiddleware,
+  actionSideEffectMiddleware
 )(createStore);
 
 export default function configureStore(initialState) {

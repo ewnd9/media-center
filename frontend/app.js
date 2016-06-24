@@ -1,6 +1,5 @@
 import 'babel-polyfill';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-select/dist/react-select.css';
 import './style.css';
 
 import '!!file?name=[name].[ext]!./assets/chrome-manifest.json';
