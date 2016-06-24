@@ -7,18 +7,16 @@ require.context('!!file?name=[name].[ext]!./assets/', false, /^\.\/.*\.png$/);
 
 import notify from './notify';
 
-window.onerror = (msg, url, line, col, err) => {
-  logError(err);
-  return true;
-};
+if (process.env.NODE_ENV === 'production') {
+  window.onerror = (msg, url, line, col, err) => {
+    notify.error(err.stack && err.stack.split('\n').join('<br />') || err);
+    return true; // stop propagation
+  };
 
-window.addEventListener('unhandledrejection', reason => {
-  logError(reason.message || reason);
-});
-
-function logError(err) {
-  notify.error(err.stack.split('\n').join('<br />'));
-  console.error(err.stack || err);
+  window.addEventListener('unhandledrejection', rejection => {
+    const err = rejection.reason;
+    notify.error(err.stack && err.stack.split('\n').join('<br />') || err);
+  });
 }
 
 import React from 'react';
