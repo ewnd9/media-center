@@ -1,5 +1,4 @@
 import React from 'react';
-import themeStyles from '../theme.css';
 import styles from './style.css';
 
 import Tabs from '../ui/tabs/tabs';
@@ -74,7 +73,7 @@ function createRouterElement(to, label, component, children) {
     label,
     type: 'router',
     link: ({ className, onClick }) => (
-      <Link activeClassName={themeStyles.activeButton} to={to} className={className} onClick={onClick}>{label}</Link>
+      <Link activeClassName={styles.activeButton} to={to} className={className} onClick={onClick}>{label}</Link>
     ),
     url: to,
     component,

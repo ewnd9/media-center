@@ -1,5 +1,17 @@
 @import "../../variables.css";
 
+.button {
+  composes: button from '../../theme-buttons.css';
+}
+
+.buttonLink {
+  composes: buttonLink from '../../theme-buttons.css';
+}
+
+.container {
+  composes: container from '../../theme.css';
+}
+
 .mainContainer {
   padding: var(--mainContainerPadding);
 }

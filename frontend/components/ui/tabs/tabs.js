@@ -1,6 +1,5 @@
 import React from 'react';
-import styles from '../../theme.css';
-import mainStyles from './style.css';
+import styles from './style.css';
 
 import NavBar from '../nav-bar/nav-bar';
 
@@ -15,17 +14,17 @@ export default React.createClass({
     const { elements, children, head, isLeftPanel, isStacked } = this.props;
     const { active } = this.state;
 
-    const linkStyle = `${styles.button} ${styles.buttonLink} ${isLeftPanel ? mainStyles.buttonLeftMargin : ''}`;
+    const linkStyle = `${styles.button} ${styles.buttonLink} ${isLeftPanel ? styles.buttonLeftMargin : ''}`;
     const el = elements.find(el => el.label === active);
 
-    const menuClassName = isLeftPanel ? mainStyles.leftPanelMenu : '';
-    const className = isLeftPanel ? '' : mainStyles.rightPanel;
+    const menuClassName = isLeftPanel ? styles.leftPanelMenu : '';
+    const className = isLeftPanel ? '' : styles.rightPanel;
 
     const cx = [
       styles.container,
-      mainStyles.verticallyCenteredContainer,
-      mainStyles.navigationBar,
-      (isStacked ? mainStyles.stacked : ''),
+      styles.verticallyCenteredContainer,
+      styles.navigationBar,
+      (isStacked ? styles.stacked : ''),
       menuClassName
     ].join(' ');
 
@@ -40,7 +39,7 @@ export default React.createClass({
           linkStyle={linkStyle}
           elements={elements} />
 
-        <div className={`${styles.container} ${mainStyles.mainContainer} ${isStacked ? mainStyles.stacked : ''}`}>
+        <div className={`${styles.container} ${styles.mainContainer} ${isStacked ? styles.stacked : ''}`}>
           { el && el.type !== 'router' &&
             React.createElement(el.component, el.getProps && el.getProps(active)) ||
             children }

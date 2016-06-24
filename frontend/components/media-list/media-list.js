@@ -1,6 +1,5 @@
 import React from 'react';
-import mainStyles from './style.css';
-import styles from '../theme.css';
+import styles from './style.css';
 
 import MediaList from './media-list-grid/media-list-grid';
 import Tabs from '../ui/tabs/tabs';
@@ -11,7 +10,7 @@ export default React.createClass({
   render: function() {
     const { mediaListProps, files, isLeftPanel } = this.props;
 
-    const className = isLeftPanel ? mainStyles.leftPanel : styles.imageContainer;
+    const className = isLeftPanel ? styles.leftPanel : styles.imageContainer;
     const el = label => ({
       label,
       component: MediaList,

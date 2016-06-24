@@ -1,6 +1,5 @@
 import React from 'react';
 
-import themeStyles from '../../theme.css';
 import styles from './style.css';
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -134,7 +133,7 @@ const MediaList = React.createClass({
     };
 
     return (
-      <div className={`${styles.flex} ${themeStyles.imageContainer}`} ref={this.setRef}>
+      <div className={`${styles.flex} ${styles.imageContainer}`} ref={this.setRef}>
         {renderFolders()}
       </div>
     );

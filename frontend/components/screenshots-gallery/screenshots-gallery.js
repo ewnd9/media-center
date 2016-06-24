@@ -1,6 +1,4 @@
 import React from 'react';
-
-import themeStyles from '../theme.css';
 import styles from './style.css';
 
 import { connect } from 'react-redux';
@@ -26,7 +24,7 @@ export const ScreenshotsGallery = React.createClass({
 
     if (!isFetching) {
       return (
-        <div className={`${themeStyles.imageContainer}`}>
+        <div className={`${styles.imageContainer} clearfix`}>
           {
             screenshots.map(url => {
               return (

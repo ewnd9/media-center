@@ -8,3 +8,7 @@
   /*border-right: 1px solid rgba(0,0,0,0.5);*/
   /*box-shadow: inset -7px 0 10px -7px rgba(0,0,0,0.5);*/
 }
+
+.imageContainer {
+  composes: imageContainer from '../theme.css';
+}

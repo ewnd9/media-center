@@ -1,6 +1,10 @@
 /* there was flex but couldn't find how to add margin between items so replaced */
 @import '../variables.css';
 
+.imageContainer {
+  composes: imageContainer from '../theme.css';
+}
+
 .screenshot {
   float: left;
   position: relative;

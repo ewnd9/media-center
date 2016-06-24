@@ -21,3 +21,7 @@
   opacity: 0.01;
   transition: all 0.2s ease-in;
 }
+
+.imageContainer {
+  composes: imageContainer from '../../theme.css';
+}
