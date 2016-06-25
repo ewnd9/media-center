@@ -42,3 +42,15 @@ test('GET /api/v1/marks', async t => {
   t.truthy(body.length === 1);
   t.truthy(body[0]._id === markEntity0._id);
 });
+
+test('GET /api/v1/marks', async t => {
+  const mark = generateMark();
+  const { body } = await t.context.request.post('/api/v1/marks').send({ mark });
+  const markDb = await t.context.app.db.Mark.getById(body._id);
+
+  t.truthy(markDb.imdb === mark.media.imdb);
+  t.truthy(markDb.marks.length === 1);
+  t.truthy(markDb.marks[0].position === mark.position);
+  t.truthy(markDb.marks[0].duration === mark.duration);
+  t.truthy(markDb.marks[0].progress === mark.progress);
+});

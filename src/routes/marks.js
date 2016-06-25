@@ -19,5 +19,12 @@ export default ({ marksService }) => {
       .catch(err => next(err));
   });
 
+  router.post('/api/v1/marks', (req, res, next) => {
+    marksService
+      .add(req.body.mark)
+      .then(data => res.json(data))
+      .catch(err => next(err));
+  });
+
   return router;
 };
