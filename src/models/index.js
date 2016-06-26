@@ -1,4 +1,5 @@
 import PouchDB from 'pouchdb';
+import t from 'tcomb-validation';
 import Repository from '../libs/pouchdb-repository-factory/';
 
 import File from './file';
@@ -19,8 +20,9 @@ export default (dbPath, dbOptions = {}) => {
     .reduce((result, key) => {
       const db = new PouchDB(`${dbPath}-${key.toLowerCase()}`, dbOptions);
       const obj = initializers[key];
+      const validate = validateFactory(obj.schema);
 
-      result[key] = new Repository(db, obj.createId, obj.indexes, obj.schema);
+      result[key] = new Repository(db, obj.createId, obj.indexes, validate);
 
       return result;
     }, {});
@@ -34,3 +36,19 @@ export default (dbPath, dbOptions = {}) => {
 
   return Promise.all(promises).then(() => models);
 };
+
+function validateFactory(schema) {
+  if (!schema) {
+    return obj => Promise.resolve(obj);
+  }
+
+  return obj => {
+    const result = t.validate(obj, schema, { strict: true });
+
+    if (result.isValid()) {
+      return Promise.resolve(obj);
+    }
+
+    return Promise.reject(result.errors);
+  };
+}

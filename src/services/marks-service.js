@@ -9,7 +9,7 @@ function MarksService({ Mark, Subtitles }, storage) {
   this.storage = storage;
   this.api = new OpenSubtitles('OSTestUserAgent');
 
-  this.query = this.Mark.query.bind(this.Mark);
+  this.findByIndex = this.Mark.findByIndex.bind(this.Mark);
 
   this.storage.on(USER_ANALYTICS, () => {
     if (this.storage.lastPlaybackStatus) {
@@ -27,24 +27,27 @@ MarksService.prototype.add = function(data) {
   delete data.media;
 
   return this.Mark
-    .get(id)
-    .then(mark => {
-      mark.marks.push(data);
+    .findOne(id)
+    .then(
+      mark => {
+        mark.marks.push(data);
 
-      return this.Mark.put(id, mark);
-    }, err => this.Mark.on404(err, () => {
-      const mark = {
-        ...media,
-        marks: [data]
-      };
+        return this.Mark.put(id, mark);
+      },
+      err => this.Mark.onNotFound(err, () => {
+        const mark = {
+          ...media,
+          marks: [data]
+        };
 
-      return this.Mark.put(id, mark);
-    }));
+        return this.Mark.put(id, mark);
+      })
+    );
 };
 
 MarksService.prototype.findAll = function(limit, since) {
   return this
-    .query(this.Mark.indexes.UPDATED_AT.name, {
+    .findByIndex(this.Mark.indexes.UPDATED_AT.name, {
       descending: true,
       skip: since ? 1 : 0,
       startkey: since || undefined,
@@ -56,7 +59,7 @@ MarksService.prototype.findOne = function(id) {
   let mark;
 
   return this.Mark
-    .getById(id)
+    .findOneById(id)
     .then(_mark => {
       mark = _mark;
       return this.getSubtitles(mark.imdb, mark.s, mark.ep);
@@ -68,7 +71,7 @@ MarksService.prototype.findOne = function(id) {
 };
 
 MarksService.prototype.getSubtitles = function(imdb, s, ep) {
-  return this.Subtitles.getOrInit({ imdb, s, ep }, this.fetchSubtitlesFromApi.bind(this, imdb, s, ep));
+  return this.Subtitles.findOneOrInit({ imdb, s, ep }, this.fetchSubtitlesFromApi.bind(this, imdb, s, ep));
 };
 
 MarksService.prototype.fetchSubtitlesFromApi = function(imdb, s, ep) {
@@ -92,7 +95,7 @@ MarksService.prototype.fetchSubtitlesFromApi = function(imdb, s, ep) {
         lang: 'en'
       };
 
-      return this.Subtitles.put(subtitles, subtitles);
+      return this.Subtitles.put(subtitles);
     });
 };
 

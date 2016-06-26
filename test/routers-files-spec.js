@@ -50,7 +50,7 @@ test('/api/v1/files/scrobble', async t => {
   t.truthy(t.context.traktMock.addToHistory.calledOnce === true);
   t.deepEqual(media, t.context.traktMock.addToHistory.firstCall.args[0]);
 
-  const d1 = await t.context.db.File.get(filename);
+  const d1 = await t.context.db.File.findOne(filename);
 
   t.is(true, d1.scrobble);
   t.not(d0.updatedAt, d1.updatedAt);

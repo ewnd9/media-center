@@ -67,7 +67,7 @@
   "devDependencies": {
     "alertify.js": "^1.0.8",
     "autoprefixer": "^6.3.3",
-    "ava": "^0.14.0",
+    "ava": "^0.15.2",
     "babel-cli": "^6.4.0",
     "babel-core": "^6.4.0",
     "babel-eslint": "^6.0.0",

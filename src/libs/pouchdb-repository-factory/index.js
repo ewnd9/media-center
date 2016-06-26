@@ -1,28 +1,13 @@
-import t from 'tcomb-validation';
 export default Model;
 
-function Model(db, createId, indexes, schema) {
+function Model(db, createId, indexes, validate) {
   this.createId = createId;
   this.db = db;
   this.indexes = indexes || {};
-  this.schema = schema;
+  this.validate = validate;
 }
 
-Model.prototype.validate = function(obj) {
-  if (!this.schema) {
-    return Promise.resolve(obj);
-  }
-
-  const result = t.validate(obj, this.schema, { strict: true });
-
-  if (result.isValid()) {
-    return Promise.resolve(obj);
-  }
-
-  return Promise.reject(result.errors);
-};
-
-Model.prototype.on404 = function(err, fn) {
+Model.prototype.onNotFound = function(err, fn) {
   if (err.status === 404) {
     return fn();
   } else {
@@ -30,18 +15,35 @@ Model.prototype.on404 = function(err, fn) {
   }
 };
 
-Model.prototype.getById = function(id) {
+Model.prototype.findById = function(id) {
   return this.db.get(id);
 };
 
-Model.prototype.get = function(id) {
+Model.prototype.findOne = function(id) {
   return this.db.get(this.createId(id));
 };
 
-Model.prototype.getOrInit = function(id, init) {
-  return this.get(id).catch(err => {
-    return this.on404(err, init);
-  });
+Model.prototype.findOneOrInit = function(id, init) {
+  return this
+    .findOne(id)
+    .then(null, err => this.onNotFound(err, init));
+};
+
+Model.prototype.findByIndex = function(index, options = {}) {
+  return this.db
+    .query(index, {
+      include_docs: true,
+      ...options
+    })
+    .then(res => res.rows.map(row => ({
+      ...row.doc,
+      _key: row.key
+    })));
+};
+
+Model.prototype.findAll = function() {
+  return this.db
+    .allDocs({ include_docs: true });
 };
 
 Model.prototype.put = function(id, _data) {
@@ -53,7 +55,8 @@ Model.prototype.put = function(id, _data) {
     updatedAt: new Date().toISOString()
   };
 
-  return this.validate(doc)
+  return this
+    .validate(doc)
     .then(doc => this.db.put(doc))
     .then(() => doc);
 };
@@ -62,32 +65,16 @@ Model.prototype.update = function(id, _data) {
   const data = _data || id;
   data.updatedAt = new Date().toISOString();
 
-  return this.validate(data)
+  return this
+    .validate(data)
     .then(data => {
       return this
-        .get(id)
+        .findOne(id)
         .then(
           dbData => this.put(id, { ...dbData, ...data }),
-          err => this.on404(err, () => this.put(id, data))
+          err => this.onNotFound(err, () => this.put(id, data))
         );
     });
-};
-
-Model.prototype.findAll = function() {
-  return this.db
-    .allDocs({ include_docs: true });
-};
-
-Model.prototype.query = function(index, options) {
-  return this.db
-    .query(index, {
-      include_docs: true,
-      ...options
-    })
-    .then(res => res.rows.map(row => ({
-      ...row.doc,
-      _key: row.key
-    })));
 };
 
 Model.prototype.createDesignDoc = function(name, mapFunction) {
@@ -101,22 +88,24 @@ Model.prototype.createDesignDoc = function(name, mapFunction) {
 };
 
 Model.prototype.ensureIndexes = function() {
-  const promises = Object.keys(this.indexes).map(key => {
-    const { name, fn } = this.indexes[key];
-    const designDoc = this.createDesignDoc(name, fn);
+  const promises = Object
+    .keys(this.indexes)
+    .map(key => {
+      const { name, fn } = this.indexes[key];
+      const designDoc = this.createDesignDoc(name, fn);
 
-    return this.db
-      .put(designDoc)
-      .then(() => {
-        console.log(`${designDoc._id} has been created`);
-      }, err => {
-        if (err.name === 'conflict') {
-          console.log(`${designDoc._id} already exists`);
-        } else {
-          throw err;
-        }
-      });
-  });
+      return this.db
+        .put(designDoc)
+        .then(() => {
+          console.log(`${designDoc._id} has been created`);
+        }, err => {
+          if (err.name === 'conflict') {
+            console.log(`${designDoc._id} already exists`);
+          } else {
+            throw err;
+          }
+        });
+    });
 
   return Promise.all(promises);
 };

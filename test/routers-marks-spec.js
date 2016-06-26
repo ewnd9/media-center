@@ -46,7 +46,7 @@ test('GET /api/v1/marks', async t => {
 test('GET /api/v1/marks', async t => {
   const mark = generateMark();
   const { body } = await t.context.request.post('/api/v1/marks').send({ mark });
-  const markDb = await t.context.app.db.Mark.getById(body._id);
+  const markDb = await t.context.app.db.Mark.findById(body._id);
 
   t.truthy(markDb.imdb === mark.media.imdb);
   t.truthy(markDb.marks.length === 1);
