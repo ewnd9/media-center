@@ -29,13 +29,18 @@ export default React.createClass({
     let title;
     let progress;
     let progressClass;
+    let streamUrlParts = [];
 
     if (item.db) {
       title = formatTitle(item.db);
+      streamUrlParts.push(`title=${encodeURIComponent(title)}`);
 
       if (item.db.position) {
         progress = parseInt((item.db.position / item.db.duration) * 100);
         progressClass = `progress progress-${ progress < 80 ? 'incomplete' : 'complete' }`;
+
+        streamUrlParts.push(`position=${encodeURIComponent(item.db.position)}`);
+        streamUrlParts.push(`duration=${encodeURIComponent(item.db.duration)}`);
       }
     } else if (item.recognition) {
       title = '? ' + formatTitle(item.recognition);
@@ -90,7 +95,7 @@ export default React.createClass({
               )
             }
             { item.streamUrl && (
-              <a target="_blank" href={item.streamUrl}>
+              <a target="_blank" href={`${item.streamUrl}#${streamUrlParts.join('&')}`}>
                 [Stream]
               </a>
             ) || '' }

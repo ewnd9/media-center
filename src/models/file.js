@@ -13,6 +13,8 @@ const File = {
     title: t.String,
     ep: t.maybe(t.Number),
     s: t.maybe(t.Number),
+    position: t.maybe(t.Number),
+    duration: t.maybe(t.Number),
     scrobble: t.maybe(t.Boolean),
     scrobbleAt: t.maybe(t.String),
     updatedAt: t.String
