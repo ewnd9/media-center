@@ -6,10 +6,10 @@ RUN mkdir app
 
 COPY .deps.json /app/package.json
 COPY app.js /app/app.js
-COPY lib /app/lib
-COPY public /app/public
 
 WORKDIR /app
-
 RUN npm install --production
 CMD node /app/app.js
+
+COPY lib /app/lib
+COPY public /app/public
