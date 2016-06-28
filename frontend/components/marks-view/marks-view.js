@@ -6,21 +6,10 @@ import sanitize from 'sanitize-html';
 
 import { fetchMark, addMark } from '../../actions/mark-actions';
 import ControlPanel from './control-panel/control-panel';
+import Spinner from '../ui/spinner/spinner';
 
-function mapStateToProps(state) {
-  const { mark, lines, isFetching } = state.mark;
-
-  return {
-    mark,
-    lines,
-    isFetching
-  };
-}
-
-const mapDispatchToProps = {
-  fetchMark,
-  addMark
-};
+const mapStateToProps = ({ mark: { mark, lines, isFetching } }) => ({ mark, lines, isFetching });
+const mapDispatchToProps = { fetchMark, addMark };
 
 export const MarksView = React.createClass({
   getInitialState() {
@@ -96,11 +85,7 @@ export const MarksView = React.createClass({
     const { active } = this.state;
 
     if (isFetching || !mark) {
-      return (
-        <div>
-          Loading
-        </div>
-      );
+      return <Spinner />;
     }
 
     return (
