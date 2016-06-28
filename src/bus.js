@@ -64,7 +64,7 @@ function Bus(services, io) {
       ignoreInitial: true
     })
     .on('all', () => {
-      process.nextTick(() => services.filesService.renewFindAllFiles);
+      process.nextTick(() => services.filesService.renewFindAllFiles());
       io.emit(RELOAD_FILES);
     });
 

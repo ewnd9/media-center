@@ -1,4 +1,6 @@
 import BasePlayer from './base';
+import { inherits } from 'util';
+
 import notifier from 'node-notifier';
 
 const notify = message => {
@@ -8,13 +10,14 @@ const notify = message => {
   });
 };
 
-
 function MockPlayer() {
-  BasePlayer.apply(this, Array.prototype.slice.apply(this));
+  BasePlayer.apply(this, Array.prototype.slice.apply(arguments));
 }
 
+inherits(MockPlayer, BasePlayer);
+
 MockPlayer.prototype.play = function({ uri, position }) {
-  BasePlayer.prototype.play.apply(this, Array.prototype.slice.apply(this));
+  BasePlayer.prototype.play.apply(this, Array.prototype.slice.apply(arguments));
 
   this.position = 0;
   this.duration = 100 * 60 * 1000 * 1000; // 100 minutes

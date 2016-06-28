@@ -26,7 +26,19 @@ import { Provider } from 'react-redux';
 import Main from './components/main/main';
 import configureStore from './configure-store';
 
-const store = configureStore();
+import * as api from './api';
+import { fetchFiles } from './actions/files-actions';
+import { recievePlayback } from './actions/playback-actions';
+import {
+  UPDATE_PLAYBACK,
+  RELOAD_FILES
+} from './constants';
+
+/* global io */
+require('script!socket.io-client/socket.io.js');
+const socket = io(api.baseUrl);
+
+const store = configureStore(socket);
 
 const app = (
   <Provider store={store}>
@@ -35,3 +47,6 @@ const app = (
 );
 
 ReactDOM.render(app, document.getElementById('root'));
+
+socket.on(UPDATE_PLAYBACK, playback => store.dispatch(recievePlayback(playback)));
+socket.on(RELOAD_FILES, () => store.dispatch(fetchFiles()));
