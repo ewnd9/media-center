@@ -59,7 +59,7 @@ MarksService.prototype.findOne = function(id) {
   let mark;
 
   return this.Mark
-    .findOneById(id)
+    .findById(id)
     .then(_mark => {
       mark = _mark;
       return this.getSubtitles(mark.imdb, mark.s, mark.ep);

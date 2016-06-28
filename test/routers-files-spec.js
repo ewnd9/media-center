@@ -55,3 +55,22 @@ test('/api/v1/files/scrobble', async t => {
   t.is(true, d1.scrobble);
   t.not(d0.updatedAt, d1.updatedAt);
 });
+
+test('POST /api/v1/files/position', async t => {
+  const filename = 'movie.avi';
+
+  const media = {
+    imdb: 'tt0',
+    type: 'show',
+    title: 'First Imdb Movie'
+  };
+
+  const { body } = await t.context.request.post('/api/v1/files/position').send({
+    filename,
+    media,
+    position: 0,
+    duration: 0
+  });
+
+  t.truthy(media.imdb === body.file.imdb);
+});

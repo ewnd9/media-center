@@ -4,7 +4,7 @@ EXPOSE 4000
 
 RUN mkdir app
 
-COPY .deps.json /app/package.json
+COPY deps.json /app/package.json
 COPY app.js /app/app.js
 
 WORKDIR /app

@@ -64,7 +64,7 @@ function createServer({ db, services, errorBoard, config: { screenshotPath, port
     }
 
     res.status(500);
-    res.json({ error: err.stack.split('\n') });
+    res.json({ error: err.stack && err.stack.split('\n') || err });
   });
 
   const bus = new Bus(services, io);

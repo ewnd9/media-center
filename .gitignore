@@ -3,6 +3,7 @@
 *.log
 play.js
 /deploy.sh
+/deploy-from-docker-hub.sh
 /deploy-docker-machine.sh
 /test.sh
 /lib
@@ -12,3 +13,5 @@ play.js
 /start-dev.sh
 /start-docker-compose-production.sh
 stats.json
+*.zip
+deps.json

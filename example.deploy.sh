@@ -4,12 +4,25 @@ set -e
 
 HOST="pi@<your-pi-ip>"
 
-DOCKERFILE="~/mc/docker-compose.yml"
+DEST_DIR="~/mc"
+
+APP_DIR="$DEST_DIR/app"
 
 START_SCRIPT="start-docker-compose-production.sh"
-START_SCRIPT_DEST="~/mc/$START_SCRIPT"
+START_SCRIPT_DEST="$APP_DIR/$START_SCRIPT"
 
-scp ./provision/docker-compose.yml $HOST:$DOCKERFILE
+npm run build:backend
+npm run build:frontend
+
+node -e "require('fs').writeFileSync('./deps.json', JSON.stringify({ dependencies: require('./package.json').dependencies }))"
+
+scp ./provision/docker-compose.yml $HOST:$APP_DIR/docker-compose.yml
+scp ./provision/docker/rpi-media-center/Dockerfile $HOST:$APP_DIR/Dockerfile
 scp ./$START_SCRIPT $HOST:$START_SCRIPT_DEST
 
-ssh $HOST -t "$START_SCRIPT_DEST $DOCKERFILE"
+scp -r ./public $HOST:$APP_DIR/public
+scp -r ./lib $HOST:$APP_DIR/lib
+scp ./deps.json $HOST:$APP_DIR/deps.json
+scp ./app.js $HOST:$APP_DIR/app.js
+
+ssh $HOST -t "cd $APP_DIR && $START_SCRIPT_DEST ./"

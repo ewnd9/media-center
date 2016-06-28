@@ -49,7 +49,7 @@ FilesService.prototype.findDlnaFiles = function() {
   return process.env.NODE_ENV === 'production' ?
     dlnaQuery().then(null, err => {
       console.error(err);
-      Promise.resolve([]);
+      return Promise.resolve([]);
     }) :
     Promise.resolve([]);
 };
@@ -77,12 +77,14 @@ FilesService.prototype.updateFile = function() {
 
 FilesService.prototype.updatePosition = function(uri, media, position, duration) {
   return this
-    .updateFile(uri, { position, duration })
+    .updateFile(uri, { ...media, position, duration })
     .then(res => {
       const pos = position / duration * 100;
 
       if (!res.scrobble && pos !== Infinity && pos > 80) {
-        return this.addToHistory(uri, media);
+        return this.addToHistory(uri, res);
+      } else {
+        return res;
       }
     });
 };

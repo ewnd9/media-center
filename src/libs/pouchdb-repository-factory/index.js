@@ -66,15 +66,22 @@ Model.prototype.update = function(id, _data) {
   data.updatedAt = new Date().toISOString();
 
   return this
-    .validate(data)
-    .then(data => {
-      return this
-        .findOne(id)
-        .then(
-          dbData => this.put(id, { ...dbData, ...data }),
-          err => this.onNotFound(err, () => this.put(id, data))
-        );
-    });
+    .findOne(id)
+    .then(
+      dbData => {
+        const obj = { ...dbData, ...data };
+        obj._rev = dbData._rev;
+
+        return this
+          .validate(obj)
+          .then(obj => this.put(id, obj));
+      },
+      err => this.onNotFound(err, () => {
+        return this
+          .validate(data)
+          .then(obj => this.put(id, obj));
+      })
+    );
 };
 
 Model.prototype.createDesignDoc = function(name, mapFunction) {

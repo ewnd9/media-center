@@ -8,6 +8,8 @@ const Mark = {
     imdb: t.String,
     s: t.maybe(t.Number),
     ep: t.maybe(t.Number),
+    title: t.String,
+    type: t.String,
     marks: t.list(
       t.struct({
         position: t.Number,

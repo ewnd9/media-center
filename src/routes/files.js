@@ -77,7 +77,7 @@ export default ({ filesService, playerService }) => {
 
     filesService
       .updatePosition(filename, media, position, duration)
-      .then(() => res.json({ status: 'ok' }))
+      .then(file => res.json({ file }))
       .catch(err => next(err));
   });
 
