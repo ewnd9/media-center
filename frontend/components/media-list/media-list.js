@@ -9,9 +9,10 @@ import Spinner from '../ui/spinner/spinner';
 
 import { MEDIA_LIST_ALL, MEDIA_LIST_UNWATCHED } from '../../constants';
 import { fetchFiles } from '../../actions/files-actions';
+import { openModal } from '../../actions/modal-actions';
 
 const mapStateToProps = ({ files: { files, isFetching }}) => ({ files, isFetching });
-const mapDispatchToProps = { fetchFiles };
+const mapDispatchToProps = { fetchFiles, openModal };
 
 const MediaList = React.createClass({
   componentDidMount() {
@@ -19,10 +20,10 @@ const MediaList = React.createClass({
   },
   render: function() {
     const {
-      mediaListProps,
       isLeftPanel,
       files,
-      isFetching
+      isFetching,
+      openModal
     } = this.props;
 
     const className = isLeftPanel ? styles.leftPanel : styles.imageContainer;
@@ -30,7 +31,7 @@ const MediaList = React.createClass({
       label,
       component: isFetching ? Spinner : MediaListGrid,
       getProps: mode => ({
-        mediaListProps,
+        openModal,
         isLeftPanel,
         files,
         mode

@@ -11,57 +11,39 @@ function isWideScreen() {
 }
 
 const Main = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
-      modalIsOpen: false,
       isWideScreen: isWideScreen()
     };
   },
-  componentDidMount: function() {
+  componentDidMount() {
     window.addEventListener('resize', this.handleResize);
   },
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
   },
   handleResize() {
     this.setState({ isWideScreen: isWideScreen() });
   },
-  openModal: function(file) {
-    this.setState({ modalIsOpen: true, file });
-  },
-  closeModal: function() {
-    this.setState({ modalIsOpen: false });
-    this.props.fetchFiles();
-  },
   render: function() {
     const { files } = this.props;
-    const mediaListProps = {
-      openModal: this.openModal,
-      setPlayback: this.setPlayback,
-      files
-    };
 
     return (
       <div>
         { this.state.isWideScreen && (
           <div className={styles.container}>
             <MediaList
-              isLeftPanel={true}
-              mediaListProps={mediaListProps} />
+              isLeftPanel={true} />
             <RightPanel
               files={files} />
           </div>
         ) || (
           <RightPanel
-            mediaListProps={mediaListProps}
             isFullWidth={true} />
         )}
 
         <Playback />
-
-        <MediaModal
-          isOpen={this.state.modalIsOpen}
-          onRequestClose={this.closeModal} />
+        <MediaModal />
       </div>
     );
   }

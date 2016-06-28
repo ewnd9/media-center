@@ -47,7 +47,7 @@ const MediaList = React.createClass({
       mode,
       isLeftPanel,
       files,
-      mediaListProps: { openModal }
+      openModal
     } = this.props;
 
     const isUnwatched = mode === MEDIA_LIST_UNWATCHED;

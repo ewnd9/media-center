@@ -1,25 +1,37 @@
 import React from 'react';
 import styles from './style.css';
 
+import { connect } from 'react-redux';
+import { closeModal } from '../../actions/modal-actions';
+
 import Modal from 'react-modal';
 import MediaDialog from './media-dialog/media-dialog';
 
-export default React.createClass({
+const mapStateToProps = ({ modal: { isOpened, file } }) => ({ isOpened, file });
+const mapDispatchToProps = { closeModal };
+
+const MediaModal = React.createClass({
   render() {
-    const { isOpen, onRequestClose, file } = this.props;
+    const { isOpened, closeModal, file } = this.props;
+
+    if (!isOpened) {
+      return null;
+    }
 
     return (
       <Modal
-        isOpen={isOpen}
         className={styles.modal}
         overlayClassName={styles.overlay}
-        onRequestClose={onRequestClose}>
+        isOpen={isOpened}
+        onRequestClose={closeModal}>
 
         <MediaDialog
-          closeModal={onRequestClose}
+          closeModal={closeModal}
           file={file} />
 
       </Modal>
     );
   }
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(MediaModal);
