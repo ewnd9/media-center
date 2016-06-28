@@ -58,14 +58,14 @@ $ chmod +x deploy.sh
 ## Filesize report
 
 - html
-  - index.html 362 B gziped
+  - index.html 360 B gziped
 
 - css
   - app.css 24.51 kB gziped
 
 - js
-  - vendors.js 64.68 kB gziped
-  - app.bundle.js 183.21 kB gziped
+  - vendors.js 64.67 kB gziped
+  - app.bundle.js 184.46 kB gziped
 
 ## Credits
 

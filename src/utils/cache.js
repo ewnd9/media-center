@@ -1,7 +1,7 @@
 import Cache from 'node-cache';
 
 export default () => {
-  const cache = new Cache({ stdTTL: 60 * 10 }); // invalidates in 10 mins
+  const cache = new Cache({ stdTTL: process.env.NODE_ENV === 'production' ? 60 * 10 : 0 }); // invalidates in 10 mins
 
   const update = function update(key, promiseFn) {
     return promiseFn().then(data => {

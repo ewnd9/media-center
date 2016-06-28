@@ -1,23 +1,21 @@
 import React from 'react';
 
 import Spinner from '../ui/spinner/spinner';
+import { connect } from 'react-redux';
 
-import * as api from '../../api';
+import { fetchTraktReport } from '../../actions/trakt-report-actions';
 import TraktReportItem from './trakt-report-item';
 
-export default React.createClass({
-  getInitialState: () => ({
-    loaded: false
-  }),
-  getReport: function() {
-    api
-      .getReport()
-      .then(report => this.setState({ report: report.filter(_ => _.length > 0), loaded: true }));
-  },
+const mapStateToProps = ({ traktReport: { isFetching, report } }) => ({ isFetching, report });
+const mapDispatchToProps = { fetchTraktReport };
+
+const TraktReport = React.createClass({
   componentDidMount: function() {
-    this.getReport();
+    this.props.fetchTraktReport();
   },
   render: function() {
+    const { isFetching, report } = this.props;
+
     const renderReport = report => report.map((group, index) => {
       if (index > 0) {
         return (
@@ -31,16 +29,16 @@ export default React.createClass({
       }
     });
 
-    const renderGroup = group => group.map(({ report, show }) => {
+    const renderGroup = group => group.map(({ show, showIds, titles }) => {
       return (
-        <TraktReportItem report={report} show={show} key={show} />
+        <TraktReportItem show={show} showIds={showIds} titles={titles} key={show} />
       );
     });
 
-    if (this.state.loaded) {
+    if (report != null && !isFetching) {
       return (
         <div>
-          { renderReport(this.state.report) }
+          { renderReport(report) }
         </div>
       );
     } else {
@@ -48,3 +46,5 @@ export default React.createClass({
     }
   }
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(TraktReport);

@@ -15,7 +15,6 @@ function TraktService(trakt, filePath) {
   this.filePath = filePath + '/posters';
   mkdirp(this.filePath);
 
-  this._getReport = this.trakt.getReport.bind(this.trakt);
   this.search = this.trakt.search.bind(this.trakt);
   this.addToHistory = this.trakt.addToHistory.bind(this.trakt);
 }
@@ -24,8 +23,32 @@ TraktService.prototype.prefetch = function() {
   return this.getReport();
 };
 
+TraktService.prototype._getReport = function() {
+  return this.trakt
+    .getReport()
+    .then(report => {
+      report.forEach(items => {
+        items.forEach(item => {
+          let showIds;
+
+          if (item.report.aired.length > 0) {
+            showIds = item.report.aired[0].show.ids;
+          }
+
+          if (item.report.future.length > 0) {
+            showIds = item.report.future[0].episodes[0].show.ids;
+          }
+
+          item.showIds = showIds;
+        });
+      });
+
+      return report;
+    });
+};
+
 TraktService.prototype.getReport = function() {
-  return this.cache.getOrInit(REPORT_CACHE, this._getReport);
+  return this.cache.getOrInit(REPORT_CACHE, this._getReport.bind(this));
 };
 
 TraktService.prototype.getPosterStream = function(type, imdbId) {
