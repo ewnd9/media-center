@@ -1,7 +1,7 @@
 import {
   REQUEST_MARK,
   RECIEVE_MARK
-} from '../actions/marks-actions';
+} from '../actions/mark-actions';
 
 import { fromSrt } from 'subtitles-parser';
 import { sortBy } from 'lodash';

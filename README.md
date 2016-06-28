@@ -58,7 +58,7 @@ $ chmod +x deploy.sh
 ## Filesize report
 
 - html
-  - index.html 362 B gziped
+  - index.html 361 B gziped
 
 - css
   - app.css 24.5 kB gziped

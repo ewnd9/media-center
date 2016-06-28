@@ -4,7 +4,7 @@ import styles from './style.css';
 import { connect } from 'react-redux';
 import sanitize from 'sanitize-html';
 
-import { fetchMark, addMark } from '../../actions/marks-actions';
+import { fetchMark, addMark } from '../../actions/mark-actions';
 import ControlPanel from './control-panel/control-panel';
 
 function mapStateToProps(state) {
