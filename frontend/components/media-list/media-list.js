@@ -1,19 +1,34 @@
 import React from 'react';
 import styles from './style.css';
 
-import MediaList from './media-list-grid/media-list-grid';
+import { connect } from 'react-redux';
+
+import MediaListGrid from './media-list-grid/media-list-grid';
 import Tabs from '../ui/tabs/tabs';
+import Spinner from '../ui/spinner/spinner';
 
 import { MEDIA_LIST_ALL, MEDIA_LIST_UNWATCHED } from '../../constants';
+import { fetchFiles } from '../../actions/files-actions';
 
-export default React.createClass({
+const mapStateToProps = ({ files: { files, isFetching }}) => ({ files, isFetching });
+const mapDispatchToProps = { fetchFiles };
+
+const MediaList = React.createClass({
+  componentDidMount() {
+    this.props.fetchFiles();
+  },
   render: function() {
-    const { mediaListProps, files, isLeftPanel } = this.props;
+    const {
+      mediaListProps,
+      isLeftPanel,
+      files,
+      isFetching
+    } = this.props;
 
     const className = isLeftPanel ? styles.leftPanel : styles.imageContainer;
     const el = label => ({
       label,
-      component: MediaList,
+      component: isFetching ? Spinner : MediaListGrid,
       getProps: mode => ({
         mediaListProps,
         isLeftPanel,
@@ -45,3 +60,5 @@ export default React.createClass({
     );
   }
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(MediaList);

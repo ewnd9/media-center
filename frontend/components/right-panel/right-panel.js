@@ -31,7 +31,6 @@ const RightPanel = React.createClass({
 
       const render = () => (
         <MediaList
-          files={this.props.files}
           mediaListProps={mediaListProps} />
       );
 

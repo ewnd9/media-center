@@ -2,6 +2,8 @@ import React from 'react';
 import styles from './style.css';
 
 import * as api from '../../api';
+import { connect } from 'react-redux';
+import { fetchFiles } from '../../actions/files-actions';
 
 import {
   UPDATE_PLAYBACK,
@@ -24,21 +26,25 @@ function isWideScreen() {
   return window.innerWidth > 1080; // large-viewport from theme.css
 }
 
-export default React.createClass({
+const mapDispatchToProps = { fetchFiles };
+
+const Main = React.createClass({
   getInitialState: function() {
     return {
       modalIsOpen: false,
-      files: [],
       socket,
       isWideScreen: isWideScreen()
     };
   },
   componentDidMount: function() {
-    window.addEventListener('resize', this.handleResize);
-    socket.on(UPDATE_PLAYBACK, playback => this.setState({ playback }));
-    socket.on(RELOAD_FILES, () => this.getFiles());
+    const { fetchFiles } = this.props;
 
-    this.getFiles();
+    window.addEventListener('resize', this.handleResize);
+
+    socket.on(UPDATE_PLAYBACK, playback => this.setState({ playback }));
+    socket.on(RELOAD_FILES, fetchFiles);
+
+    fetchFiles();
   },
   componentWillUnmount: function() {
     window.removeEventListener('resize', this.handleResize);
@@ -46,24 +52,22 @@ export default React.createClass({
   handleResize() {
     this.setState({ isWideScreen: isWideScreen() });
   },
-  getFiles: function() {
-    api.findFiles().then(files => this.setState({ files }));
-  },
   openModal: function(file) {
     this.setState({ modalIsOpen: true, file });
   },
   closeModal: function() {
     this.setState({ modalIsOpen: false });
-    this.getFiles();
+    this.props.fetchFiles();
   },
   socketEmit: function(event, data) {
     this.state.socket.emit(event, data);
   },
   render: function() {
+    const { files } = this.props;
     const mediaListProps = {
       openModal: this.openModal,
       setPlayback: this.setPlayback,
-      files: this.state.files
+      files
     };
 
     return (
@@ -72,15 +76,13 @@ export default React.createClass({
           <div className={styles.container}>
             <MediaList
               isLeftPanel={true}
-              files={this.state.files}
               mediaListProps={mediaListProps} />
             <RightPanel
-              files={this.state.files} />
+              files={files} />
           </div>
         ) || (
           <RightPanel
             mediaListProps={mediaListProps}
-            files={this.state.files}
             isFullWidth={true} />
         )}
 
@@ -96,9 +98,10 @@ export default React.createClass({
 
         <MediaModal
           isOpen={this.state.modalIsOpen}
-          onRequestClose={this.closeModal}
-          file={this.state.file} />
+          onRequestClose={this.closeModal} />
       </div>
     );
   }
 });
+
+export default connect(null, mapDispatchToProps)(Main);
