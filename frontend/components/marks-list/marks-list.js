@@ -1,61 +1,35 @@
 import React from 'react';
 
+import { connect } from 'react-redux';
+
 import InfiniteScroll from 'react-infinite-scroller';
 import { formatEpisode } from 'show-episode-format';
 
-import { getMarks } from '../../api';
+import { fetchMarks } from '../../actions/marks-actions';
 import { Link } from 'react-router';
 
-export default React.createClass({
-  getInitialState() {
-    return {
-      marks: [],
-      isLoading: false,
-      hasMore: true
-    };
-  },
+import ListItemShow from '../ui/list-item-show/list-item-show';
+import Spinner from '../ui/spinner/spinner';
+
+const mapStateToProps = ({ marks: { marks, isFetching, hasMore, hasInitialLoad }}) =>
+  ({ marks, isFetching, hasMore, hasInitialLoad });
+
+const mapDispatchToProps = { fetchMarks };
+
+const MarksList = React.createClass({
   loadMore() {
-    this.setState({
-      isLoading: true
-    });
+    const { marks, fetchMarks } = this.props;
 
-    const since = this.state.marks.length > 0 ?
-      this.state.marks[this.state.marks.length - 1]._key : undefined;
+    const since = marks.length > 0 ?
+      marks[marks.length - 1]._key : undefined;
 
-    return getMarks(since)
-      .then(marks => {
-        const xs = this.state.marks.length > 0 ?
-          this.state.marks.concat(marks) : marks;
-
-        this.setState({ marks: xs, isLoading: false, hasMore: marks.length > 0 });
-      })
-      .catch(err => {
-        console.log(err.stack || err);
-        this.setState({ isLoading: false, hasMore: false });
-      });
+    fetchMarks(since);
   },
-  render() {
-    const { marks, isLoading, hasMore } = this.state;
+  renderMark(mark, index) {
+    const { type, imdb } = mark;
 
-    return (
-      <InfiniteScroll
-          pageStart={0}
-          loadMore={this.loadMore}
-          hasMore={!isLoading && hasMore}
-          loader={<div className="loader">Loading ...</div>}
-          useWindow={false}>
-
-        {marks.map(renderMark)}
-
-      </InfiniteScroll>
-    );
-  }
-});
-
-function renderMark(mark, index) {
-  return (
-    <div key={index}>
-      <div>{`${mark.title} ${formatEpisode(mark.s, mark.ep)}`}</div>
+    const title = `${mark.title} ${formatEpisode(mark.s, mark.ep)}`;
+    const body = (
       <div>
         {mark.marks.length} marks
         {' '}
@@ -63,6 +37,33 @@ function renderMark(mark, index) {
           (Open)
         </Link>
       </div>
-    </div>
-  );
-}
+    );
+
+    return (
+      <ListItemShow
+        key={index}
+        type={type}
+        imdb={imdb}
+        title={title}
+        body={body} />
+    );
+  },
+  render() {
+    const { marks, isFetching, hasMore, hasInitialLoad } = this.props;
+
+    return (
+      <InfiniteScroll
+          pageStart={0}
+          loadMore={this.loadMore}
+          hasMore={!isFetching && hasMore}
+          loader={<div className="loader">Loading ...</div>}
+          useWindow={false}>
+
+        { hasInitialLoad && marks.map(this.renderMark) || <Spinner /> }
+
+      </InfiniteScroll>
+    );
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MarksList);

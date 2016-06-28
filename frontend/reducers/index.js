@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 
 import screenshots from './screenshots-reducer';
 import mark from './mark-reducer';
+import marks from './marks-reducer';
 import youtube from './youtube-reducer';
 import traktReport from './trakt-report-reducer';
 import files from './files-reducer';
@@ -14,6 +15,7 @@ export default socket => {
     traktReport,
     screenshots,
     mark,
+    marks,
     youtube,
     files,
     modal,
