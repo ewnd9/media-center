@@ -1,7 +1,11 @@
 import superagent from 'superagent';
 import notify from './notify';
 
-export const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+export let baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+
+export const setBaseUrl = url => { // for react-native
+  baseUrl = url;
+};
 
 const fetch = (url, options = {}) => {
   let req = (
