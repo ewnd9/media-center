@@ -74,7 +74,7 @@ MarksService.prototype.getSubtitles = function(imdb, s, ep) {
   return this.Subtitles.findOneOrInit({ imdb, s, ep }, this.fetchSubtitlesFromApi.bind(this, imdb, s, ep));
 };
 
-MarksService.prototype.fetchSubtitlesFromApi = function(imdb, s, ep) {
+MarksService.prototype._fetchSubtitlesFromApi = function(imdb, s, ep) {
   const query = {
     imdbid: imdb,
     season: s,
@@ -87,6 +87,13 @@ MarksService.prototype.fetchSubtitlesFromApi = function(imdb, s, ep) {
       return got(url);
     })
     .then(({ body }) => {
+      return body;
+    });
+};
+
+MarksService.prototype.fetchSubtitlesFromApi = function(imdb, s, ep) {
+  return this._fetchSubtitlesFromApi(imdb, s, ep)
+    .then(body => {
       const subtitles = {
         imdb,
         s,

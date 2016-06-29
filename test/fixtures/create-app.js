@@ -22,5 +22,14 @@ export default ({ traktMock = defaultTrackMock }) => {
     }
   }).default;
 
-  return createApp();
+  const app = createApp();
+
+  return createApp()
+    .then(app => {
+      app.services.marksService._fetchSubtitlesFromApi = function() {
+        return Promise.resolve('subtitles'); // i never need to test subtitles, so global overriding
+      };
+
+      return app;
+    });
 };

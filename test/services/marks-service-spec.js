@@ -11,5 +11,5 @@ test('fetch and save subtitles', async t => {
   t.truthy((await db.Subtitles.findAll()).total_rows === 1);
   const subtitles1 = await services.marksService.getSubtitles(showImdb, 1, 1);
   t.truthy((await db.Subtitles.findAll()).total_rows === 1);
-  t.truthy(subtitles1.text.length > 50000);
+  t.truthy(subtitles1.text.length > 0);
 });
