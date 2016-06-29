@@ -36,7 +36,7 @@ import {
 
 /* global io */
 require('script!socket.io-client/socket.io.js');
-const socket = io(api.baseUrl);
+const socket = io(api.getBaseUrl());
 
 const store = configureStore(socket);
 

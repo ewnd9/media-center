@@ -4,7 +4,7 @@ import styles from './style.css';
 import { connect } from 'react-redux';
 import { fetchScreenshots } from '../../actions/screenshots-actions';
 
-import { baseUrl } from '../../api';
+import { getBaseUrl } from '../../api';
 import Spinner from '../ui/spinner/spinner';
 
 function mapStateToProps(state) {
@@ -29,7 +29,7 @@ export const ScreenshotsGallery = React.createClass({
             screenshots.map(url => {
               return (
                 <div key={url} className={styles.screenshot}>
-                  <img src={`${baseUrl}/screenshots/${url}`} />
+                  <img src={`${getBaseUrl()}/screenshots/${url}`} />
                 </div>
               );
             })
