@@ -88,6 +88,15 @@ export const setHidden = (file, filename) => {
   });
 };
 
+export const updatePosition = (filename, media, position, duration) => {
+  return post('/api/v1/files/position', {
+    filename,
+    media,
+    position,
+    duration
+  });
+};
+
 export const findFiles = () => {
   return get('/api/v1/files');
 };
@@ -126,4 +135,8 @@ export const getMarks = since => {
 
 export const getMark = id => {
   return get(`/api/v1/marks/${id}`);
+};
+
+export const postMark = mark => {
+  return post('/api/v1/marks', { mark });
 };
