@@ -1,81 +1,88 @@
 import React from 'react';
 import styles from './style.css';
 
-import * as api from '../../../api';
-
 import IconButton from '../../ui/icon-button/icon-button';
 import MediaDialogAutosuggest from '../media-dialog-autosuggest/media-dialog-autosuggest';
 
 const MediaDialog = React.createClass({
-  getInitialState: function() {
-    if (this.props.file.recognition) {
-      const r = this.props.file.recognition;
+  componentDidMount() {
+    const { file: { recognition }, changeField } = this.props;
 
-      return {
-        type: r.type,
-        s: r.s,
-        ep: r.ep
-      };
-    } else {
-      return {
-        type: {
-          label: 'show',
-          value: 'show'
-        }
-      };
+    if (recognition) {
+      changeField('type', recognition.type);
+      changeField('s', recognition.s);
+      changeField('ep', recognition.ep);
     }
   },
   onChangeInput: function(field, event) {
+    const { changeField } = this.props;
+
     const value = event.target.value;
-    this.setState({ [field]: value });
+    changeField(field, value);
   },
-  getInfo: function() {
+  getInfo() {
+    const {
+      suggestionSelectedValue: imdb,
+      suggestionSelectedLabel: title,
+      type,
+      s,
+      ep
+    } = this.props;
+
     return {
-      type: this.state.type,
-      imdb: this.state.imdb.value,
-      title: this.state.imdb.label,
-      s: this.state.s,
-      ep: this.state.ep
+      imdb, title, type, s, ep
     };
   },
   handlePlaying: function(event, noScrobble) {
-    event.preventDefault();
+    const { file, playFile, closeModal } = this.props;
 
-    api.playFile(this.props.file.file, noScrobble ? {} : this.getInfo(), null, noScrobble)
-      .then(() => this.props.closeModal(event));
+    playFile(file.file, noScrobble ? {} : this.getInfo(), null, noScrobble)
+      .then(() => closeModal());
   },
-  handleSaveInfo: function(event) {
-    event.preventDefault();
+  handleSaveInfo: function() {
+    const { file, saveInfo, closeModal } = this.props;
 
-    api.saveInfo(this.props.file.file, this.getInfo())
-      .then(() => this.props.closeModal(event));
+    saveInfo(file.file, this.getInfo())
+      .then(() => closeModal());
   },
-  handleHide: function(event) {
-    event.preventDefault();
+  handleHide: function() {
+    const { file, setHidden, closeModal } = this.props;
 
-    api.setHidden(this.props.file.file, this.props.file.filename)
-      .then(() => this.props.closeModal(event));
-  },
-  isNotValid: function() {
-    return !!!this.state.imdb || this.state.type === 'show' && (!this.state.s || !this.state.ep);
+    setHidden(file.file, file.filename)
+      .then(() => closeModal());
   },
   onSaveClick: function(fn, event) {
-    if (!this.isNotValid()) {
+    const { isValid } = this.props;
+
+    if (isValid) {
       fn(event);
     }
-  },
-  handleImdbUpdate(value, label) {
-    this.setState({ imdb: { value, label } });
   },
   render: function() {
     const types = [{ value: 'show', label: 'Show'}, { value: 'movie', label: 'Movie' }];
 
-    const { type } = this.state;
-    const { file } = this.props;
+    const {
+      file,
+      isFetching,
+      isValid,
+      type,
+      s,
+      ep,
+      suggestions,
+      suggestionSearchTitle,
+      suggestionIsValid,
+      suggestionSelectedValue,
+      suggestionSelectedLabel,
+
+      closeModal,
+      fetchSuggestions,
+      selectSuggestion
+    } = this.props;
 
     return (
       <div className={styles.container}>
-        <h2>{this.props.file.filename}</h2>
+        <h2>{file.filename}</h2>
+
         <form>
           <div className={styles.fieldGroup}>
             <label className={styles.label}>
@@ -83,7 +90,7 @@ const MediaDialog = React.createClass({
 
               <div className={styles.selectContainer}>
                 <select
-                  value={type.value}
+                  value={type || ''}
                   className={styles.select}
                   onChange={this.onChangeInput.bind(this, 'type')}>
                   {
@@ -100,53 +107,94 @@ const MediaDialog = React.createClass({
           <div className={styles.fieldGroup}>
             <label className={styles.label}>
               Title
+
               <MediaDialogAutosuggest
-                recognition={this.props.file.recognition}
-                type={this.state.type}
-                onUpdate={this.handleImdbUpdate} />
+                recognition={file.recognition}
+                type={type}
+
+                isFetching={isFetching}
+                suggestions={suggestions}
+                suggestionSearchTitle={suggestionSearchTitle}
+                suggestionIsValid={suggestionIsValid}
+                suggestionSelectedValue={suggestionSelectedValue}
+                suggestionSelectedLabel={suggestionSelectedLabel}
+
+                fetchSuggestions={fetchSuggestions}
+                selectSuggestion={selectSuggestion} />
             </label>
           </div>
 
           {
-            this.state.type === 'show' && (
+            type === 'show' && (
               <div className={styles.fieldGroup}>
                 <label className={styles.label}>
                   Season
-                  <input className={styles.input} name="s" placeholder="Season" value={this.state.s} onChange={this.onChangeInput.bind(this, 's')} />
+                  <input
+                    className={styles.input}
+                    name="s"
+                    placeholder="Season"
+                    value={s}
+                    onChange={this.onChangeInput.bind(this, 's')} />
                 </label>
               </div>
             )
           }
 
           {
-            this.state.type === 'show' && (
+            type === 'show' && (
               <div className={styles.fieldGroup}>
                 <label className={styles.label}>
                   Episode
-                  <input className={styles.input} name="ep" placeholder="Episode" value={this.state.ep} onChange={this.onChangeInput.bind(this, 'ep')} />
+                  <input
+                    className={styles.input}
+                    name="ep"
+                    placeholder="Episode"
+                    value={ep}
+                    onChange={this.onChangeInput.bind(this, 'ep')} />
                 </label>
               </div>
             )
           }
 
-          <div className={styles.fieldGroup}>
+          <div className={`${styles.fieldGroup} ${styles.wordWrap}`}>
             {file.fileName}
           </div>
 
           <div className={`field-group ${styles.controls}`}>
-            <IconButton className={styles.buttonMarginBottom} icon="play" disabled={this.isNotValid()} onClick={this.onSaveClick.bind(this, this.handlePlaying)}>
+            <IconButton
+              className={styles.buttonMarginBottom}
+              icon="play"
+              disabled={!isValid}
+              onClick={this.onSaveClick.bind(this, this.handlePlaying)}>
               Play
             </IconButton>
-            <IconButton className={styles.buttonMarginBottom} icon="floppy-saved" disabled={this.isNotValid()} onClick={this.onSaveClick.bind(this, this.handleSaveInfo)}>
+
+            <IconButton
+              className={styles.buttonMarginBottom}
+              icon="floppy-saved"
+              disabled={!isValid}
+              onClick={this.onSaveClick.bind(this, this.handleSaveInfo)}>
               Save & Close
             </IconButton>
-            <IconButton className={styles.buttonMarginBottom} icon="eye-close" onClick={e => this.handlePlaying(e, true)}>
+
+            <IconButton
+              className={styles.buttonMarginBottom}
+              icon="eye-close"
+              onClick={e => this.handlePlaying(e, true)}>
               Play Without Scrobble
             </IconButton>
-            <IconButton className={styles.buttonMarginBottom} icon="tree-conifer" onClick={this.handleHide}>
+
+            <IconButton
+              className={styles.buttonMarginBottom}
+              icon="tree-conifer"
+              onClick={this.handleHide}>
               Hide File
             </IconButton>
-            <IconButton className={styles.buttonMarginBottom} icon="remove" onClick={this.props.closeModal}>
+
+            <IconButton
+              className={styles.buttonMarginBottom}
+              icon="remove"
+              onClick={closeModal}>
               Close
             </IconButton>
           </div>

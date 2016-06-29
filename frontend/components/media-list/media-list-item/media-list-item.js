@@ -2,26 +2,28 @@ import React from 'react';
 import styles from './style.css';
 
 import moment from 'moment';
-import * as api from '../../../api';
 import { formatTitle } from '../../../utils';
 
 export default React.createClass({
-  handleClick: function(file, position) {
+  handleClick(file, position) {
+    const { playFile, openModal } = this.props;
+
     if (file.db) {
-      api.playFile(file.file, file.db, position);
+      playFile(file.file, file.db, position);
     } else {
-      this.openModal(file);
+      openModal(file);
     }
   },
-  handleHistoryClick: function(file) {
-    api.addToHistory(file.file, file.db);
+  handleHistoryClick(file) {
+    const { addToHistory } = this.props;
+    addToHistory(file);
   },
-  openModal: function(file) {
-    this.props.openModal(file);
-  },
-  render: function() {
-    const item = this.props.file;
-    const index = this.props.index;
+  render() {
+    const {
+      file: item,
+      index,
+      openModal
+    } = this.props;
 
     const file = item.fileName || item.dir;
     const data = file.split('/');
@@ -52,10 +54,6 @@ export default React.createClass({
       item.db.scrobbleAtDiff = moment(item.db.scrobbleAt).fromNow();
     }
 
-    if (this.props.mode === 'not-watched' && item.db && (item.db.scrobble || item.db.hidden)) {
-      return null;
-    }
-
     return (
       <div className={`${styles.file} ${styles.file}`}
            key={file}
@@ -84,7 +82,7 @@ export default React.createClass({
                 </span>
               ) || (
                 <span>
-                  <a onClick={this.openModal.bind(this, item)}>
+                  <a onClick={openModal.bind(null, item)}>
                     [Change Media]
                   </a>
                   {' '}

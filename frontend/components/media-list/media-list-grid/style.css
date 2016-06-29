@@ -1,3 +1,5 @@
+@import '../../variables.css';
+
 .flex {
   display: flex;
   flex-direction: row;
@@ -24,4 +26,13 @@
 
 .imageContainer {
   composes: imageContainer from '../../theme.css';
+}
+
+.textAlignRight {
+  text-align: right;
+}
+
+.filesList {
+  width: 100%;
+  padding: var(--padding);
 }

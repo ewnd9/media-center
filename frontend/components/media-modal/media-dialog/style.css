@@ -40,3 +40,7 @@
   composes: input from '../media-dialog-autosuggest/style.css';
   display: block;
 }
+
+.wordWrap {
+  word-wrap: break-word;
+}

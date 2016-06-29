@@ -8,11 +8,11 @@ import Tabs from '../ui/tabs/tabs';
 import Spinner from '../ui/spinner/spinner';
 
 import { MEDIA_LIST_ALL, MEDIA_LIST_UNWATCHED } from '../../constants';
-import { fetchFiles } from '../../actions/files-actions';
+import { fetchFiles, playFile, addToHistory, setActiveKey } from '../../actions/files-actions';
 import { openModal } from '../../actions/modal-actions';
 
-const mapStateToProps = ({ files: { files, isFetching }}) => ({ files, isFetching });
-const mapDispatchToProps = { fetchFiles, openModal };
+const mapStateToProps = ({ files: { files, isFetching, activeKey }}) => ({ files, isFetching, activeKey });
+const mapDispatchToProps = { fetchFiles, playFile, openModal, addToHistory, setActiveKey };
 
 const MediaList = React.createClass({
   componentDidMount() {
@@ -23,7 +23,12 @@ const MediaList = React.createClass({
       isLeftPanel,
       files,
       isFetching,
-      openModal
+      activeKey,
+
+      openModal,
+      playFile,
+      addToHistory,
+      setActiveKey
     } = this.props;
 
     const className = isLeftPanel ? styles.leftPanel : styles.imageContainer;
@@ -32,9 +37,14 @@ const MediaList = React.createClass({
       component: isFetching ? Spinner : MediaListGrid,
       getProps: mode => ({
         openModal,
+        playFile,
+        addToHistory,
+        setActiveKey,
+
         isLeftPanel,
         files,
-        mode
+        mode,
+        activeKey
       })
     });
 

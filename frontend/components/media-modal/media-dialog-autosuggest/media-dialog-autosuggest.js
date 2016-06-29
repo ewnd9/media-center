@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './style.css';
 
-import * as api from '../../../api';
 import Autosuggest from 'react-autosuggest';
 import { debounce } from 'lodash';
 import { t, propTypes } from 'tcomb-react';
@@ -17,78 +16,71 @@ function renderSuggestion(suggestion) {
 }
 
 const MediaDialogAutosuggest = React.createClass({
-  getInitialState() {
-    return {
-      value: '',
-      valid: false,
-      suggestions: [],
-      isLoading: false
-    };
-  },
+  propTypes: propTypes({
+    type: t.String,
+    isFetching: t.Boolean,
+    suggestions: t.Array,
+    suggestionSearchTitle: t.String,
+    suggestionIsValid: t.Boolean,
+    suggestionSelectedValue: t.maybe(t.String),
+    suggestionSelectedLabel: t.maybe(t.String),
+    selectSuggestion: t.Function,
+    fetchSuggestions: t.Function,
+    recognition: t.struct({
+      imdb: t.maybe(t.String),
+      type: t.String,
+      s: t.maybe(t.Number),
+      ep: t.maybe(t.Number)
+    })
+  }),
   componentDidMount: function() {
+    const {
+      recognition,
+      fetchSuggestions
+    } = this.props;
+
     this.autosuggest.input.focus();
-
     this.loadSuggestions = debounce(value => {
-      this.setState({
-        isLoading: true
-      });
+      const { type } = this.props;
+      return fetchSuggestions(type, value).then(() => this.autosuggest.input.focus());
+    });
 
-      api.getMediaSuggestion(value, this.props.type)
-        .then(suggestions => {
-          if (value === this.state.value) {
-            this.setState({
-              isLoading: false,
-              suggestions
-            });
-            this.autosuggest.input.focus();
-          } else {
-            this.setState({
-              isLoading: false
-            });
-          }
-        }, err => {
-          this.setState({
-            isLoading: false,
-            suggestions: []
-          });
-
-          throw err;
-        });
-    }).bind(this);
-
-    if (this.props.recognition) {
-      this.setState({ value: this.props.recognition.title });
-      this.loadSuggestions(this.props.recognition.title);
+    if (recognition) {
+      const { title } = recognition;
+      this.loadSuggestions(title);
     }
   },
-  onChange(event, { newValue }) {
-    this.setState({
-      value: newValue
-    });
+  onChange(event, { method, newValue }) {
+    if (method !== 'click') {
+      this.loadSuggestions(newValue);
+    }
   },
   onSuggestionSelected(event, { suggestion }) {
-    this.setState({ valid: true });
-    this.props.onUpdate(suggestion.value, suggestion.label);
+    const { selectSuggestion } = this.props;
+    selectSuggestion(suggestion.value, suggestion.label);
   },
   onSuggestionsUpdateRequested({ value, reason }) {
     if (reason !== 'click') {
-      this.setState({ valid: false });
       this.loadSuggestions(value);
     }
   },
   render() {
-    const { value, suggestions } = this.state;
+    const {
+      suggestions,
+      suggestionSearchTitle,
+      suggestionIsValid
+    } = this.props;
 
     const inputProps = {
       placeholder: "Type 'c'",
-      value,
+      value: suggestionSearchTitle || '',
       onChange: this.onChange
     };
 
     const theme = {
       container: styles.container,
       containerOpen: styles.containerOpen,
-      input: `${styles.input} ${this.state.valid ? styles.hasSuccess : styles.hasError}`,
+      input: `${styles.input} ${suggestionIsValid ? styles.hasSuccess : styles.hasError}`,
       suggestionsContainer: styles.suggestionsContainer,
       suggestion: styles.suggestion,
       suggestionFocused: styles.suggestionFocused
@@ -109,18 +101,5 @@ const MediaDialogAutosuggest = React.createClass({
     );
   }
 });
-
-MediaDialogAutosuggest.propTypes = propTypes({
-  type: t.String,
-  onUpdate: t.Function,
-  loadSuggestions: t.maybe(t.Function),
-  recognition: t.struct({
-    imdb: t.maybe(t.String),
-    type: t.String,
-    s: t.maybe(t.Number),
-    ep: t.maybe(t.Number)
-  })
-});
-
 
 export default MediaDialogAutosuggest;

@@ -95,10 +95,12 @@ function flattenVideos(rootDir, result) {
     group.dir = media.dir;
     group.media.forEach(media => {
       media.watched = media.db && !!media.db.scrobble;
+      media.hidden = media.db && !!media.db.hidden;
     });
 
     const unwatchedCount = group.media.filter(_ => !_.watched).length;
     group.watched = unwatchedCount === 0;
+    group.hidden = group.media.every(_ => _.hidden || _.watched);
 
     if (media.db) {
       group.imdb = media.db.imdb;

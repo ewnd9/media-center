@@ -1,8 +1,9 @@
-import { REQUEST_FILES, RECIEVE_FILES } from '../actions/files-actions';
+import { REQUEST_FILES, RECIEVE_FILES, FILES_SET_ACTIVE_KEY } from '../actions/files-actions';
 
 function files(state = {
   isFetching: false,
-  files: []
+  files: [],
+  activeKey: null
 }, action) {
   switch (action.type) {
     case REQUEST_FILES:
@@ -15,6 +16,11 @@ function files(state = {
         ...state,
         isFetching: false,
         files: action.files
+      };
+    case FILES_SET_ACTIVE_KEY:
+      return {
+        ...state,
+        activeKey: action.activeKey === state.activeKey ? null : action.activeKey
       };
     default:
       return state;

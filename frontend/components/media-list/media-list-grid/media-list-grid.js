@@ -1,13 +1,19 @@
 import React from 'react';
-
 import styles from './style.css';
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { MEDIA_LIST_UNWATCHED } from '../../../constants';
 
-import MediaListDirectory from '../media-list-directory/media-list-directory';
-import MediaListChildrenContainer from '../media-list-children-container/media-list-children-container';
+import MediaListPoster from '../media-list-poster/media-list-poster';
+import MediaListItem from '../media-list-item/media-list-item';
+
+const transitionClasses = {
+  enter: styles.exampleEnter,
+  enterActive: styles.exampleEnterActive,
+  leave: styles.exampleLeave,
+  leaveActive: styles.exampleLeaveActive
+};
 
 const FirstChild = React.createClass({
   render: function() {
@@ -17,125 +23,125 @@ const FirstChild = React.createClass({
 });
 
 const MediaList = React.createClass({
-  getInitialState() {
-    return {
-      activeKey: null,
-      positions: {}
-    };
-  },
-  setActive(file) {
-    const { activeKey } = this.state;
-
-    this.setState({
-      activeKey: activeKey !== file.key ? file.key : null
-    });
-  },
   setRef(el) {
-    this.el = el;
+    if (el) {
+      this.el = el;
+    }
   },
   retrieveDomChildren() {
+    if (!this.el) {
+      return [];
+    }
+
     return Array.prototype.slice
       .call(this.el.children)
       .filter(el => el.className.indexOf('poster') > -1);
   },
   render() {
     const {
-      activeKey
-    } = this.state;
-
-    const {
       mode,
-      isLeftPanel,
       files,
-      openModal
+      activeKey,
+
+      openModal,
+      playFile,
+      addToHistory,
+      setActiveKey
     } = this.props;
 
     const isUnwatched = mode === MEDIA_LIST_UNWATCHED;
 
-    const renderFolders = () => {
-      let activeChildren;
-      let activeOffset = null;
+    let activeChildren;
+    let activeOffset = null;
 
-      let isNextRowFounded;
-      let i = 0;
+    let isNextRowFounded;
+    let i = 0;
 
-      const transitionClasses = {
-        enter: styles.exampleEnter,
-        enterActive: styles.exampleEnterActive,
-        leave: styles.exampleLeave,
-        leaveActive: styles.exampleLeaveActive
-      };
+    const domChildren = activeKey ? this.retrieveDomChildren() : [];
 
-      const renderChildren = hasChildren => (
-        // key={activeKey} for MediaListChildrenContainer
-        // causes https://github.com/facebook/react/issues/4876
-        // without key there is no animation on changing files on the same group
+    const renderedFiles = files
+      .filter(file => {
+        return !isUnwatched || (!file.watched && !file.hidden);
+      })
+      .reduce((total, file, index) => {
+        const { key } = file;
 
-        <ReactCSSTransitionGroup
-          key={i++}
-          transitionName={transitionClasses}
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
-          component={FirstChild}>
+        let isNextRowAfterActive;
 
-          { hasChildren && (
-            <MediaListChildrenContainer
-              openModal={openModal}
-              isLeftPanel={isLeftPanel}
-              mode={mode}
-              activeChildren={activeChildren} />
-          ) || null }
+        if (activeOffset !== null && !isNextRowFounded && domChildren.length > 0 && domChildren[index].offsetTop > activeOffset) {
+          isNextRowAfterActive = true;
+          isNextRowFounded = true;
+        }
 
-        </ReactCSSTransitionGroup>
-      );
+        total.push(this.renderExpandedActiveItems(openModal, playFile, addToHistory, isNextRowAfterActive, activeChildren, i++));
+        total.push(this.renderPoster(openModal, setActiveKey, file, i++));
 
-      const domChildren = activeKey ? this.retrieveDomChildren() : [];
+        if (key === activeKey && domChildren.length > 0) {
+          activeOffset = domChildren[index].offsetTop;
+          activeChildren = file.media;
+        }
 
-      const renderedFiles = files
-        .filter(file => {
-          return !isUnwatched || !file.watched;
-        })
-        .reduce((total, file, index) => {
-          const key = file.key;
+        return total;
+      }, []);
 
-          let isNextRowAfterActive;
-
-          if (activeOffset !== null && !isNextRowFounded && domChildren[index].offsetTop > activeOffset) {
-            isNextRowAfterActive = true;
-            isNextRowFounded = true;
-          }
-
-          total.push(renderChildren(isNextRowAfterActive));
-
-          total.push(
-            <MediaListDirectory
-              file={file}
-              key={i++}
-              activeKey={activeKey}
-              setActive={this.setActive}
-              setPosition={this.setPosition}
-              openModal={openModal} />
-          );
-
-          if (key === activeKey) {
-            activeOffset = domChildren[index].offsetTop;
-            activeChildren = file.media;
-          }
-
-          return total;
-        }, []);
-
-      if (activeChildren && !isNextRowFounded) {
-        renderedFiles.push(renderChildren(true));
-      }
-
-      return renderedFiles;
-    };
+    if (activeChildren && !isNextRowFounded) {
+      renderedFiles.push(this.renderExpandedActiveItems(true, activeChildren, i++));
+    }
 
     return (
       <div className={`${styles.flex} ${styles.imageContainer}`} ref={this.setRef}>
-        {renderFolders()}
+        {renderedFiles}
       </div>
+    );
+  },
+  renderPoster(openModal, setActiveKey, file, i) {
+    return (
+      <MediaListPoster
+        file={file}
+        key={i++}
+        setActiveKey={setActiveKey}
+        setPosition={this.setPosition}
+        openModal={openModal} />
+    );
+  },
+  renderExpandedActiveItems(openModal, playFile, addToHistory, hasChildren, activeChildren, i) {
+    const { isLeftPanel } = this.props;
+
+    const child = hasChildren && (
+      <div
+        className={`${styles.filesList} ${isLeftPanel ? styles.textAlignRight : ''}`}>
+        {
+          activeChildren
+            .map((media, index) => {
+              return (
+                <MediaListItem
+                  key={index}
+                  file={media}
+                  index={index}
+                  openModal={openModal}
+                  playFile={playFile}
+                  addToHistory={addToHistory} />
+              );
+            })
+        }
+      </div>
+    ) || null;
+
+    // key={activeKey} for MediaListChildrenContainer
+    // causes https://github.com/facebook/react/issues/4876
+    // without key there is no animation on changing files on the same group
+
+    return (
+      <ReactCSSTransitionGroup
+        key={i++}
+        transitionName={transitionClasses}
+        transitionEnterTimeout={200}
+        transitionLeaveTimeout={200}
+        component={FirstChild}>
+
+        { child }
+
+      </ReactCSSTransitionGroup>
     );
   }
 });

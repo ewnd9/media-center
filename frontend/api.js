@@ -92,7 +92,7 @@ export const getScreenshots = () => {
   return get('/api/v1/screenshots');
 };
 
-export const getMediaSuggestion = (title, type) => {
+export const getMediaSuggestion = (type, title) => {
   return get('/api/v1/suggestions?title=' + encodeURIComponent(title) + '&type=' + type);
 };
 

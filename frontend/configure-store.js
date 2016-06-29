@@ -4,7 +4,7 @@ import thunkMiddleware from 'redux-thunk';
 import { actionSideEffectMiddleware } from 'redux-side-effect';
 
 import createLogger from 'redux-logger';
-const logger = createLogger();
+const logger = createLogger({ collapsed: true });
 
 import createRootReducer from './reducers/index';
 

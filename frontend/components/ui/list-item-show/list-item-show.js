@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './style.css';
 
-import * as api from '../../../api';
+import { getPosterUrl } from '../../../api';
 
 export default React.createClass({
   render() {
@@ -12,7 +12,7 @@ export default React.createClass({
         <div className={styles.marginBottom}>
           <div className={styles.imgWrapper}>
             <img
-              src={api.getPosterUrl(type, imdb)}
+              src={getPosterUrl(type, imdb)}
               className={styles.img} />
           </div>
 

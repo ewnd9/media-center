@@ -4,16 +4,12 @@ import styles from './style.css';
 import { getPosterUrl, getPosterPlaceholderUrl } from '../../../api';
 
 export default React.createClass({
-  toggleHidden: function() {
-    this.props.setActive(this.props.file);
-  },
-  render: function() {
-    const { file } = this.props;
-    const { title, imdb, s, type } = file;
+  render() {
+    const { file: { title, imdb, s, type, key }, setActiveKey } = this.props;
 
     return (
       <div
-        onClick={this.toggleHidden}
+        onClick={setActiveKey.bind(null, key)}
         className={`${styles.poster}`}>
 
         <div className={styles.imgWrapper}>
