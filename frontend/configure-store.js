@@ -3,16 +3,19 @@ import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { actionSideEffectMiddleware } from 'redux-side-effect';
 
-import createLogger from 'redux-logger';
-const logger = createLogger({ collapsed: true });
-
 import createRootReducer from './reducers/index';
 
-const createStoreWithMiddleware = applyMiddleware(
+let middleware = [
   thunkMiddleware,
-  actionSideEffectMiddleware,
-  logger
-)(createStore);
+  actionSideEffectMiddleware
+];
+
+if (process.env.NODE_ENV !== 'production') {
+  const logger = require('redux-logger')({ collapsed: true });
+  middleware = [...middleware, logger];
+}
+
+const createStoreWithMiddleware = applyMiddleware(...middleware)(createStore);
 
 export default function configureStore(socket, initialState) {
   return createStoreWithMiddleware(createRootReducer(socket), initialState);
