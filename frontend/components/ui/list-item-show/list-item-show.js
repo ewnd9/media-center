@@ -8,18 +8,18 @@ export default React.createClass({
     const { type, imdb, title, body } = this.props;
 
     return (
-      <div className={styles.marginBottom}>
-        <div className={styles.marginBottom}>
-          <div className={styles.imgWrapper}>
-            <img
-              src={getPosterUrl(type, imdb)}
-              className={styles.img} />
-          </div>
-
-          { title }
+      <div className={`${styles.marginBottom} clearfix`}>
+        <div className={styles.imgWrapper}>
+          <img
+            src={getPosterUrl(type, imdb)}
+            className={styles.img} />
         </div>
 
-        <span>{ body }</span>
+        <div>
+          <div className={styles.title}>{ title }</div>
+          <div className={styles.body}>{ body }</div>
+        </div>
+
       </div>
     );
   }

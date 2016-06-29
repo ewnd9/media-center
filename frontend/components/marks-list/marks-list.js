@@ -28,7 +28,7 @@ const MarksList = React.createClass({
   renderMark(mark, index) {
     const { type, imdb } = mark;
 
-    const title = `${mark.title} ${formatEpisode(mark.s, mark.ep)}`;
+    const title = `${mark.title} ${mark.s && mark.ep && formatEpisode(mark.s, mark.ep) || ''}`;
     const body = (
       <div>
         {mark.marks.length} marks

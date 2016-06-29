@@ -4,7 +4,8 @@ import Spinner from '../ui/spinner/spinner';
 import { connect } from 'react-redux';
 
 import { fetchTraktReport } from '../../actions/trakt-report-actions';
-import TraktReportItem from './trakt-report-item';
+
+import ListItemShow from '../ui/list-item-show/list-item-show';
 
 const mapStateToProps = ({ traktReport: { isFetching, report } }) => ({ isFetching, report });
 const mapDispatchToProps = { fetchTraktReport };
@@ -30,8 +31,21 @@ const TraktReport = React.createClass({
     });
 
     const renderGroup = group => group.map(({ show, showIds, titles }) => {
+      const title = (
+        <a href={`https://trakt.tv/shows/${showIds.slug}`} target="_blank">
+          {show}
+        </a>
+      );
+
+      const body = titles.join(', ');
+
       return (
-        <TraktReportItem show={show} showIds={showIds} titles={titles} key={show} />
+        <ListItemShow
+          key={show}
+          type="show"
+          imdb={showIds.imdb}
+          title={title}
+          body={body} />
       );
     });
 
