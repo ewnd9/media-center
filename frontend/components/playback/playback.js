@@ -16,7 +16,7 @@ import IconButton from '../ui/icon-button/icon-button';
 const mapStateToProps = ({ playback: { playback } }) => ({ playback });
 const mapDispatchToProps = { emitPlay, emitPause, emitClose };
 
-const Playback = ({ playback, emitPlay, emitPause, emitClose }) => {
+export const Playback = ({ playback, emitPlay, emitPause, emitClose }) => {
   if (!playback || playback.status === STOPPED) {
     return null;
   }

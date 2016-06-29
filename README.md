@@ -65,7 +65,7 @@ $ chmod +x deploy.sh
 
 - js
   - vendors.js 64.67 kB gziped
-  - app.bundle.js 186.27 kB gziped
+  - app.bundle.js 185.22 kB gziped
 
 ## Credits
 
