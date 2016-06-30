@@ -1,6 +1,7 @@
 import proxyquire from 'proxyquire';
-import { generateTmpDir } from './create-db';
 import mkdirp from 'mkdirp';
+import { generateTmpDir } from './create-db';
+import createTraktService from './create-trakt-service';
 
 const defaultTrackMock = {
   getReport: () => {},
@@ -19,7 +20,12 @@ export default ({ traktMock = defaultTrackMock }) => {
       screenshotPath: tmpDir,
       trakt: traktMock,
       port: undefined
-    }
+    },
+    './services/index': proxyquire('../../src/services/index', {
+      './trakt-service': {
+        default: createTraktService
+      }
+    })
   }).default;
 
   const app = createApp();

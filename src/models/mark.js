@@ -5,6 +5,9 @@ const Mark = {
   schema: t.struct({
     _id: t.maybe(t.String),
     _rev: t.maybe(t.String),
+    _key: t.maybe(t.String),
+    updatedAt: t.String,
+
     imdb: t.String,
     s: t.maybe(t.Number),
     ep: t.maybe(t.Number),
@@ -17,8 +20,7 @@ const Mark = {
         progress: t.Number,
         file: t.String
       })
-    ),
-    updatedAt: t.String
+    )
   }),
   indexes: {
     UPDATED_AT: {
@@ -33,4 +35,5 @@ const Mark = {
   associate: () => {}
 };
 
+export const schema = Mark.schema;
 export default Mark;

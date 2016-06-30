@@ -8,6 +8,9 @@ const File = {
   schema: t.struct({
     _id: t.maybe(t.String),
     _rev: t.maybe(t.String),
+    _key: t.maybe(t.String),
+    updatedAt: t.maybe(t.String),
+
     imdb: t.maybe(t.String),
     type: t.maybe(t.String),
     title: t.maybe(t.String),
@@ -17,8 +20,8 @@ const File = {
     duration: t.maybe(t.Number),
     scrobble: t.maybe(t.Boolean),
     scrobbleAt: t.maybe(t.String),
-    hidden: t.maybe(t.Boolean),
-    updatedAt: t.String
+    scrobbleAtDiff: t.maybe(t.String),
+    hidden: t.maybe(t.Boolean)
   }),
   associate: models => {
     models.File.getAll = files => models.File.db.allDocs({
@@ -36,4 +39,5 @@ const File = {
   }
 };
 
+export const schema = File.schema;
 export default File;

@@ -82,7 +82,7 @@ function createServer({ db, services, errorBoard, config: { screenshotPath, port
       });
   }
 
-  return { server, bus, db, services };
+  return { server, app, bus, db, services };
 }
 
 export default createServer;
