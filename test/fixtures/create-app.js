@@ -9,9 +9,19 @@ const defaultTrackMock = {
   addToHistory: () => {}
 };
 
-export default ({ traktMock = defaultTrackMock }) => {
+export default ({ traktMock = defaultTrackMock, playerServiceMock } = {}) => {
   const tmpDir = generateTmpDir();
   mkdirp.sync(tmpDir);
+
+  const servicesMocks = {
+    './trakt-service': {
+      default: createTraktService
+    }
+  };
+
+  if (playerServiceMock) {
+    servicesMocks['./player-service'] = playerServiceMock;
+  }
 
   const createApp = proxyquire('../../src/index', {
     './config': {
@@ -21,10 +31,11 @@ export default ({ traktMock = defaultTrackMock }) => {
       trakt: traktMock,
       port: undefined
     },
-    './services/index': proxyquire('../../src/services/index', {
-      './trakt-service': {
-        default: createTraktService
-      }
+    './services/index': proxyquire('../../src/services/index', servicesMocks),
+    './server': proxyquire('../../src/server', {
+      './routes/youtube': proxyquire('../../src/routes/youtube', {
+        execa: () => Promise.resolve({ stdout: 'youtube-url' })
+      })
     })
   }).default;
 

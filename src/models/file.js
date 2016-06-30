@@ -30,11 +30,19 @@ const File = {
     });
 
     models.File.add = (file, data) => {
-      const recognition = split(path.basename(file));
-
       return models.File
         .update(file, data)
-        .then(() => models.Prefix.update(recognition.title, data));
+        .then(result => {
+          const recognition = split(path.basename(file));
+
+          if (recognition !== null) {
+            return models.Prefix
+              .update(recognition.title, data)
+              .then(() => result);
+          } else {
+            return result;
+          }          
+        });
     };
   }
 };

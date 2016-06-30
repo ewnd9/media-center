@@ -43,7 +43,6 @@ function validatePromise(request, responseSchema) {
         reject(error);
       } else {
         const responseValidation = validate(response.body, responseSchema, { strict: true });
-
         if (!responseValidation.isValid()) {
           reject(errorMessage(response.body, responseValidation.errors));
         } else {

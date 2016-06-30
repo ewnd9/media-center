@@ -46,7 +46,7 @@ export default ({ filesService, playerService }) => {
   router.post('/api/v1/playback/info', (req, res, next) => {
     filesService
       .addFile(req.body.filename, req.body.media)
-      .then(() => res.json({ status: 'ok '}))
+      .then(() => res.json({ status: 'ok' }))
       .catch(err => next(err));
   });
 

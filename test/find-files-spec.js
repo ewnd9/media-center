@@ -1,6 +1,8 @@
 import test from 'ava';
 import 'babel-core/register';
 
+import { validate } from 'tcomb-validation';
+
 import findFiles from './../src/find-files';
 import createDb from './fixtures/create-db';
 
@@ -28,11 +30,10 @@ import {
   movieFolder,
   movieFile,
 
-  movieTitle,
-
-  nearestDate,
-  pastDate
+  movieTitle
 } from './fixtures/create-fs';
+
+import { filesArrayResponseSchema } from './fixtures/api-schemas';
 
 async function addMockFile(db) {
   const res = await db.File.add([showFolder, showFile1].join('/'), {
@@ -65,9 +66,13 @@ test('#findFiles', async t => {
   mockFs();
 
   const result = await findFiles(db, testDir);
-  const r0 = result[0].media[0];
+  const errors = validate(result, filesArrayResponseSchema, { strict: true }).errors;
 
-  t.is(r0.birthtime, nearestDate);
+  if (errors.length > 0) {
+    throw errors;
+  }
+
+  const r0 = result[0].media[0];
   t.is(r0.dir, movieFolder);
   t.is(r0.file, [movieFolder, movieFile].join('/'));
   t.is(r0.db, undefined);
@@ -76,7 +81,6 @@ test('#findFiles', async t => {
   t.is(r0.recognition.year, 2015);
 
   t.is(result[1].dir, showFolder);
-  t.is(result[1].media[0].birthtime, pastDate);
 
   const items = result[1].media;
   t.is(items.length, 2);

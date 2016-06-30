@@ -96,6 +96,8 @@ function flattenVideos(rootDir, result) {
     group.media.forEach(media => {
       media.watched = media.db && !!media.db.scrobble;
       media.hidden = media.db && !!media.db.hidden;
+
+      delete media.birthtime;
     });
 
     const unwatchedCount = group.media.filter(_ => !_.watched).length;

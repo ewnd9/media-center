@@ -20,6 +20,7 @@ test.afterEach(t => {
 import {
   markRequestSchema,
   markResponseSchema,
+  markSubtitlesResponseSchema,
   marksArrayResponseSchema
 } from '../fixtures/api-schemas';
 
@@ -46,6 +47,14 @@ test('GET /api/v1/marks', async t => {
   const { body: body3 } = await t.context.request.get('/api/v1/marks', { limit: 1, since: body2[0]._key }, marksArrayResponseSchema);
   t.truthy(body3.length === 1);
   t.truthy(body3[0]._id === markEntity0._id);
+});
+
+test('GET /api/v1/marks/:id', async t => {
+  const mark0 = generateMark();
+  const markEntity0 = await t.context.app.services.marksService.add(mark0);
+
+  const { body } = await t.context.request.get(`/api/v1/marks/${markEntity0._id}`, {}, markSubtitlesResponseSchema);
+  t.truthy(body._id === markEntity0._id);
 });
 
 test('POST /api/v1/marks', async t => {
