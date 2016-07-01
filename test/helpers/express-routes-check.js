@@ -69,14 +69,23 @@ function getTests(filter) {
     .sync([filter])
     .reduce((total, file) => {
       try {
-        return total.concat(getExpressionsArguments(file, 'test').map(_ => _[0]));
+        const predicates = [
+          isCalleeNameEqual('test'),
+          isCalleeObjectEqual('test', 'serial')
+        ];
+
+        return total.concat(getExpressionsArguments(file, predicates).map(_ => _[0]));
       } catch (e) {
-        throw new Error(`can't parse ${file}`);
+        throw e;
       }
     }, []);
 }
 
-function getExpressionsArguments(file, calleeName) {
+const isCalleeNameEqual = name => callee => callee.name === name;
+const isCalleeObjectEqual = (object, property) => callee =>
+  callee.object && callee.object.name === object && callee.property.name === property;
+
+function getExpressionsArguments(file, predicates) {
   const code = require('fs').readFileSync(file, 'utf-8');
   const ast = parse(code, { sourceType: 'module', plugins: ['asyncFunctions'] });
 
@@ -86,7 +95,12 @@ function getExpressionsArguments(file, calleeName) {
     ExpressionStatement(path, parent) {
       const node = path.node;
 
-      if (node.expression.callee && node.expression.callee.name === calleeName) {
+      if (!node.expression.callee) {
+        return;
+      }
+
+      const callee = node.expression.callee;
+      if (predicates.some(p => p(callee))) {
         result.push(node.expression.arguments.map(_ => _.value));
       }
     },

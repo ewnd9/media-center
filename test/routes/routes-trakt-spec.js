@@ -3,16 +3,22 @@ import 'babel-core/register';
 
 import createApp from '../fixtures/create-app';
 import agent from '../fixtures/agent';
-import trakt from '../fixtures/create-trakt';
+import createTrakt from '../fixtures/create-trakt';
 import { showTitle } from '../fixtures/create-fs';
 
+import { nockBefore } from '../helpers/nock';
+
 test.beforeEach(async t => {
-  t.context.app = await createApp({ traktMock: trakt });
+  t.context.app = await createApp({ traktMock: createTrakt(process.env.TRAKT_TOKEN) });
   t.context.request = agent(t.context.app.server);
+
+  const nock = nockBefore(__filename, t);
+  t.context.nockEnd = nock.afterFn;
 });
 
 test.afterEach(t => {
   t.context.app.server.close();
+  t.context.nockEnd();
 });
 
 import {
@@ -20,12 +26,12 @@ import {
   traktSuggestionsResponseSchema
 } from '../fixtures/api-schemas';
 
-test('GET /api/v1/report', async t => {
+test.serial('GET /api/v1/report', async t => {
   const { body } = await t.context.request.get('/api/v1/report', {}, traktReportResponseSchema);
   // rejection on schema mismatch
 });
 
-test('GET /api/v1/suggestions', async t => {
+test.serial('GET /api/v1/suggestions', async t => {
   const { body } = await t.context.request.get('/api/v1/suggestions', { type: 'show', title: showTitle }, traktSuggestionsResponseSchema);
   // rejection on schema mismatch
 });
