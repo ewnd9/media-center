@@ -1,0 +1,178 @@
+[
+    {
+        "scope": "https://api-v2launch.trakt.tv:443",
+        "method": "GET",
+        "path": "/calendars/my/shows/2016-06-21/60",
+        "body": "",
+        "status": 200,
+        "response": [
+            "1f8b0800237776570003dc974d6fe3361086ff8ac17364cc0cbf7ddb1eb6a7058a34c0022d8a40b19858b02c1a94dc2058e4bf9796b3126dcb1fe92959d8077d70c4e1c3775e927fff608f6568dafbbc0cae603346802a039511de01ce00e27f0a007fb11be6d665e30bc7663f58e3f2c6d76c4637acdeac1e5c6033841bd6966d15dfb3af79bb70a1caeb22869545b30d6943be6c630418cb958c6dff2d1ed84c4a4ba8446cb5daded69baa8aafba6b4423c9886dcb903fc5cfc2ebeb0d6b16feb9fbdc5b5748936fbe5eba972676f5e2f2b0ed02e561b70a84890f9b6af3d40565ab3e6897086952a2cf83b52d47614829f6331d0556982119ae2cf0d798d139807411202400077edfc27472eb1f7c7b5fb83914bc98167e3e82125058dba354424b81a328635312fa02cabed7b3242dd7043dc955c8c25bc81b4763a58584a340691061e04852c1908920417496a3be46886a5c88770b37f95ed64533f18fdb8b3636381c105a13a712078c312385e908c8f038f92c11a61620873120a83866a3a41ec3fa7bbe72dbeeef16c1d76e4fa678940bb703dba71898f9c7aced0377192221df4b302627acd043827ca78a5d76145f9e57ea558471202c07c07ffa4dbb8864ab6a725b366ef2e5292feb63a512374acb44a942c8534a45a5d405a5fe115c3e5f7473d9b354472c81808b9ee67a88d965c10184a604a38c1f9130ccb312c413a5c6a9e1e7399af75a6652f2b7aed984e0e66de947f875a6a9f74d539e364df9394d536720de29459548715317feb91ea97022059456f8567e34862f99eeede3cfa23d9de155cb75024ef7e076e31f2346fbc4f8af458cde5bad",
+            "3468edb7cafb62f23d6f16ae987c79ce5fc64b56e37ec9aad3257bc9f23e6cc9a2b8669f43a3fb1cb76e680af79b7a259a65b66e71da1e6f73306e28b831034963844d95202c2018b3b73e2b48b4d0adcf1ce23afe59b63dff032b9dc64a6358638953e7823f4b3cfea44d0b8cc77d10a804ab951c2fe9f483d2bc6a694eecd15c618f7cdf1e470f319fd71eed7bed9127e717b7f2e1a5dbf4fa7815e2808ffd5118adf7b6345ac3697fbc7478f9b0fe78dd393001c90f0a19ef973cd4aecad6798df3e9b219395477b59cead1583ca865a1411cd4f2873e10fef31f000000ffff03006d6972dc9b100000"
+        ],
+        "headers": {
+            "date": "Fri, 01 Jul 2016 13:58:59 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "841",
+            "connection": "close",
+            "set-cookie": [
+                "__cfduid=dfe0b6a3223fe6d7694fd13bcf3d35c1e1467381539; expires=Sat, 01-Jul-17 13:58:59 GMT; path=/; domain=.trakt.tv; HttpOnly"
+            ],
+            "cache-control": "max-age=14400, public",
+            "content-encoding": "gzip",
+            "etag": "W/\"640560695a15e214e2f7d06a2917492f\"",
+            "expires": "Fri, 01 Jul 2016 17:58:59 GMT",
+            "vary": "Accept-Encoding",
+            "x-content-type-options": "nosniff",
+            "x-end-date": "Thu, 21 Jul 2016 23:59:59 GMT",
+            "x-frame-options": "SAMEORIGIN",
+            "x-request-id": "c22d10ed-3731-4662-ae6b-e9df3f529d79",
+            "x-runtime": "0.013828",
+            "x-start-date": "Tue, 21 Jun 2016 00:00:00 GMT",
+            "x-xss-protection": "1; mode=block",
+            "server": "cloudflare-nginx",
+            "cf-ray": "2bba603b45043768-ARN"
+        }
+    },
+    {
+        "scope": "https://api-v2launch.trakt.tv:443",
+        "method": "GET",
+        "path": "/sync/history/shows/60485",
+        "body": "",
+        "status": 200,
+        "response": [
+            "1f8b0800404a73570003cc944f6fdb300cc5bf8aa173329022254bbe0dddb53b6c396d1806b51612a1fe13d86abba0c8779fecadf1e239b71c02f860127cf4e3fb01fefe2642290ab44c98a355bc12af2e3eee7cf9d345510809a8d620d7c81b9005407a3e00c037b112ee3186b64933a32035e261ef53e9f7a16f4b9f1aef6fc59be8bdeb87615c89e6b97ef09d28545284580d92cdce679fc37617b32f6d5b276528fb41153bf7945c586b553e8cbf940f4907d210a745a11e4a11232329ab61b030b610246a1a059ddbfaa1a1554e160c1f8f2bd1efdad771fbdfafa3cceedbe6c91ffab4e1e05df2369c3d77a1814d6af6d5f37614adeb93e88f31994bcdfc8f2f423652eb932f0d96cde48ab4053a2647670c8cd61718407e75063c31f8185d1796a3e7f3e8611e3d9a59f4bc103ddd7cf4902bb5183dae09af1e3d4dd1dfb9be774dd9b9ecaeadf795ffb58c81ce30909d63009e61a039062483b78c019919d37c7e0183541b5085a42b629013867bdf44575587ec5378f1dd3655cb1ce4390733e3608c9e71900b1ce0b639909492345ee2c01bc4027481742d0e3871f8baaf421353f3bff4d351a8df8f64ab3137f39f91b1f274a5b548a0cfc3d7862cdd64f83f7e030000ffff030089b1bc078c070000"
+        ],
+        "headers": {
+            "date": "Fri, 01 Jul 2016 13:59:00 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "469",
+            "connection": "close",
+            "set-cookie": [
+                "__cfduid=d3bc83677ebaf5b1e7dc29b5e09d85dfb1467381540; expires=Sat, 01-Jul-17 13:59:00 GMT; path=/; domain=.trakt.tv; HttpOnly"
+            ],
+            "cache-control": "max-age=0, private, must-revalidate",
+            "content-encoding": "gzip",
+            "etag": "W/\"ed40d6c83afcccd0b75567c469c251b3\"",
+            "last-modified": "Wed, 29 Jun 2016 04:10:40 GMT",
+            "vary": "Accept-Encoding",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-pagination-item-count": "5",
+            "x-pagination-limit": "10",
+            "x-pagination-page": "1",
+            "x-pagination-page-count": "1",
+            "x-request-id": "3e661eda-ba0a-46ef-b677-8dd1793f16ac",
+            "x-runtime": "0.015101",
+            "x-xss-protection": "1; mode=block",
+            "server": "cloudflare-nginx",
+            "cf-ray": "2bba604641453732-ARN"
+        }
+    },
+    {
+        "scope": "https://api-v2launch.trakt.tv:443",
+        "method": "GET",
+        "path": "/sync/history/shows/102034",
+        "body": "",
+        "status": 200,
+        "response": [
+            "1f8b0800404a73570003d4d4cd8adb301007f057313a67cbcce8cbd2ad0f50085d43a1a514652d1251c70eb6d2b02c79f78ed3a64ebbf19e72686eb2acbf66e687f19717916ae1092c95004876210e213f6d62fd2d64e105019a07300f642bd05ea3477c07009fc54284a79cba96cf9c02bc919f77911fe32e0d5d1d79e3bcf22f628861180fe342b4fbed2af6c26b4ea4dc8c91c76e9f37c5a7d434c5c734c4e2fd3aa4962f48f53086731fbe733344b234768cfda8579c374a29cd17a6edf8d8ee9b865f9dd638b66dcc78b20f6bae00c7e3420c9bee70baee77d5651f034fda73a1e718fa5101cdbf451108a4e270b35f736637657e75210194a573132267cd976850e2dc8b512461ea443a90f2c8ed9ce18d44035ac31c3c54587aad3dd0ade0d504ffa16b871cfbe2f110b6bb2be0640dd0040e56015d0547a7b4557701aec9a176e5dc978eb242e955e9a9bc15b89cc0ab4d2c96dd30a4556a524e719841c7bfd1af7fe527747917e8ca59eb34e83974ac9078560ff256e874f17b89f135335ac7335f324be7e699e95e980925aa3798d16be242b762c68979999a2ebf8246e7c880fa03ad95e3292e66e47e8d56464cded65aedfe67efaf3f010000ffff0300e10e211537070000"
+        ],
+        "headers": {
+            "date": "Fri, 01 Jul 2016 13:59:01 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "459",
+            "connection": "close",
+            "set-cookie": [
+                "__cfduid=de3a741d38aab71dc5a3945e347b2401b1467381540; expires=Sat, 01-Jul-17 13:59:00 GMT; path=/; domain=.trakt.tv; HttpOnly"
+            ],
+            "cache-control": "max-age=0, private, must-revalidate",
+            "content-encoding": "gzip",
+            "etag": "W/\"c76ed3a2f97c49882291f01bba3e6d25\"",
+            "last-modified": "Wed, 29 Jun 2016 04:10:40 GMT",
+            "vary": "Accept-Encoding",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-pagination-item-count": "5",
+            "x-pagination-limit": "10",
+            "x-pagination-page": "1",
+            "x-pagination-page-count": "1",
+            "x-request-id": "0c75219c-4e2f-4873-af64-7050bbdfb51c",
+            "x-runtime": "0.017479",
+            "x-xss-protection": "1; mode=block",
+            "server": "cloudflare-nginx",
+            "cf-ray": "2bba604689fb36e4-ARN"
+        }
+    },
+    {
+        "scope": "https://api-v2launch.trakt.tv:443",
+        "method": "GET",
+        "path": "/sync/history/shows/93720",
+        "body": "",
+        "status": 200,
+        "response": [
+            "1f8b0800404a73570003ccd7cb8e9b301406e057a9bc06747cb77987d9545db5aa10094e82864b6a1cd2749477afc94ca7b143b6881d583ed6ef7c3a31fef186ea0ae55812a05c614113742eddf660aaa274284704304f3149b1fe86490e2c07c800e03b4a50b97575dff939b7023fe02e47e35fcdb11efacaf8817f4ff91b1a4c394c937182ba53bb31f6f6e86ad7bc970c3883e2609aa6dfd9da7455d6f6a35fa1ae86a9dad9f2d54d29b5cf09be6eac3628e7202508e567b5d32b728e094e14555396db10062ec5b42737da726fa601c1a5f2c3e47a4dd070e8cfb7e53f62bcd8eccbd77ed33bbfc0c5943ee3b4fd3885a63e842f6e4e7b5fd3dad47e94bca7224a730df7a1b0ff61317c8612840bf81f8911467c9a6b1249b0e5244824818bbe33435a7655fac7583043d61ecdfe91432922b4f8e4200c04b08043090838249634e250440abc7e0ebe1c078d384851d1cd699fb5af332d713390a101bfdfaea43e16b937a0a0d98c015dbd8158ce804506b4a84ada4237b5027ba2a0420511fe3169ad2052e0330a6cf50a7239051e29b082fe3e3650bb213bb7cf9a41870c326e061c37839861e0ab6750cb31888881171bcb4693fa0d8f061b9b95c36e1643de1dd6130686070c1661c8190cb17a0cbd1c868c30443162734e0738d9adc976cd7c5b48c0a1047d905091849a91906b9790b09c848a2464713e60e73f980693b5ec9903091d1ece6a2222073de3a056ef809773d091832a5a6c2d58dcedb35fee09030d1982c35a6acd55d80e18608641af9e812c789f83c8",
+            "4117d3ed21adca4b568ef51307163ac824bacdf1e080500a663e9a08accee1e75f000000ffff0300d881e912590f0000"
+        ],
+        "headers": {
+            "date": "Fri, 01 Jul 2016 13:59:01 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "619",
+            "connection": "close",
+            "set-cookie": [
+                "__cfduid=d3d3aa3ac9882b89b0d962d3550c65e871467381540; expires=Sat, 01-Jul-17 13:59:00 GMT; path=/; domain=.trakt.tv; HttpOnly"
+            ],
+            "cache-control": "max-age=0, private, must-revalidate",
+            "content-encoding": "gzip",
+            "etag": "W/\"a0408bd4ad57adcb243781e320d12243\"",
+            "last-modified": "Wed, 29 Jun 2016 04:10:40 GMT",
+            "vary": "Accept-Encoding",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-pagination-item-count": "11",
+            "x-pagination-limit": "10",
+            "x-pagination-page": "1",
+            "x-pagination-page-count": "2",
+            "x-request-id": "9a5affe6-3311-4554-b2e8-69849bcf5d13",
+            "x-runtime": "0.032313",
+            "x-xss-protection": "1; mode=block",
+            "server": "cloudflare-nginx",
+            "cf-ray": "2bba6046ad8937b6-ARN"
+        }
+    },
+    {
+        "scope": "https://api-v2launch.trakt.tv:443",
+        "method": "GET",
+        "path": "/sync/history/shows/1390",
+        "body": "",
+        "status": 200,
+        "response": [
+            "1f8b0800404a73570003d4d7cd6e9b401000e057b138dbd5cccecefe1da34aed258dd422456a55552410db72cc46401a4551debd835b0743e0c6a1be2d9831c37eecccf2e325d9e649506095f106bd5f264f5973bb29f25f59938444019a159895b229e80010487d0080efc932c96e9b6d2ce59a43809c689e1f0a392c1eb675cc0b39711c8597a42eb2babdd82c93f2717f5354494090906d73dfc6a49b6271bd2df37a11efda4123172c25b3ba8d6daa6c27b9a0771e0825e8777e9304364a2b2387db7d7b98348d568ec0eb3693c329446735701b5065eba2bda3610fceb07d7d5d26f5263e1dfefe5f0e9fb27dd1de3edd54b12c6af99be722abdab9417c970b79c9bebe7f5c4be05a0257f16ed5bc05fecd1015522f41494e7b6dbb04a99def63764a7ea457c9ec486214b1474f5324900207c0c0381789ef442eb24606ed7c34627391d54d56e5f5040af4516088e2dc00458fa098b34061e51034e3040a528a18d0c952990bc575285fe2e2aa2cc61194ef21b01f22d8e1caa011043e1304abb5e5a9950126956521c56a3e04dbaf551755dc15e5e2322b27304c87816c490f310c9c6218cf6604439f05060119e7b41ac5e0154999a2a06c409e0bc39c94a9fb18f3763a2e9f1787f18407f73d68e8c17ae031d636e82c3cd069e9e638dec979a5280513d006ede6f2e0fee2f818e344f756d4310020a92183720386b146a1ce82012c5a698d3cc180264561a0c03417833e591631ee8ebdfb9b3c75b99eda5029f546c2de937957a9d00c48c6da069e01896c6e0d031e",
+            "f68ce32452a9eca152e9b948a823b9ca9acd4d5564bb49896e6bcbf2e640af4621a181a1841a9180b39070f23c68bc9d900095a20a0441cd56a35427f139eea7f650d027e8d527b09679b8871a69dbda9f0581716419518f12e895e214dca14d98d93ef8fa6de26b912faee37e740bc5864c67a18d07e4934725c30ef0d482e5cd1f1426e749d37ffd51f1f30f000000ffff03006c2106027e0f0000"
+        ],
+        "headers": {
+            "date": "Fri, 01 Jul 2016 13:59:01 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "727",
+            "connection": "close",
+            "set-cookie": [
+                "__cfduid=dfdfba4be3c86367fc589e29db933b1091467381540; expires=Sat, 01-Jul-17 13:59:00 GMT; path=/; domain=.trakt.tv; HttpOnly"
+            ],
+            "cache-control": "max-age=0, private, must-revalidate",
+            "content-encoding": "gzip",
+            "etag": "W/\"1624e04b7e9a05e2f0667321accfbf50\"",
+            "last-modified": "Wed, 29 Jun 2016 04:10:40 GMT",
+            "vary": "Accept-Encoding",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-pagination-item-count": "60",
+            "x-pagination-limit": "10",
+            "x-pagination-page": "1",
+            "x-pagination-page-count": "6",
+            "x-request-id": "589847b9-63db-473a-8f2a-0afdfd1d54ea",
+            "x-runtime": "0.011277",
+            "x-xss-protection": "1; mode=block",
+            "server": "cloudflare-nginx",
+            "cf-ray": "2bba60463c271694-ARN"
+        }
+    }
+]
