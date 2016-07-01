@@ -14,10 +14,10 @@
     "build:frontend": "rm -f public/* && NODE_ENV=production node scripts/build",
     "lint": "eslint 'src/**/*.js' 'frontend/**/*.js'",
     "test": "NODE_DISABLE_X11_SUPPORT=true CONFIG=$(pwd)/webpack.config.ava.js BABEL_DISABLE_CACHE=1 NODE_ENV=test ava",
+    "test:coverage": "nyc --reporter=lcov --reporter=text npm test",
     "test:watch": "npm run test -- --watch",
     "precommit": "npm run lint && npm test && npm run build:frontend"
   },
-  "preferGlobal": "true",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ewnd9/media-center.git"
@@ -31,6 +31,15 @@
       "babel-register"
     ],
     "babel": "inherit"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js",
+      "frontend/**/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ]
   },
   "author": "ewnd9 <ewndnine@gmail.com>",
   "license": "MIT",
@@ -88,6 +97,7 @@
     "carte-blanche": "^0.2.3",
     "chai": "^3.2.0",
     "classnames": "^2.2.3",
+    "coveralls": "^2.11.9",
     "css-loader": "^0.15.4",
     "enzyme": "^2.3.0",
     "eslint": "^2.7.0",
@@ -109,6 +119,7 @@
     "node-notifier": "^4.4.0",
     "nodemon": "^1.8.1",
     "npm-run-all": "^1.4.0",
+    "nyc": "^6.6.1",
     "postcss-cssnext": "^2.4.0",
     "postcss-import": "^8.0.2",
     "postcss-loader": "^0.8.1",

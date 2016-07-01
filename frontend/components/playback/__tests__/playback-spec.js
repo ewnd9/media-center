@@ -5,8 +5,8 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 
-import { Playback } from './playback';
-import IconButton from '../ui/icon-button/icon-button';
+import { Playback } from '../playback';
+import IconButton from '../../ui/icon-button/icon-button';
 
 test('has 2 icons', t => {
   const wrapper = shallow(<Playback playback={{}} />);

@@ -1,5 +1,5 @@
-sudo: false
 language: node_js
 node_js:
-  - '0.12'
-  - '0.10'
+  - '5'
+after_script:
+  - 'cat coverage/lcov.info | ./node_modules/.bin/coveralls'

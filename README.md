@@ -1,6 +1,9 @@
 # media-center
 
-[WIP] Media center web app for raspberry pi with seamless [trakt.tv](http://trakt.tv/) scrobbling
+[![Build Status](https://travis-ci.org/ewnd9/media-center.svg?branch=master)](https://travis-ci.org/ewnd9/media-center)
+[![Coverage Status](https://coveralls.io/repos/ewnd9/media-center/badge.svg?branch=master&service=github)](https://coveralls.io/github/ewnd9/media-center?branch=master)
+
+Media Center for Raspberry Pi with a seamless [trakt.tv](http://trakt.tv/) scrobbling
 
 ![title-image](/mockup.jpg?raw=true)
 
@@ -17,11 +20,8 @@ Transpiled with `babel` (`es2015` + `stage-0`)
 Frontend:
 
 - `react`
-  - `react-modal`
-  - `react-spinkit`
-  - `react-select`
 - `react-hmr` in development
-- `post-css` (`precss` + `autoprefixer`)
+- `post-css` (`cssnext` + `autoprefixer`)
 
 Transpiled with `babel` (`es2015` + `stage-0` + `react`) and bundled with `webpack`
 

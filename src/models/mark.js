@@ -25,11 +25,9 @@ const Mark = {
   indexes: {
     UPDATED_AT: {
       name: 'UPDATED_AT_1',
-      /*eslint-disable */
-      fn: (doc) => {
+      fn: `function(doc) {
         emit(doc.updatedAt + '$' + doc._id);
-      }
-      /*eslint-enable */
+      }`
     }
   },
   associate: () => {}

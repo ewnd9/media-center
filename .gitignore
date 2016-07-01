@@ -15,3 +15,5 @@ play.js
 stats.json
 *.zip
 deps.json
+.nyc_output
+coverage

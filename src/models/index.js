@@ -19,6 +19,8 @@ export default (dbPath, dbOptions = {}) => {
     .keys(initializers)
     .reduce((result, key) => {
       const db = new PouchDB(`${dbPath}-${key.toLowerCase()}`, dbOptions);
+      db.on('error', err => console.log('pouch-error', err));
+
       const obj = initializers[key];
       const validate = validateFactory(obj.schema);
 
