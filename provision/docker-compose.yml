@@ -19,6 +19,13 @@ services:
       - "9091:9091"
       - "51413:51413"
       - "51413:51413/udp"
+  error-board:
+    build: ./provision/docker/rpi-error-board
+    restart: always
+    ports:
+      - "5000:3000"
+    volumes:
+      - ${DB}:/db
   app:
     # image: ewnd9/media-center:0.1.18
     build: ./
@@ -36,6 +43,7 @@ services:
       - DATA_PATH=/db
       - NODE_DISABLE_X11_SUPPORT=true
       - TRAKT_TOKEN=${TRAKT_TOKEN}
+      - ERROR_BOARD_URL=${ERROR_BOARD_URL}
     devices:
       - "/dev/vchiq:/dev/vchiq"
       - "/dev/fb0:/dev/fb0"

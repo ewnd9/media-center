@@ -4,27 +4,17 @@
 
 require('source-map-support').install();
 
+const report = require('./lib/agent').default;
 const app = require('./lib/index');
-const config = require('./lib/config');
-
-const errorBoard = process.env.NODE_ENV === 'production' ? (
-  require('embedded-error-board')(config.errorBoardPath, config.errorBoardMount)
-) : null;
 
 process.on('uncaughtException', function (err) {
   console.error('global exception:', err.stack || err);
-
-  if (errorBoard) {
-    errorBoard.agent.report(err);
-  }
+  report(err).catch(err => console.error(err));
 });
 
-process.on('unhandledRejection', function (reason, promise) {
+process.on('unhandledRejection', function (reason) {
   console.error('unhandled promise rejection:', reason.stack || reason);
-
-  if (errorBoard) {
-    errorBoard.agent.report(reason);
-  }
+  report(err).catch(err => console.error(err));
 });
 
-app.default(errorBoard);
+app.default();

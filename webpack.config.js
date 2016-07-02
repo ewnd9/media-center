@@ -71,6 +71,7 @@ const config = {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
+        ERROR_BOARD_URL: JSON.stringify(process.env.ERROR_BOARD_URL),
         APP_ENV: JSON.stringify('browser')
       },
     }),

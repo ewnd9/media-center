@@ -6,16 +6,21 @@ import '!!file?name=[name].[ext]!./assets/chrome-manifest.json';
 require.context('!!file?name=[name].[ext]!./assets/', false, /^\.\/.*\.png$/);
 
 import notify from './notify';
+import report from './agent';
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && process.env.ERROR_BOARD_URL) {
   window.onerror = (msg, url, line, col, err) => {
     notify.error(err.stack && err.stack.split('\n').join('<br />') || err);
+    report(err).catch(err => console.error(err)); // prevent recursion
+
     return true; // stop propagation
   };
 
   window.addEventListener('unhandledrejection', rejection => {
     const err = rejection.reason;
+
     notify.error(err.stack && err.stack.split('\n').join('<br />') || err);
+    report(err).catch(err => console.error(err)); // prevent recursion
   });
 }
 

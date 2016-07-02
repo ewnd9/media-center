@@ -16,7 +16,9 @@ import TraktRouter from './routes/trakt';
 import MarksRouter from './routes/marks';
 import PostersRouter from './routes/posters';
 
-function createServer({ db, services, errorBoard, config: { screenshotPath, port, errorBoardMount } }) {
+import report from './agent';
+
+function createServer({ db, services, config: { screenshotPath, port } }) {
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
@@ -36,16 +38,8 @@ function createServer({ db, services, errorBoard, config: { screenshotPath, port
   app.use('/', MarksRouter(services));
   app.use('/', PostersRouter(services));
 
-  let agent;
-
   const httpServer = http.createServer(app);
   const io = socketIO(httpServer);
-
-  if (errorBoard) {
-    agent = errorBoard.agent;
-    app.use(errorBoardMount, errorBoard.app);
-    errorBoard.ws.installHandlers(httpServer, { prefix: `${errorBoardMount}/ws` });
-  }
 
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
@@ -58,10 +52,7 @@ function createServer({ db, services, errorBoard, config: { screenshotPath, port
     }
 
     console.log(err, err.stack);
-
-    if (agent) {
-      agent.report(err);
-    }
+    report(err);
 
     res.status(500);
     res.json({ error: err.stack && err.stack.split('\n') || err });
