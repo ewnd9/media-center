@@ -9,12 +9,12 @@ const app = require('./lib/index');
 
 process.on('uncaughtException', function (err) {
   console.error('global exception:', err.stack || err);
-  report(err).catch(err => console.error(err));
+  report(err);
 });
 
 process.on('unhandledRejection', function (reason) {
   console.error('unhandled promise rejection:', reason.stack || reason);
-  report(err).catch(err => console.error(err));
+  report(err);
 });
 
 app.default();

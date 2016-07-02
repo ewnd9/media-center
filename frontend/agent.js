@@ -11,8 +11,6 @@ const reporter = (process.env.NODE_ENV === 'production' && process.env.ERROR_BOA
 
 export default function(err) {
   if (reporter) {
-    return reporter.report(err);
-  } else {
-    return Promise.resolve();
+    return reporter.report(err).catch(err => console.error(err)); // prevent recursion
   }
 }
