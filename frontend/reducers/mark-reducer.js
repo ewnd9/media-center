@@ -1,16 +1,15 @@
 import {
   REQUEST_MARK,
-  RECIEVE_MARK
+  RECIEVE_MARK,
+  SHOW_TOOLTIP
 } from '../actions/mark-actions';
-
-import { fromSrt } from 'subtitles-parser';
-import { sortBy } from 'lodash';
 
 function mark(state = {
   isFetching: false,
   mark: null,
   lines: null,
-  active: 0
+  active: 0,
+  activeTooltipId: null
 }, action) {
   switch (action.type) {
     case REQUEST_MARK:
@@ -20,6 +19,11 @@ function mark(state = {
       };
     case RECIEVE_MARK:
       return recieveMark(state, action);
+    case SHOW_TOOLTIP:
+      return {
+        ...state,
+        activeTooltipId: state.activeTooltipId === action.id ? null : action.id
+      };
     default:
       return state;
   }
@@ -28,30 +32,10 @@ function mark(state = {
 export default mark;
 
 function recieveMark(state, { mark }) {
-  const originalLines = fromSrt(mark.subtitles)
-    .map(line => {
-      line.startTimeMs = srtTimeToMs(line.startTime);
-      line.endTimeMs = srtTimeToMs(line.endTime);
-
-      return line;
-    });
-
-  const lines = originalLines.concat(mark.marks.map(mark => {
-    const startTimeMs = mark.position / 1000;
-    return { startTimeMs };
-  }));
-
   return {
     ...state,
     isFetching: false,
     mark,
-    lines: sortBy(lines, 'startTimeMs')
+    lines: mark.subtitles
   };
-}
-
-function srtTimeToMs(str) {
-  const [rest, ms] = str.split(',');
-  const [ h, m, s ] = rest.split(':');
-
-  return +h * 60 * 60 * 1000 + +m * 60 * 1000 + +s * 1000 + +ms;
 }

@@ -9,7 +9,7 @@ const defaultTrackMock = {
   addToHistory: () => {}
 };
 
-export default ({ traktMock = defaultTrackMock, playerServiceMock } = {}) => {
+export default ({ traktMock = defaultTrackMock, playerServiceMock, marksServiceMock } = {}) => {
   const tmpDir = generateTmpDir();
   mkdirp.sync(tmpDir);
 
@@ -21,6 +21,10 @@ export default ({ traktMock = defaultTrackMock, playerServiceMock } = {}) => {
 
   if (playerServiceMock) {
     servicesMocks['./player-service'] = playerServiceMock;
+  }
+
+  if (marksServiceMock) {
+    servicesMocks['./marks-service'] = marksServiceMock;
   }
 
   const createApp = proxyquire('../../src/index', {
@@ -39,14 +43,5 @@ export default ({ traktMock = defaultTrackMock, playerServiceMock } = {}) => {
     })
   }).default;
 
-  const app = createApp();
-
-  return createApp()
-    .then(app => {
-      app.services.marksService._fetchSubtitlesFromApi = function() {
-        return Promise.resolve('subtitles'); // i never need to test subtitles, so global overriding
-      };
-
-      return app;
-    });
+  return createApp();
 };

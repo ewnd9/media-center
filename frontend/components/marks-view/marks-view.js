@@ -2,14 +2,16 @@ import React from 'react';
 import styles from './style.css';
 
 import { connect } from 'react-redux';
-import sanitize from 'sanitize-html';
 
-import { fetchMark, addMark } from '../../actions/mark-actions';
+import { fetchMark, addMark, showTooltip } from '../../actions/mark-actions';
 import ControlPanel from './control-panel/control-panel';
 import Spinner from '../ui/spinner/spinner';
 
-const mapStateToProps = ({ mark: { mark, lines, isFetching } }) => ({ mark, lines, isFetching });
-const mapDispatchToProps = { fetchMark, addMark };
+import ToolTip from 'react-portal-tooltip';
+
+const mapStateToProps = ({ mark: { mark, lines, isFetching, activeTooltipId } }) =>
+  ({ mark, lines, isFetching, activeTooltipId });
+const mapDispatchToProps = { fetchMark, addMark, showTooltip };
 
 export const MarksView = React.createClass({
   getInitialState() {
@@ -18,13 +20,6 @@ export const MarksView = React.createClass({
   componentDidMount() {
     const { params: { id } } = this.props;
     this.props.fetchMark(id.replace(/-/g, ':'));
-  },
-  getLineHTML(text) {
-    return {
-      __html: sanitize(text, {
-        allowedTags: ['b', 'i', 'em', 'strong', 'a', 'br'],
-      })
-    };
   },
   setCurrentFocusRef(startTimeMs, el) {
     if (!el) {
@@ -61,11 +56,52 @@ export const MarksView = React.createClass({
     this.focusActive(next);
     this.setState({ active: next });
   },
-  renderLine(line) {
+  renderLine(subtitles, index) {
+    const { showTooltip, activeTooltipId } = this.props;
+    let i = 0;
+
+    const getTerms = sentence => sentence.map(term => {
+      const id = `term-${index}-${i++}`;
+      const isSelected = activeTooltipId && activeTooltipId === id;
+
+      // @TODO got a bug on probably with a race condition on rendering all without condition
+
+      return (
+        <span>
+          {term.whitespace.preceding || ''}
+          <span
+            id={id}
+            onClick={showTooltip.bind(null, id)}
+            className={`${styles.term} ${isSelected && styles.selected || ''}`}>
+            {term.text}
+          </span>
+          { isSelected &&  (
+            <ToolTip active={isSelected} position="bottom" arrow="center" parent={`#${id}`}>
+              <div className={styles.tooltip}>
+                <p><b>{term.normal}</b></p>
+                <p>{Object.keys(term.pos).join(', ')}</p>
+              </div>
+            </ToolTip>
+          ) || ''}
+
+          {term.whitespace.trailing || ''}
+        </span>
+      );
+    });
+
+    const getSentences = line => line.map(sentence => getTerms(sentence));
+
+    const lines = subtitles.text
+      .map((line, index) => (
+        <div key={index}>
+          { getSentences(line) }
+        </div>
+      ));
+
     return (
-      <div key={line.startTimeMs} className={styles.line}>
-        <div className={styles.time}>{line.startTime} -> {line.endTime}</div>
-        <div dangerouslySetInnerHTML={this.getLineHTML(line.text)} />
+      <div key={subtitles.startTimeMs} className={styles.line}>
+        <div className={styles.time}>{subtitles.startTime} -> {subtitles.endTime}</div>
+        { lines }
       </div>
     );
   },
@@ -91,8 +127,8 @@ export const MarksView = React.createClass({
     return (
       <div className={styles.container}>
         {
-          lines.map(line => line.startTime ?
-            this.renderLine(line) :
+          lines.map((line, index) => line.startTime ?
+            this.renderLine(line, index) :
             this.renderCurrentFocus(line)
           )
         }

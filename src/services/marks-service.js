@@ -1,5 +1,11 @@
 import { USER_ANALYTICS } from '../constants';
+
 import OpenSubtitles from 'opensubtitles-universal-api';
+import { fromSrt } from 'subtitles-parser';
+import nlp from 'nlp_compromise';
+import { sortBy } from 'lodash';
+import sanitize from 'sanitize-html';
+
 import got from 'got';
 
 function MarksService({ Mark, Subtitles }, storage) {
@@ -65,7 +71,37 @@ MarksService.prototype.findOne = function(id) {
       return this.getSubtitles(mark.imdb, mark.s, mark.ep);
     })
     .then(subtitles => {
-      mark.subtitles = subtitles.text;
+      const originalSrt = fromSrt(subtitles.text)
+        .map(srt => {
+          srt.startTimeMs = srtTimeToMs(srt.startTime);
+          srt.endTimeMs = srtTimeToMs(srt.endTime);
+
+          const sanitized = sanitize(srt.text, {
+            // @TODO figure out how to keep tags with nlp
+            // probably I need to transform the text to a tree
+            allowedTags: [],
+            allowedAttributes: []
+            // allowedTags: ['b', 'i', 'em', 'strong', 'a', 'br'],
+          }).replace(/\&quot\;/g, '"');
+
+          srt.text = sanitized
+            .split('\n')
+            .map(text => {
+              return nlp.text(text).sentences
+                .map(sentence => {
+                  return sentence.terms;
+                });
+            });
+
+          return srt;
+        });
+
+      const lines = originalSrt.concat(mark.marks.map(mark => {
+        const startTimeMs = mark.position / 1000;
+        return { startTimeMs };
+      }));
+
+      mark.subtitles = sortBy(lines, 'startTimeMs').slice(0, 10);
       return mark;
     });
 };
@@ -108,4 +144,11 @@ MarksService.prototype.fetchSubtitlesFromApi = function(imdb, s, ep) {
 
 export default function(models, storage) {
   return new MarksService(models, storage);
+}
+
+function srtTimeToMs(str) {
+  const [rest, ms] = str.split(',');
+  const [ h, m, s ] = rest.split(':');
+
+  return +h * 60 * 60 * 1000 + +m * 60 * 1000 + +s * 1000 + +ms;
 }

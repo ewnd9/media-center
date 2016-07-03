@@ -54,7 +54,35 @@ export const markRequestSchema = t.struct({
 });
 
 export const markResponseSchema = markSchema;
-export const markSubtitlesResponseSchema = markSchema.extend({ subtitles: t.String });
+
+export const subtitlesNlpTermSchema = t.struct({
+  whitespace: t.struct({ preceding: t.maybe(t.String), trailing: t.maybe(t.String) }),
+  text: t.String,
+  normal: t.String,
+  expansion: t.maybe(t.String),
+  reasoning: t.list(t.String),
+  pos: t.dict(t.String, t.Boolean),
+  firstName: t.maybe(t.String),
+  middleName: t.maybe(t.String),
+  lastName: t.maybe(t.String),
+  honourific: t.maybe(t.String),
+  tag: t.String
+});
+
+export const subtitlesNlpSchema = t.list(t.list(t.list(subtitlesNlpTermSchema)));
+export const markSubtitlesResponseSchema = markSchema.extend({
+  subtitles: t.list(
+    t.struct({
+      id: t.maybe(t.String),
+      startTime: t.maybe(t.String),
+      startTimeMs: t.Number,
+      endTime: t.maybe(t.String),
+      endTimeMs: t.maybe(t.Number),
+      text: t.maybe(subtitlesNlpSchema)
+    })
+  )
+});
+
 // export const markResponseSchema = t.struct({ mark: markSchema });
 
 export const marksArrayResponseSchema = t.list(markSchema);

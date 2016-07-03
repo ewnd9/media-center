@@ -6,10 +6,25 @@ import Promise from 'bluebird';
 
 import agent from '../fixtures/agent';
 import createApp from '../fixtures/create-app';
+
 import { generateMark } from '../fixtures/mocks-marks';
+import MarksService from '../../src/services/marks-service';
+
+import fs from 'fs';
+const srtText = fs.readFileSync('../fixtures/srt/game-of-thrones-06x10-sample.srt', 'utf-8');
 
 test.beforeEach(async t => {
-  t.context.app = await createApp({});
+  const MarksServiceMock = function() {
+    const service = MarksService.apply(this, Array.prototype.slice.apply(arguments));
+
+    service._fetchSubtitlesFromApi = function() {
+      return Promise.resolve(srtText);
+    };
+
+    return service;
+  };
+
+  t.context.app = await createApp({ marksServiceMock: { default: MarksServiceMock } });
   t.context.request = agent(t.context.app.server);
 });
 

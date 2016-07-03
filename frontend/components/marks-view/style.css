@@ -1,3 +1,5 @@
+@import '../variables.css';
+
 .container {
   position: relative;
 }
@@ -8,4 +10,20 @@
 
 .time {
   font-size: 0.7em;
+}
+
+.term {
+  cursor: pointer;
+}
+
+.selected {
+  text-decoration: underline;
+}
+
+.tooltip {
+  color: var(--darkTextColor);
+}
+
+.tooltip > p {
+  margin: 10px 0;
 }
