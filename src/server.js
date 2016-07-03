@@ -52,7 +52,7 @@ function createServer({ db, services, config: { screenshotPath, port } }) {
     }
 
     console.log(err, err.stack);
-    report(err);
+    report(err, { url: req.url });
 
     res.status(500);
     res.json({ error: err.stack && err.stack.split('\n') || err });

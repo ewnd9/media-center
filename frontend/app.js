@@ -11,7 +11,7 @@ import report from './agent';
 if (process.env.NODE_ENV === 'production' && process.env.ERROR_BOARD_URL) {
   window.onerror = (msg, url, line, col, err) => {
     notify.error(err.stack && err.stack.split('\n').join('<br />') || err);
-    report(err);
+    report(err, { url: window.location.href });
 
     return true; // stop propagation
   };
@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production' && process.env.ERROR_BOARD_URL) {
     const err = rejection.reason;
 
     notify.error(err.stack && err.stack.split('\n').join('<br />') || err);
-    report(err);
+    report(err, { url: window.location.href });
   });
 }
 

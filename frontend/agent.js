@@ -9,8 +9,8 @@ const reporter = (process.env.NODE_ENV === 'production' && process.env.ERROR_BOA
     endpoint: process.env.ERROR_BOARD_URL
   }) : null;
 
-export default function(err) {
+export default function(err, metaData = {}) {
   if (reporter) {
-    return reporter.report(err).catch(err => console.error(err)); // prevent recursion
+    return reporter.report(err, metaData).catch(err => console.error(err)); // prevent recursion
   }
 }
