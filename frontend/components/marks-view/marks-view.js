@@ -9,9 +9,71 @@ import Spinner from '../ui/spinner/spinner';
 
 import ToolTip from 'react-portal-tooltip';
 
-const mapStateToProps = ({ mark: { mark, lines, isFetching, activeTooltipId } }) =>
-  ({ mark, lines, isFetching, activeTooltipId });
+const mapStateToProps = ({ mark: { mark, lines, isFetching, activeTooltipId, activeBlockIndex } }) =>
+  ({ mark, lines, isFetching, activeTooltipId, activeBlockIndex });
 const mapDispatchToProps = { fetchMark, addMark, showTooltip };
+
+export const SubtitlesBlock = React.createClass({
+  shouldComponentUpdate(nextProps) {
+    const { activeBlockIndex: currIndex, blockIndex: index } = this.props;
+    const { activeBlockIndex: nextIndex } = nextProps;
+
+    return (
+      nextIndex === index ||
+      (currIndex === index && nextIndex !== index)
+    );
+  },
+  renderTerm(term, id, isSelected, showTooltip) {
+    // @TODO got a bug on probably with a race condition on rendering all without condition
+    return (
+      <span key={id}>
+        {term.whitespace.preceding || ''}
+        <span
+          id={id}
+          onClick={showTooltip}
+          className={`${styles.term} ${isSelected && styles.selected || ''}`}>
+          {term.text}
+        </span>
+        { isSelected &&  (
+          <ToolTip active={isSelected} position="bottom" arrow="center" parent={`#${id}`}>
+            <div className={styles.tooltip}>
+              <p><b>{term.normal}</b></p>
+              <p>{Object.keys(term.pos).join(', ')}</p>
+            </div>
+          </ToolTip>
+        ) || ''}
+
+        {term.whitespace.trailing || ''}
+      </span>
+    );
+  },
+  render() {
+    const { block, blockIndex, activeTooltipId, showTooltip } = this.props;
+
+    return (
+      <div key={block.startTimeMs} className={styles.line}>
+        <div className={styles.time}>{block.startTime} -> {block.endTime}</div>
+        { block.text
+            .map((line, lineIndex) => (
+              <div key={lineIndex}>
+                { line.map((sentence, sentenceIndex) => (
+                    <span key={sentenceIndex}>
+                      { sentence.map((term, termIndex) => {
+                          const id = `term-${[blockIndex, lineIndex, sentenceIndex, termIndex].join('-')}`;
+                          const isSelected = activeTooltipId && activeTooltipId === id;
+
+                          return this.renderTerm(term, id, isSelected, showTooltip.bind(null, id, blockIndex));
+                        })
+                      }
+                    </span>
+                  )) }
+              </div>
+            ))
+        }
+      </div>
+    );
+  }
+});
 
 export const MarksView = React.createClass({
   getInitialState() {
@@ -56,56 +118,20 @@ export const MarksView = React.createClass({
     this.focusActive(next);
     this.setState({ active: next });
   },
-  renderLine(subtitles, index) {
-    const { showTooltip, activeTooltipId } = this.props;
-    let i = 0;
-
-    const getTerms = sentence => sentence.map(term => {
-      const id = `term-${index}-${i++}`;
-      const isSelected = activeTooltipId && activeTooltipId === id;
-
-      // @TODO got a bug on probably with a race condition on rendering all without condition
-
-      return (
-        <span>
-          {term.whitespace.preceding || ''}
-          <span
-            id={id}
-            onClick={showTooltip.bind(null, id)}
-            className={`${styles.term} ${isSelected && styles.selected || ''}`}>
-            {term.text}
-          </span>
-          { isSelected &&  (
-            <ToolTip active={isSelected} position="bottom" arrow="center" parent={`#${id}`}>
-              <div className={styles.tooltip}>
-                <p><b>{term.normal}</b></p>
-                <p>{Object.keys(term.pos).join(', ')}</p>
-              </div>
-            </ToolTip>
-          ) || ''}
-
-          {term.whitespace.trailing || ''}
-        </span>
-      );
-    });
-
-    const getSentences = line => line.map(sentence => getTerms(sentence));
-
-    const lines = subtitles.text
-      .map((line, index) => (
-        <div key={index}>
-          { getSentences(line) }
-        </div>
-      ));
+  renderBlock(block, blockIndex) {
+    const { activeTooltipId, activeBlockIndex, showTooltip } = this.props;
 
     return (
-      <div key={subtitles.startTimeMs} className={styles.line}>
-        <div className={styles.time}>{subtitles.startTime} -> {subtitles.endTime}</div>
-        { lines }
-      </div>
+      <SubtitlesBlock
+        key={blockIndex}
+        block={block}
+        blockIndex={blockIndex}
+        activeTooltipId={activeTooltipId}
+        activeBlockIndex={activeBlockIndex}
+        showTooltip={showTooltip} />
     );
   },
-  renderCurrentFocus(line) {
+  renderMark(line) {
     return (
       <div
         key={line.startTimeMs}
@@ -117,7 +143,7 @@ export const MarksView = React.createClass({
   },
   render() {
     const { isFullWidth } = this.props.route;
-    const { mark, isFetching, lines } = this.props;
+    const { mark, isFetching } = this.props;
     const { active } = this.state;
 
     if (isFetching || !mark) {
@@ -127,9 +153,9 @@ export const MarksView = React.createClass({
     return (
       <div className={styles.container}>
         {
-          lines.map((line, index) => line.startTime ?
-            this.renderLine(line, index) :
-            this.renderCurrentFocus(line)
+          mark.subtitles.map((block, blockIndex) => block.startTime ?
+            this.renderBlock(block, blockIndex) :
+            this.renderMark(block)
           )
         }
 

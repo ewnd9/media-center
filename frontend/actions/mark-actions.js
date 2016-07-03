@@ -31,9 +31,10 @@ export function fetchMark(id) {
   };
 }
 
-export function showTooltip(id) {
+export function showTooltip(id, blockIndex) {
   return {
     type: SHOW_TOOLTIP,
-    id
+    id,
+    blockIndex
   };
 }

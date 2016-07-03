@@ -7,9 +7,9 @@ import {
 function mark(state = {
   isFetching: false,
   mark: null,
-  lines: null,
   active: 0,
-  activeTooltipId: null
+  activeTooltipId: null,
+  activeBlockIndex: null
 }, action) {
   switch (action.type) {
     case REQUEST_MARK:
@@ -22,7 +22,8 @@ function mark(state = {
     case SHOW_TOOLTIP:
       return {
         ...state,
-        activeTooltipId: state.activeTooltipId === action.id ? null : action.id
+        activeTooltipId: state.activeTooltipId === action.id ? null : action.id,
+        activeBlockIndex: state.activeTooltipId === action.id ? null : action.blockIndex
       };
     default:
       return state;
@@ -35,7 +36,6 @@ function recieveMark(state, { mark }) {
   return {
     ...state,
     isFetching: false,
-    mark,
-    lines: mark.subtitles
+    mark
   };
 }
