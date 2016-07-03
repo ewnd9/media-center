@@ -101,7 +101,7 @@ MarksService.prototype.findOne = function(id) {
         return { startTimeMs };
       }));
 
-      mark.subtitles = sortBy(lines, 'startTimeMs').slice(0, 10);
+      mark.subtitles = sortBy(lines, 'startTimeMs');
       return mark;
     });
 };
