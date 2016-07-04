@@ -29,11 +29,14 @@ Model.prototype.findOneOrInit = function(id, init) {
     .then(null, err => this.onNotFound(err, init));
 };
 
-Model.prototype.findByIndex = function(index, options = {}) {
+Model.prototype.findByIndex = function(index, { descending, limit, since }) {
   return this.db
     .query(index, {
       include_docs: true,
-      ...options
+      descending,
+      skip: since ? 1 : 0,
+      startkey: since || undefined,
+      limit
     })
     .then(res => res.rows.map(row => ({
       ...row.doc,
@@ -44,6 +47,21 @@ Model.prototype.findByIndex = function(index, options = {}) {
 Model.prototype.findAll = function() {
   return this.db
     .allDocs({ include_docs: true });
+};
+
+Model.prototype.findAllDocs = function({ descending, limit, since }) {
+  return this.db
+    .allDocs({
+      include_docs: true,
+      descending,
+      skip: since ? 1 : 0,
+      startkey: since || undefined,
+      limit
+    })
+    .then(res => res.rows.map(row => ({
+      ...row.doc,
+      _key: row.key
+    })));
 };
 
 Model.prototype.put = function(id, _data) {

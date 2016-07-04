@@ -4,14 +4,17 @@ import { validate } from 'tcomb-validation';
 export default server => {
   const request = agent(server);
 
-  return {
-    get: (url, query, responseSchema) => {
-      if (!responseSchema) {
-        return Promise.reject('responseSchema is missing');
-      }
+  const getFn = fn => (url, query, responseSchema) => {
+    if (!responseSchema) {
+      return Promise.reject('responseSchema is missing');
+    }
 
-      return validatePromise(request.get(url).query(query), responseSchema);
-    },
+    return validatePromise(fn(url).query(query), responseSchema);
+  };
+
+  return {
+    get: getFn(request.get.bind(request)),
+    delete: getFn(request.delete.bind(request)),
     post: (url, body, requestSchema, responseSchema) => {
       if (!requestSchema) {
         return Promise.reject('requestSchema is missing');

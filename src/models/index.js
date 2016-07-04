@@ -6,13 +6,15 @@ import File from './file';
 import Prefix from './prefix';
 import Mark from './mark';
 import Subtitles from './subtitles';
+import Word from './word';
 
 export default (dbPath, dbOptions = {}) => {
   const initializers = {
     File,
     Prefix,
     Mark,
-    Subtitles
+    Subtitles,
+    Word
   };
 
   const models = Object

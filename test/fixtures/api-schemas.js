@@ -3,6 +3,7 @@ import { validate } from 'tcomb-validation';
 
 import { schema as fileSchema } from '../../src/models/file';
 import { schema as markSchema } from '../../src/models/mark';
+import { wordSchema, wordExampleSchema } from '../../src/models/word';
 
 export const fileScrobbleRequestSchema = t.struct({
   filename: t.String,
@@ -170,3 +171,14 @@ export const filesArrayResponseSchema = t.list(t.struct({
   summary: t.String,
   posterUrl: t.String
 }));
+
+export const postWordRequestSchema = t.struct({
+  word: t.struct({
+    type: t.String,
+    word: t.String
+  }),
+  example: wordExampleSchema
+});
+
+export const wordResponseSchema = t.struct({ word: wordSchema });
+export const wordsArrayResponseSchema = t.struct({ words: t.list(wordSchema.extend({ _key: t.String })) });

@@ -56,8 +56,7 @@ MarksService.prototype.findAll = function(limit, since) {
   return this
     .findByIndex(this.Mark.indexes.UPDATED_AT.name, {
       descending: true,
-      skip: since ? 1 : 0,
-      startkey: since || undefined,
+      since,
       limit
     });
 };
