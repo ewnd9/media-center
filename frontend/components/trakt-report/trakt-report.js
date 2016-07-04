@@ -30,7 +30,7 @@ const TraktReport = React.createClass({
       }
     });
 
-    const renderGroup = group => group.map(({ show, showIds, titles }) => {
+    const renderGroup = group => group.map(({ show, showIds, posterUrl, titles }) => {
       const title = (
         <a href={`https://trakt.tv/shows/${showIds.slug}`} target="_blank">
           {show}
@@ -42,8 +42,7 @@ const TraktReport = React.createClass({
       return (
         <ListItemShow
           key={show}
-          type="show"
-          imdb={showIds.imdb}
+          posterUrl={posterUrl}
           title={title}
           body={body} />
       );

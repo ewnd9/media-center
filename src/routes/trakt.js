@@ -21,7 +21,7 @@ export default ({ traktService }) => {
 
   router.get('/api/v1/report', (req, res, next) => {
     traktService
-      .getReport()
+      .getReportWithPosterUrls(req.headers.host)
       .then(data => res.json(data))
       .catch(err => next(err));
   });

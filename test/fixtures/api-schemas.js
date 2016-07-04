@@ -85,7 +85,7 @@ export const markSubtitlesResponseSchema = markSchema.extend({
 
 // export const markResponseSchema = t.struct({ mark: markSchema });
 
-export const marksArrayResponseSchema = t.list(markSchema);
+export const marksArrayResponseSchema = t.list(markSchema.extend({ posterUrl: t.String }));
 export const traktSuggestionsResponseSchema = t.list(t.struct({ label: t.String, value: t.String }));
 
 export const traktIds = t.struct({
@@ -126,6 +126,7 @@ export const traktReportResponseSchema = t.list(t.list(
   t.struct({
     show: t.String,
     showIds: traktIds,
+    posterUrl: t.String,
     report: t.struct({
       aired: t.maybe(t.list(traktReport)),
       unaired: t.maybe(t.list(traktReportGaps)),
@@ -166,5 +167,6 @@ export const filesArrayResponseSchema = t.list(t.struct({
   type: t.maybe(t.String),
   title: t.maybe(t.String),
   unwatchedCount: t.maybe(t.Number),
-  summary: t.String
+  summary: t.String,
+  posterUrl: t.String
 }));

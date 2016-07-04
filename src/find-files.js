@@ -4,6 +4,7 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 import split from 'split-torrent-release';
 import path from 'path';
+import getPosterUrl from './utils/poster-url';
 
 const exts = '(mkv|mp4|avi)';
 
@@ -111,6 +112,8 @@ function flattenVideos(rootDir, result) {
       group.title = media.db.title;
       group.unwatchedCount = unwatchedCount;
     }
+
+    group.posterUrl = media.db ? getPosterUrl(media.db.type, media.db.imdb, media.db.s) : getPosterUrl();
 
     if (media.db && media.db.s) {
       const title = `${media.db.title} season ${media.db.s}`;

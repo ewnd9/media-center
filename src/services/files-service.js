@@ -70,6 +70,8 @@ FilesService.prototype.findAllFilesWithStreamUrls = function(host) {
 
       // @TODO think maybe external ip should be set via environment variable?
       files.forEach(file => {
+        file.posterUrl = replaceHostname(file.posterUrl, host, true);
+
         file.media.forEach(media => {
           if (media.streamUrl) {
             media.streamUrl = replaceHostname(media.streamUrl, host);

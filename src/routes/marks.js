@@ -7,7 +7,7 @@ export default ({ marksService }) => {
     const { limit, since } = req.pagination;
 
     marksService
-      .findAll(limit, since)
+      .findAllWithPosterUrls(limit, since, req.headers.host)
       .then(data => res.json(data))
       .catch(err => next(err));
   });

@@ -26,14 +26,14 @@ const MarksList = React.createClass({
     fetchMarks(since);
   },
   renderMark(mark, index) {
-    const { type, imdb } = mark;
+    const { _id, title, s, ep, posterUrl, marks } = mark;
 
-    const title = `${mark.title} ${mark.s && mark.ep && formatEpisode(mark.s, mark.ep) || ''}`;
+    const markTitle = `${title} ${s && ep && formatEpisode(s, ep) || ''}`;
     const body = (
       <div>
-        {mark.marks.length} marks
+        {marks.length} marks
         {' '}
-        <Link to={`/marks/${mark._id.replace(/:/g, '-')}`}>
+        <Link to={`/marks/${_id.replace(/:/g, '-')}`}>
           (Open)
         </Link>
       </div>
@@ -42,9 +42,8 @@ const MarksList = React.createClass({
     return (
       <ListItemShow
         key={index}
-        type={type}
-        imdb={imdb}
-        title={title}
+        posterUrl={posterUrl}
+        title={markTitle}
         body={body} />
     );
   },

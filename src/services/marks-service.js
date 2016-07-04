@@ -5,8 +5,9 @@ import { fromSrt } from 'subtitles-parser';
 import nlp from 'nlp_compromise';
 import { sortBy } from 'lodash';
 import sanitize from 'sanitize-html';
-
 import got from 'got';
+
+import getPosterUrl from '../utils/poster-url';
 
 function MarksService({ Mark, Subtitles }, storage) {
   this.Mark = Mark;
@@ -58,6 +59,18 @@ MarksService.prototype.findAll = function(limit, since) {
       skip: since ? 1 : 0,
       startkey: since || undefined,
       limit
+    });
+};
+
+MarksService.prototype.findAllWithPosterUrls = function(limit, since, host) {
+  return this
+    .findAll(limit, since)
+    .then(marks => {
+      marks.forEach(mark => {
+        mark.posterUrl = getPosterUrl(mark.type, mark.imdb, mark.s, host);
+      });
+
+      return marks;
     });
 };
 

@@ -118,15 +118,8 @@ export const playYoutubeLink = query => {
   return post('/api/v1/youtube', { query });
 };
 
-export const getPosterUrl = (type, imdb, s) => {
-  if (type && imdb) {
-    return `${baseUrl}/api/v1/posters/${type}/${imdb}/${s}`;
-  } else {
-    return getPosterPlaceholderUrl();
-  }
-};
-
 export const getPosterPlaceholderUrl = () => {
+  // @TODO should be passed with config (not implemented yet) from backend
   return `${baseUrl}/api/v1/posters/placeholder.jpg`;
 };
 

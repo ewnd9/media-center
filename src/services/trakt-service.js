@@ -6,6 +6,7 @@ import _mkdirp from 'mkdirp';
 const mkdirp = pify(_mkdirp);
 
 import fsCache from '../utils/fs-cache';
+import getPosterUrl from '../utils/poster-url';
 
 export const REPORT_CACHE = 'REPORT_CACHE';
 
@@ -49,6 +50,20 @@ TraktService.prototype._getReport = function() {
 
 TraktService.prototype.getReport = function() {
   return this.cache.getOrInit(REPORT_CACHE, this._getReport.bind(this));
+};
+
+TraktService.prototype.getReportWithPosterUrls = function(host) {
+  return this
+    .getReport()
+    .then(reportsByType => {
+      reportsByType.forEach(reports => {
+        reports.forEach(report => {
+          report.posterUrl = getPosterUrl('show', report.showIds.imdb, undefined, host);
+        });
+      });
+
+      return reportsByType;
+    });
 };
 
 TraktService.prototype.getPosterStream = function(type, imdbId) {
