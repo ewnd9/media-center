@@ -1,4 +1,5 @@
 import * as api from '../api';
+import { translate } from '../libs/dictionary-core';
 
 export const REQUEST_MARK = 'REQUEST_MARK';
 export const RECIEVE_MARK = 'RECIEVE_MARK';
@@ -10,6 +11,9 @@ export const POST_WORD_SUCCESS = 'POST_WORD_SUCCESS';
 
 export const DELETE_WORD_REQUEST = 'DELETE_WORD_REQUEST';
 export const DELETE_WORD_SUCCESS = 'DELETE_WORD_SUCCESS';
+
+export const REQUEST_TRANSLATION = 'REQUEST_TRANSLATION';
+export const RECIEVE_TRANSLATION = 'RECIEVE_TRANSLATION';
 
 function requestMark(id) {
   return {
@@ -66,12 +70,16 @@ export function showTooltipAndSave(id, blockIndex, word, example) {
   return dispatch => {
     dispatch(showTooltip(id, blockIndex));
     dispatch(postWordRequest(id, word, example));
+    dispatch(requestTranslation(id, word.word));
 
-    return api
+    api
       .postWord(word, example)
       .then(({ word }) => {
         return dispatch(postWordSuccess(id, word));
       });
+
+    translate('en', 'ru', word.word)
+      .then(translation => dispatch(recieveTranslation(id, word.word, translation)));
   };
 }
 
@@ -98,5 +106,22 @@ export function deleteWord(id, wordId) {
     return api
       .deleteWord(wordId)
       .then(() => dispatch(deleteWordSuccess(id, wordId)));
+  };
+}
+
+function requestTranslation(id, word) {
+  return {
+    type: REQUEST_TRANSLATION,
+    id,
+    word
+  };
+}
+
+function recieveTranslation(id, word, translation) {
+  return {
+    type: RECIEVE_TRANSLATION,
+    id,
+    word,
+    translation
   };
 }

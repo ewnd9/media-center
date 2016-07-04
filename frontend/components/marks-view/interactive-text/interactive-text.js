@@ -18,7 +18,7 @@ const InteractiveText = React.createClass({
       (currIndex === index && nextIndex !== index)
     );
   },
-  renderTerm(term, id, isSelected, savedId, onClick, deleteWord) {
+  renderTerm(term, id, isSelected, savedId, translations, onClick, deleteWord) {
     // @TODO got a bug on probably with a race condition on rendering all without condition
     return (
       <span key={id}>
@@ -45,6 +45,17 @@ const InteractiveText = React.createClass({
               <p>
                 {Object.keys(term.pos).join(', ')}
               </p>
+
+              <div>
+                {
+                  translations.map(({ translation, synonyms }, id) => (
+                    <div key={id} className={styles.translationBlock}>
+                      <div className={styles.translation}>{translation}</div>
+                      <div className={styles.synonyms}>{synonyms}</div>
+                    </div>
+                  ))
+                }
+              </div>
             </div>
           </ToolTip>
         ) || ''}
@@ -62,6 +73,7 @@ const InteractiveText = React.createClass({
       showTooltip,
       showTooltipAndSave,
       words,
+      translations,
       deleteWord
     } = this.props;
 
@@ -77,6 +89,23 @@ const InteractiveText = React.createClass({
                           const id = `term-${[blockIndex, lineIndex, sentenceIndex, termIndex].join('-')}`;
                           const isSelected = activeTooltipId && activeTooltipId === id;
                           const savedId = words[id] && words[id]._id || false;
+
+                          let t = [];
+
+                          if (translations[id]) {
+                            const tr = translations[id];
+
+                            if (tr.type === 'dictionary') {
+                              const type = Object.keys(term.pos)[0].toLowerCase();
+
+                              if (tr.result[type]) {
+                                t = tr.result[type].translations.map(tr => ({
+                                  translation: tr.translation,
+                                  synonyms: tr.synonyms
+                                }));
+                              }
+                            }
+                          }
 
                           let onClick;
 
@@ -98,7 +127,7 @@ const InteractiveText = React.createClass({
                             onClick = () => showTooltip(id, blockIndex);
                           }
 
-                          return this.renderTerm(term, id, isSelected, savedId, onClick, deleteWord);
+                          return this.renderTerm(term, id, isSelected, savedId, t, onClick, deleteWord);
                         })
                       }
                     </span>

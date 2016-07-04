@@ -8,8 +8,8 @@ import ControlPanel from './control-panel/control-panel';
 import Spinner from '../ui/spinner/spinner';
 import InteractiveText from './interactive-text/interactive-text';
 
-const mapStateToProps = ({ mark: { mark, lines, isFetching, activeTooltipId, activeBlockIndex, words } }) =>
-  ({ mark, lines, isFetching, activeTooltipId, activeBlockIndex, words });
+const mapStateToProps = ({ mark: { mark, lines, isFetching, activeTooltipId, activeBlockIndex, words, translations } }) =>
+  ({ mark, lines, isFetching, activeTooltipId, activeBlockIndex, words, translations });
 const mapDispatchToProps = { fetchMark, addMark, showTooltip, showTooltipAndSave, deleteWord };
 
 export const MarksView = React.createClass({
@@ -56,7 +56,17 @@ export const MarksView = React.createClass({
     this.setState({ active: next });
   },
   renderBlock(block, blockIndex) {
-    const { activeTooltipId, activeBlockIndex, showTooltip, showTooltipAndSave, deleteWord, words, mark: { imdb, s, ep } } = this.props;
+    const {
+      activeTooltipId,
+      activeBlockIndex,
+      showTooltip,
+      showTooltipAndSave,
+      deleteWord,
+      words,
+      translations,
+      mark: { imdb, s, ep }
+    } = this.props;
+
     const source = { imdb, s, ep };
 
     return (
@@ -67,6 +77,7 @@ export const MarksView = React.createClass({
         source={source}
         words={words}
         deleteWord={deleteWord}
+        translations={translations}
         activeTooltipId={activeTooltipId}
         activeBlockIndex={activeBlockIndex}
         showTooltip={showTooltip}

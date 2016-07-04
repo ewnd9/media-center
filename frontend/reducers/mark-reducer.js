@@ -3,6 +3,7 @@ import {
   RECIEVE_MARK,
   SHOW_TOOLTIP,
   POST_WORD_SUCCESS,
+  RECIEVE_TRANSLATION,
   DELETE_WORD_SUCCESS
 } from '../actions/mark-actions';
 
@@ -12,7 +13,8 @@ function mark(state = {
   active: 0,
   activeTooltipId: null,
   activeBlockIndex: null,
-  words: {}
+  words: {},
+  translations: {}
 }, action) {
   switch (action.type) {
     case REQUEST_MARK:
@@ -34,6 +36,14 @@ function mark(state = {
         words: {
           ...state.words,
           [action.id]: action.word
+        }
+      };
+    case RECIEVE_TRANSLATION:
+      return {
+        ...state,
+        translations: {
+          ...state.translations,
+          [action.id]: action.translation
         }
       };
     case DELETE_WORD_SUCCESS:

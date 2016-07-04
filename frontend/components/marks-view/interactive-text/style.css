@@ -32,3 +32,16 @@
   margin-left: 10px;
   margin-right: 0;
 }
+
+.translationBlock {
+  border-bottom: 1px dashed black;
+  margin: 5px 0;
+}
+
+.translation {
+
+}
+
+.synonyms {
+  font-size: 0.7em;
+}
