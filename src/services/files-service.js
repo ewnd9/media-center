@@ -2,6 +2,7 @@ import findFiles from '../find-files';
 import Cache from '../utils/cache';
 import proxy from '../utils/proxy';
 import dlnaQuery from '../libs/dlna-query';
+import replaceHostname from '../libs/replace-link-hostname';
 
 export const FIND_FILES = 'FIND_FILES';
 
@@ -60,6 +61,24 @@ FilesService.prototype.prefetch = function() {
 
 FilesService.prototype.findAllFiles = function() {
   return this.cache.getOrInit(FIND_FILES, this.findFiles);
+};
+
+FilesService.prototype.findAllFilesWithStreamUrls = function(host) {
+  return this
+    .findAllFiles()
+    .then(files => {
+
+      // @TODO think maybe external ip should be set via environment variable?
+      files.forEach(file => {
+        file.media.forEach(media => {
+          if (media.streamUrl) {
+            media.streamUrl = replaceHostname(media.streamUrl, host);
+          }
+        });
+      });
+
+      return files;
+    });
 };
 
 FilesService.prototype.renewFindAllFiles = function(result) {
