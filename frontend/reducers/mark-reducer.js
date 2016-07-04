@@ -33,6 +33,8 @@ function mark(state = {
     case POST_WORD_SUCCESS:
       return {
         ...state,
+        activeTooltipId: null,
+        activeBlockIndex: null,
         words: {
           ...state.words,
           [action.id]: action.word

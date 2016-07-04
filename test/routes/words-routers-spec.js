@@ -79,6 +79,7 @@ function generateWord() {
 
   const example = {
     text: 'A raven came from the Citadel.',
+    translation: 'a bird',
     source: {
       imdb: showImdb,
       s: 1,

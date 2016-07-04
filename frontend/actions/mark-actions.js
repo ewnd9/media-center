@@ -66,21 +66,26 @@ function postWordSuccess(id, word) {
   };
 }
 
-export function showTooltipAndSave(id, blockIndex, word, example) {
+export function showTooltipAndFetchTranslations(id, blockIndex, word) {
   return dispatch => {
     dispatch(showTooltip(id, blockIndex));
-    dispatch(postWordRequest(id, word, example));
-    dispatch(requestTranslation(id, word.word));
+    dispatch(requestTranslation(id, word));
 
-    api
+    return translate('en', 'ru', word)
+      .then(translation => dispatch(recieveTranslation(id, word.word, translation)));
+  };
+}
+
+export function saveWord(id, word, example) {
+  return dispatch => {
+    dispatch(postWordRequest(id, word, example));
+
+    return api
       .postWord(word, example)
       .then(({ word }) => {
         return dispatch(postWordSuccess(id, word));
       });
-
-    translate('en', 'ru', word.word)
-      .then(translation => dispatch(recieveTranslation(id, word.word, translation)));
-  };
+  }
 }
 
 function deleteWordRequest(id, wordId) {

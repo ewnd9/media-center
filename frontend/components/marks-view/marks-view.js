@@ -3,14 +3,22 @@ import styles from './style.css';
 
 import { connect } from 'react-redux';
 
-import { fetchMark, addMark, showTooltip, showTooltipAndSave, deleteWord } from '../../actions/mark-actions';
+import {
+  fetchMark,
+  addMark,
+  showTooltip,
+  showTooltipAndFetchTranslations,
+  saveWord,
+  deleteWord
+} from '../../actions/mark-actions';
+
 import ControlPanel from './control-panel/control-panel';
 import Spinner from '../ui/spinner/spinner';
 import InteractiveText from './interactive-text/interactive-text';
 
 const mapStateToProps = ({ mark: { mark, lines, isFetching, activeTooltipId, activeBlockIndex, words, translations } }) =>
   ({ mark, lines, isFetching, activeTooltipId, activeBlockIndex, words, translations });
-const mapDispatchToProps = { fetchMark, addMark, showTooltip, showTooltipAndSave, deleteWord };
+const mapDispatchToProps = { fetchMark, addMark, showTooltip, showTooltipAndFetchTranslations, saveWord, deleteWord };
 
 export const MarksView = React.createClass({
   getInitialState() {
@@ -60,7 +68,8 @@ export const MarksView = React.createClass({
       activeTooltipId,
       activeBlockIndex,
       showTooltip,
-      showTooltipAndSave,
+      showTooltipAndFetchTranslations,
+      saveWord,
       deleteWord,
       words,
       translations,
@@ -76,12 +85,13 @@ export const MarksView = React.createClass({
         blockIndex={blockIndex}
         source={source}
         words={words}
+        saveWord={saveWord}
         deleteWord={deleteWord}
         translations={translations}
         activeTooltipId={activeTooltipId}
         activeBlockIndex={activeBlockIndex}
         showTooltip={showTooltip}
-        showTooltipAndSave={showTooltipAndSave} />
+        showTooltipAndFetchTranslations={showTooltipAndFetchTranslations} />
     );
   },
   renderMark(line) {

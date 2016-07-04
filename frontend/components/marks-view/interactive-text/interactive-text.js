@@ -8,6 +8,10 @@ function termToString(term) {
   return `${term.whitespace.preceding || ''}${term.text}${term.whitespace.trailing || ''}`;
 }
 
+function sentenceToString(sentence) {
+  return sentence.map(termToString).join('');
+}
+
 const InteractiveText = React.createClass({
   shouldComponentUpdate(nextProps) {
     const { activeBlockIndex: currIndex, blockIndex: index } = this.props;
@@ -18,7 +22,49 @@ const InteractiveText = React.createClass({
       (currIndex === index && nextIndex !== index)
     );
   },
-  renderTerm(term, id, isSelected, savedId, translations, onClick, deleteWord) {
+  onClickTranslation(id, sentence, term, translation) {
+    const {
+      source,
+      saveWord
+    } = this.props;
+
+    const word = {
+      type: Object.keys(term.pos)[0].toLowerCase(),
+      word: term.normal
+    };
+
+    const example = {
+      text: sentenceToString(sentence),
+      source,
+      translation
+    };
+
+    saveWord(id, word, example);
+  },
+  renderSentence(sentence, selectedTerm) {
+    return sentence.map((term, index) => {
+      if (term === selectedTerm) {
+        return (<b>{termToString(term)}</b>);
+      } else {
+        return (<span>{termToString(term)}</span>);
+      }
+    })
+  },
+  renderTerm(id, blockIndex, sentence, term, isSelected, savedId, translations) {
+    const {
+      showTooltip,
+      showTooltipAndFetchTranslations,
+      deleteWord
+    } = this.props;
+
+    let onClick;
+
+    if (!savedId) {
+      onClick = () => showTooltipAndFetchTranslations(id, blockIndex, term.normal);
+    } else {
+      onClick = () => showTooltip(id, blockIndex);
+    }
+
     // @TODO got a bug on probably with a race condition on rendering all without condition
     return (
       <span key={id}>
@@ -42,16 +88,23 @@ const InteractiveText = React.createClass({
                 ) || ''}
               </p>
 
-              <p>
+              <div className={styles.smallText}>
                 {Object.keys(term.pos).join(', ')}
-              </p>
+              </div>
+
+              <div className={styles.smallText}>
+                { this.renderSentence(sentence, term) }
+              </div>
 
               <div>
                 {
-                  translations.map(({ translation, synonyms }, id) => (
-                    <div key={id} className={styles.translationBlock}>
-                      <div className={styles.translation}>{translation}</div>
-                      <div className={styles.synonyms}>{synonyms}</div>
+                  translations.map((translation, translationId) => (
+                    <div
+                      key={translationId}
+                      className={styles.translationBlock}
+                      onClick={() => this.onClickTranslation(id, sentence, term, translation.translation)}>
+                      <div>{translation.translation}</div>
+                      <div className={styles.smallText}>{translation.synonyms.join(' | ')}</div>
                     </div>
                   ))
                 }
@@ -70,11 +123,8 @@ const InteractiveText = React.createClass({
       blockIndex,
       source,
       activeTooltipId,
-      showTooltip,
-      showTooltipAndSave,
       words,
-      translations,
-      deleteWord
+      translations
     } = this.props;
 
     return (
@@ -107,27 +157,7 @@ const InteractiveText = React.createClass({
                             }
                           }
 
-                          let onClick;
-
-                          if (!savedId) {
-                            onClick = () => {
-                              const word = {
-                                type: Object.keys(term.pos)[0].toLowerCase(),
-                                word: term.normal
-                              };
-
-                              const example = {
-                                text: sentence.map(termToString).join(''),
-                                source
-                              };
-
-                              showTooltipAndSave(id, blockIndex, word, example);
-                            };
-                          } else {
-                            onClick = () => showTooltip(id, blockIndex);
-                          }
-
-                          return this.renderTerm(term, id, isSelected, savedId, t, onClick, deleteWord);
+                          return this.renderTerm(id, blockIndex, sentence, term, isSelected, savedId, t);
                         })
                       }
                     </span>

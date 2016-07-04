@@ -6,7 +6,8 @@ export const wordExampleSchema = t.struct({
     imdb: t.String,
     s: t.maybe(t.Number),
     ep: t.maybe(t.Number)
-  })
+  }),
+  translation: t.maybe(t.String)
 });
 
 export const wordSchema = t.struct({

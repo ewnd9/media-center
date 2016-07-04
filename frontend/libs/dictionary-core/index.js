@@ -38,7 +38,7 @@ const formatDictionaryTranslations = translation => {
 
   return {
     translation: translation.text,
-    synonyms: joiner(synonyms),
+    synonyms,
     means: joiner(means),
     examples: (translation.ex || []).map(function(ex) {
       const translations = ex.tr.map(_ => _.text);
