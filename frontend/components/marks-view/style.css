@@ -3,27 +3,3 @@
 .container {
   position: relative;
 }
-
-.line {
-  margin-bottom: 10px;
-}
-
-.time {
-  font-size: 0.7em;
-}
-
-.term {
-  cursor: pointer;
-}
-
-.selected {
-  text-decoration: underline;
-}
-
-.tooltip {
-  color: var(--darkTextColor);
-}
-
-.tooltip > p {
-  margin: 10px 0;
-}

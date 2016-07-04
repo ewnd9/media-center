@@ -12,7 +12,7 @@ const fetch = (url, options = {}) => {
   let req = (
     options.method === 'post' ?
       superagent.post(url).send(options.body) :
-      superagent.get(url)
+      (options.method === 'delete' ? superagent.delete(url) : superagent.get(url))
   );
 
   if (options.query) {
@@ -44,6 +44,11 @@ const fetch = (url, options = {}) => {
 
 export const get = (url, query = {}) => {
   return fetch(baseUrl + url, { query })
+    .catch(err => notify.error(err.message));
+};
+
+export const deleteRequest = (url, query = {}) => {
+  return fetch(baseUrl + url, { method: 'delete', query })
     .catch(err => notify.error(err.message));
 };
 
@@ -133,4 +138,12 @@ export const getMark = id => {
 
 export const postMark = mark => {
   return post('/api/v1/marks', { mark });
+};
+
+export const postWord = (word, example) => {
+  return post('/api/v1/words', { word, example });
+};
+
+export const deleteWord = id => {
+  return deleteRequest(`/api/v1/words/${id}`);
 };

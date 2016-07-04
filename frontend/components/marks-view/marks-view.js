@@ -3,77 +3,14 @@ import styles from './style.css';
 
 import { connect } from 'react-redux';
 
-import { fetchMark, addMark, showTooltip } from '../../actions/mark-actions';
+import { fetchMark, addMark, showTooltip, showTooltipAndSave, deleteWord } from '../../actions/mark-actions';
 import ControlPanel from './control-panel/control-panel';
 import Spinner from '../ui/spinner/spinner';
+import InteractiveText from './interactive-text/interactive-text';
 
-import ToolTip from 'react-portal-tooltip';
-
-const mapStateToProps = ({ mark: { mark, lines, isFetching, activeTooltipId, activeBlockIndex } }) =>
-  ({ mark, lines, isFetching, activeTooltipId, activeBlockIndex });
-const mapDispatchToProps = { fetchMark, addMark, showTooltip };
-
-export const SubtitlesBlock = React.createClass({
-  shouldComponentUpdate(nextProps) {
-    const { activeBlockIndex: currIndex, blockIndex: index } = this.props;
-    const { activeBlockIndex: nextIndex } = nextProps;
-
-    return (
-      nextIndex === index ||
-      (currIndex === index && nextIndex !== index)
-    );
-  },
-  renderTerm(term, id, isSelected, showTooltip) {
-    // @TODO got a bug on probably with a race condition on rendering all without condition
-    return (
-      <span key={id}>
-        {term.whitespace.preceding || ''}
-        <span
-          id={id}
-          onClick={showTooltip}
-          className={`${styles.term} ${isSelected && styles.selected || ''}`}>
-          {term.text}
-        </span>
-        { isSelected &&  (
-          <ToolTip active={isSelected} position="bottom" arrow="center" parent={`#${id}`}>
-            <div className={styles.tooltip}>
-              <p><b>{term.normal}</b></p>
-              <p>{Object.keys(term.pos).join(', ')}</p>
-            </div>
-          </ToolTip>
-        ) || ''}
-
-        {term.whitespace.trailing || ''}
-      </span>
-    );
-  },
-  render() {
-    const { block, blockIndex, activeTooltipId, showTooltip } = this.props;
-
-    return (
-      <div key={block.startTimeMs} className={styles.line}>
-        <div className={styles.time}>{block.startTime} -> {block.endTime}</div>
-        { block.text
-            .map((line, lineIndex) => (
-              <div key={lineIndex}>
-                { line.map((sentence, sentenceIndex) => (
-                    <span key={sentenceIndex}>
-                      { sentence.map((term, termIndex) => {
-                          const id = `term-${[blockIndex, lineIndex, sentenceIndex, termIndex].join('-')}`;
-                          const isSelected = activeTooltipId && activeTooltipId === id;
-
-                          return this.renderTerm(term, id, isSelected, showTooltip.bind(null, id, blockIndex));
-                        })
-                      }
-                    </span>
-                  )) }
-              </div>
-            ))
-        }
-      </div>
-    );
-  }
-});
+const mapStateToProps = ({ mark: { mark, lines, isFetching, activeTooltipId, activeBlockIndex, words } }) =>
+  ({ mark, lines, isFetching, activeTooltipId, activeBlockIndex, words });
+const mapDispatchToProps = { fetchMark, addMark, showTooltip, showTooltipAndSave, deleteWord };
 
 export const MarksView = React.createClass({
   getInitialState() {
@@ -119,16 +56,21 @@ export const MarksView = React.createClass({
     this.setState({ active: next });
   },
   renderBlock(block, blockIndex) {
-    const { activeTooltipId, activeBlockIndex, showTooltip } = this.props;
+    const { activeTooltipId, activeBlockIndex, showTooltip, showTooltipAndSave, deleteWord, words, mark: { imdb, s, ep } } = this.props;
+    const source = { imdb, s, ep };
 
     return (
-      <SubtitlesBlock
+      <InteractiveText
         key={blockIndex}
         block={block}
         blockIndex={blockIndex}
+        source={source}
+        words={words}
+        deleteWord={deleteWord}
         activeTooltipId={activeTooltipId}
         activeBlockIndex={activeBlockIndex}
-        showTooltip={showTooltip} />
+        showTooltip={showTooltip}
+        showTooltipAndSave={showTooltipAndSave} />
     );
   },
   renderMark(line) {
@@ -153,7 +95,7 @@ export const MarksView = React.createClass({
     return (
       <div className={styles.container}>
         {
-          mark.subtitles.map((block, blockIndex) => block.startTime ?
+          mark.subtitles.slice(0,10).map((block, blockIndex) => block.startTime ?
             this.renderBlock(block, blockIndex) :
             this.renderMark(block)
           )

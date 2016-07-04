@@ -5,6 +5,12 @@ export const RECIEVE_MARK = 'RECIEVE_MARK';
 
 export const SHOW_TOOLTIP = 'SHOW_TOOLTIP';
 
+export const POST_WORD_REQUEST = 'POST_WORD_REQUEST';
+export const POST_WORD_SUCCESS = 'POST_WORD_SUCCESS';
+
+export const DELETE_WORD_REQUEST = 'DELETE_WORD_REQUEST';
+export const DELETE_WORD_SUCCESS = 'DELETE_WORD_SUCCESS';
+
 function requestMark(id) {
   return {
     type: REQUEST_MARK,
@@ -36,5 +42,61 @@ export function showTooltip(id, blockIndex) {
     type: SHOW_TOOLTIP,
     id,
     blockIndex
+  };
+}
+
+function postWordRequest(id, word, example) {
+  return {
+    type: POST_WORD_REQUEST,
+    id,
+    word,
+    example
+  };
+}
+
+function postWordSuccess(id, word) {
+  return {
+    type: POST_WORD_SUCCESS,
+    id,
+    word
+  };
+}
+
+export function showTooltipAndSave(id, blockIndex, word, example) {
+  return dispatch => {
+    dispatch(showTooltip(id, blockIndex));
+    dispatch(postWordRequest(id, word, example));
+
+    return api
+      .postWord(word, example)
+      .then(({ word }) => {
+        return dispatch(postWordSuccess(id, word));
+      });
+  };
+}
+
+function deleteWordRequest(id, wordId) {
+  return {
+    type: DELETE_WORD_REQUEST,
+    id,
+    wordId
+  };
+}
+
+function deleteWordSuccess(id, wordId) {
+  return {
+    type: DELETE_WORD_SUCCESS,
+    id,
+    wordId
+  };
+}
+
+export function deleteWord(id, wordId) {
+  return dispatch => {
+    dispatch(deleteWordRequest(id, wordId));
+
+    return api
+      .deleteWord(wordId)
+      .then(() => dispatch(deleteWordSuccess(id, wordId)));
   };
 }
