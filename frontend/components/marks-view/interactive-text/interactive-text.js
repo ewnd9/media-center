@@ -25,7 +25,7 @@ const InteractiveText = React.createClass({
     let onClick;
 
     if (!savedId) {
-      onClick = () => showTooltipAndFetchTranslations(id, blockIndex, term.normal);
+      onClick = () => showTooltipAndFetchTranslations(id, blockIndex, Object.keys(term.pos)[0].toLowerCase(), term.normal);
     } else {
       onClick = () => showTooltip(id, blockIndex);
     }
@@ -78,23 +78,7 @@ const InteractiveText = React.createClass({
                           const id = `term-${[blockIndex, lineIndex, sentenceIndex, termIndex].join('-')}`;
                           const isSelected = activeTooltipId && activeTooltipId === id;
                           const savedId = words[id] && words[id]._id || false;
-
-                          let t = [];
-
-                          if (translations[id]) {
-                            const tr = translations[id];
-
-                            if (tr.type === 'dictionary') {
-                              const type = Object.keys(term.pos)[0].toLowerCase();
-
-                              if (tr.result[type]) {
-                                t = tr.result[type].translations.map(tr => ({
-                                  translation: tr.translation,
-                                  synonyms: tr.synonyms
-                                }));
-                              }
-                            }
-                          }
+                          const t = translations[id] || null;
 
                           return this.renderTerm(id, blockIndex, sentence, term, isSelected, savedId, t);
                         })

@@ -116,7 +116,7 @@ export const MarksView = React.createClass({
     return (
       <div className={styles.container}>
         {
-          mark.subtitles.slice(0,10).map((block, blockIndex) => block.startTime ?
+          mark.subtitles.map((block, blockIndex) => block.startTime ?
             this.renderBlock(block, blockIndex) :
             this.renderMark(block)
           )

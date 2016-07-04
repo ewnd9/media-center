@@ -45,7 +45,7 @@ function mark(state = {
         ...state,
         translations: {
           ...state.translations,
-          [action.id]: action.translation
+          [action.id]: normalizeTranslations(action.translation, action.wordType)
         }
       };
     case DELETE_WORD_SUCCESS:
@@ -71,4 +71,18 @@ function recieveMark(state, { mark }) {
     isFetching: false,
     mark
   };
+}
+
+function normalizeTranslations(translation, wordType) {
+  if (translation.type === 'dictionary') {
+    if (translation.result[wordType]) {
+      return translation.result[wordType].translations
+        .map(tr => ({
+          translation: tr.translation,
+          synonyms: tr.synonyms
+        }));
+    }
+  }
+
+  return [];
 }

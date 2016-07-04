@@ -66,13 +66,13 @@ function postWordSuccess(id, word) {
   };
 }
 
-export function showTooltipAndFetchTranslations(id, blockIndex, word) {
+export function showTooltipAndFetchTranslations(id, blockIndex, wordType, word) {
   return dispatch => {
     dispatch(showTooltip(id, blockIndex));
-    dispatch(requestTranslation(id, word));
+    dispatch(requestTranslation(id, wordType, word));
 
     return translate('en', 'ru', word)
-      .then(translation => dispatch(recieveTranslation(id, word.word, translation)));
+      .then(translation => dispatch(recieveTranslation(id, wordType, word.word, translation)));
   };
 }
 
@@ -114,18 +114,20 @@ export function deleteWord(id, wordId) {
   };
 }
 
-function requestTranslation(id, word) {
+function requestTranslation(id, wordType, word) {
   return {
     type: REQUEST_TRANSLATION,
     id,
+    wordType,
     word
   };
 }
 
-function recieveTranslation(id, word, translation) {
+function recieveTranslation(id, wordType, word, translation) {
   return {
     type: RECIEVE_TRANSLATION,
     id,
+    wordType,
     word,
     translation
   };

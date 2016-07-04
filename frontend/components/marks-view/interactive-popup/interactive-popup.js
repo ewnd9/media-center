@@ -78,15 +78,21 @@ const InteractivePopup = React.createClass({
 
           <div>
             {
-              translations.map((translation, translationId) => (
-                <div
-                  key={translationId}
-                  className={styles.translationBlock}
-                  onClick={() => this.onClickTranslation(translation.translation)}>
-                  <div>{translation.translation}</div>
-                  <div className={styles.smallText}>{translation.synonyms.join(' | ')}</div>
-                </div>
-              ))
+              translations !== null && (
+                translations.length === 0 && (
+                  <div>Nothing found</div>
+                ) || (
+                  translations.map((translation, translationId) => (
+                    <div
+                      key={translationId}
+                      className={styles.translationBlock}
+                      onClick={() => this.onClickTranslation(translation.translation)}>
+                      <div>{translation.translation}</div>
+                      <div className={styles.smallText}>{translation.synonyms.join(' | ')}</div>
+                    </div>
+                  ))
+                )
+              ) || ''
             }
           </div>
         </div>
