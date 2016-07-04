@@ -85,7 +85,7 @@ export function saveWord(id, word, example) {
       .then(({ word }) => {
         return dispatch(postWordSuccess(id, word));
       });
-  }
+  };
 }
 
 function deleteWordRequest(id, wordId) {

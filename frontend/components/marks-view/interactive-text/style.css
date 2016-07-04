@@ -12,41 +12,10 @@
   border-bottom: 1px dashed yellow;
 }
 
-.tooltip {
-  color: var(--darkTextColor);
-}
-
-.tooltip > p {
-  margin: 10px 0;
-}
-
 .line {
   margin-bottom: 10px;
 }
 
 .time {
-  font-size: 0.7em;
-}
-
-.trashButton {
-  margin-left: 10px;
-  margin-right: 0;
-}
-
-.translationBlock {
-  border-bottom: 1px dashed black;
-  margin: 5px 0;
-  cursor: pointer;
-}
-
-.translation {
-
-}
-
-.synonyms {
-  font-size: 0.7em;
-}
-
-.smallText {
   font-size: 0.7em;
 }
