@@ -14,7 +14,7 @@ process.on('uncaughtException', function (err) {
 
 process.on('unhandledRejection', function (reason) {
   console.error('unhandled promise rejection:', reason.stack || reason);
-  report(err);
+  report(reason);
 });
 
 app.default();
