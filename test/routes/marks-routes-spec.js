@@ -8,23 +8,10 @@ import agent from '../fixtures/agent';
 import createApp from '../fixtures/create-app';
 
 import { generateMark } from '../fixtures/mocks-marks';
-import MarksService from '../../src/services/marks-service';
-
-import fs from 'fs';
-const srtText = fs.readFileSync('../fixtures/srt/game-of-thrones-06x10-sample.srt', 'utf-8');
+import createMarksServiceMock from '../fixtures/create-marks-service'
 
 test.beforeEach(async t => {
-  const MarksServiceMock = function() {
-    const service = MarksService.apply(this, Array.prototype.slice.apply(arguments));
-
-    service._fetchSubtitlesFromApi = function() {
-      return Promise.resolve(srtText);
-    };
-
-    return service;
-  };
-
-  t.context.app = await createApp({ marksServiceMock: { default: MarksServiceMock } });
+  t.context.app = await createApp({ marksServiceMock: createMarksServiceMock() });
   t.context.request = agent(t.context.app.server);
 });
 
