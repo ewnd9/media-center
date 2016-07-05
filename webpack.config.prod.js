@@ -7,7 +7,7 @@ if (typeof process.env.NODE_ENV === 'undefined') {
 
 const config = require(`${__dirname}/webpack.config`);
 
-config.entry.vendors = ['react', 'react-dom', 'redux', 'socket.io-client'];
+config.entry.vendors = getVendors();
 
 config.devtool = 'source-map';
 config.output.filename = '[name].bundle.[hash].js';
@@ -19,6 +19,7 @@ const prodPlugins = config.plugins.reduce((total, curr) => {
 
   return total;
 }, [
+  new webpack.optimize.DedupePlugin(),
   new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.[hash].js'),
   new ExtractTextPlugin('styles.css', '[name].[contenthash].css')
@@ -45,3 +46,26 @@ const prodLoaders = config.module.loaders.reduce((total, curr) => {
 config.module.loaders = prodLoaders;
 
 module.exports = config;
+
+function getVendors() {
+  return [
+    'core-js',
+    'fbjs',
+    'engine.io-client',
+    'history',
+    'json3',
+    'lodash',
+    'moment',
+    'react',
+    'react-autosuggest',
+    'react-dom',
+    'react-portal-tooltip',
+    'react-router',
+    'redux',
+    'regenerator-runtime',
+    'socket.io-client',
+    'socket.io-client/socket.io.js',
+    'superagent',
+    'tcomb'
+  ];
+}

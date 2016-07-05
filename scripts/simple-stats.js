@@ -48,7 +48,7 @@ function formatFiles(files, distDirectory) {
     return result;
   };
 
-  return '\n' + ['html', 'css', 'js'].map(formatGroup).join('\n');
+  return ['html', 'css', 'js'].map(formatGroup).join('\n');
 }
 
 function replaceBetween(input, before, after, replacement) {

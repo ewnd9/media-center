@@ -30,6 +30,7 @@ const config = {
     ]
   },
   module: {
+    noParse: [ /socket.io-client/ ],
     loaders: [
       {
         test: /\.jsx?$/,

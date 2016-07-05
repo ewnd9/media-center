@@ -55,18 +55,6 @@ $ cp example.deploy.sh deploy.sh # replace user@ip to yours
 $ chmod +x deploy.sh
 ```
 
-## Filesize report
-
-- html
-  - index.html 361 B gziped
-
-- css
-  - app.css 24.7 kB gziped
-
-- js
-  - vendors.js 64.68 kB gziped
-  - app.bundle.js 166.43 kB gziped
-
 ## Credits
 
 Mockup image from [placeit](https://placeit.net/stages/flat-screen-and-ipad-mini-mockup-at-home-a4667?f_devices=tv)

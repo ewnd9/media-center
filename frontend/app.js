@@ -5,6 +5,7 @@ import './style.css';
 import '!!file?name=[name].[ext]!./assets/chrome-manifest.json';
 require.context('!!file?name=[name].[ext]!./assets/', false, /^\.\/.*\.png$/);
 
+import io from 'socket.io-client/socket.io.js';
 import notify from './notify';
 import report from './agent';
 
@@ -39,10 +40,8 @@ import {
   RELOAD_FILES
 } from './constants';
 
-/* global io */
-require('script!socket.io-client/socket.io.js');
-const socket = io(api.getBaseUrl());
 
+const socket = io(api.getBaseUrl());
 const store = configureStore(socket);
 
 const app = (
