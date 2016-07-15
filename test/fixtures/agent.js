@@ -5,7 +5,7 @@ export default server => {
   const request = agent(server);
 
   const getFn = fn => (url, query, responseSchema) => {
-    if (!responseSchema) {
+    if (!responseSchema && responseSchema !== false) {
       return Promise.reject('responseSchema is missing');
     }
 
@@ -13,6 +13,7 @@ export default server => {
   };
 
   return {
+    supertest: request,
     get: getFn(request.get.bind(request)),
     delete: getFn(request.delete.bind(request)),
     post: (url, body, requestSchema, responseSchema) => {
@@ -45,9 +46,14 @@ function validatePromise(request, responseSchema) {
       if (error) {
         reject(error);
       } else {
-        const responseValidation = validate(response.body, responseSchema, { strict: true });
-        if (!responseValidation.isValid()) {
-          reject(errorMessage(response.body, responseValidation.errors));
+        if (responseSchema !== false) {
+          const responseValidation = validate(response.body, responseSchema, { strict: true });
+
+          if (!responseValidation.isValid()) {
+            reject(errorMessage(response.body, responseValidation.errors));
+          } else {
+            resolve(response);
+          }
         } else {
           resolve(response);
         }

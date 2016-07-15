@@ -16,6 +16,7 @@ import TraktRouter from './routes/trakt';
 import MarksRouter from './routes/marks';
 import PostersRouter from './routes/posters';
 import WordsRouter from './routes/words';
+import DbRouter from './routes/db';
 
 import report from './agent';
 
@@ -39,6 +40,7 @@ function createServer({ db, services, config: { screenshotPath, port } }) {
   app.use('/', MarksRouter(services));
   app.use('/', PostersRouter(services));
   app.use('/', WordsRouter(services));
+  app.use('/', DbRouter(db, services));
 
   const httpServer = http.createServer(app);
   const io = socketIO(httpServer);

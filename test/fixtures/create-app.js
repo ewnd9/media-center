@@ -33,7 +33,7 @@ export default ({ traktMock = defaultTrackMock, playerServiceMock, marksServiceM
       mediaPath: tmpDir,
       screenshotPath: tmpDir,
       trakt: traktMock,
-      port: undefined
+      port: (Math.random() * 64536) | 0 + 1000
     },
     './services/index': proxyquire('../../src/services/index', servicesMocks),
     './server': proxyquire('../../src/server', {

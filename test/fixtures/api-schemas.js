@@ -1,5 +1,4 @@
-import t from 'tcomb';
-import { validate } from 'tcomb-validation';
+import t, { validate } from 'tcomb-validation';
 
 import { schema as fileSchema } from '../../src/models/file';
 import { schema as markSchema } from '../../src/models/mark';

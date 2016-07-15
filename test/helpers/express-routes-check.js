@@ -56,6 +56,10 @@ function getRoutes(app) {
   app._router.stack.forEach(el => {
     if (el.handle.stack) {
       el.handle.stack.forEach(route => {
+        if (!route.route) {
+          return;
+        }
+        
         result.push(`${Object.keys(route.route.methods).map(key => key.toUpperCase()).join(' ')} ${route.route.path}`);
       });
     }

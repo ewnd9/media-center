@@ -2,6 +2,10 @@ import PouchDB from 'pouchdb';
 import t from 'tcomb-validation';
 import Repository from '../libs/pouchdb-repository-factory/';
 
+import { plugin as ReplicationPlugin, adapters } from 'pouchdb-replication-stream';
+PouchDB.plugin(ReplicationPlugin);
+PouchDB.adapter('writableStream', adapters.writableStream);
+
 import File from './file';
 import Prefix from './prefix';
 import Mark from './mark';
@@ -20,7 +24,9 @@ export default (dbPath, dbOptions = {}) => {
   const models = Object
     .keys(initializers)
     .reduce((result, key) => {
-      const db = new PouchDB(`${dbPath}-${key.toLowerCase()}`, dbOptions);
+      const name = key.toLowerCase();
+      
+      const db = new PouchDB(`${dbPath}-${name}`, dbOptions);
       db.on('error', err => console.log('pouch-error', err));
 
       const obj = initializers[key];
