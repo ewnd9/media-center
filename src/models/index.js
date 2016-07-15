@@ -11,6 +11,7 @@ import Prefix from './prefix';
 import Mark from './mark';
 import Subtitles from './subtitles';
 import Word from './word';
+import Book from './book';
 
 export default (dbPath, dbOptions = {}) => {
   const initializers = {
@@ -18,14 +19,15 @@ export default (dbPath, dbOptions = {}) => {
     Prefix,
     Mark,
     Subtitles,
-    Word
+    Word,
+    Book
   };
 
   const models = Object
     .keys(initializers)
     .reduce((result, key) => {
       const name = key.toLowerCase();
-      
+
       const db = new PouchDB(`${dbPath}-${name}`, dbOptions);
       db.on('error', err => console.log('pouch-error', err));
 

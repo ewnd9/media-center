@@ -46,6 +46,7 @@
   "license": "MIT",
   "dependencies": {
     "@ewnd9/registry": "^1.0.1",
+    "adm-zip": "^0.4.7",
     "bluebird": "^2.10.2",
     "body-parser": "^1.14.2",
     "busboy": "^0.2.13",
@@ -85,7 +86,7 @@
     "user-home": "^2.0.0",
     "vlc": "github:fenwick67/node-vlc",
     "x11": "^2.0.2",
-    "xml2js": "^0.4.16"
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "alertify.js": "^1.0.8",

@@ -23,7 +23,7 @@ const fetch = (url, options = {}) => {
     req = req.set(options.headers);
   }
 
-  return reqToPromise(req);
+  return reqToPromise(req, options, url);
   // return req
   //   .then(({ body }) => {
   //     return body;
@@ -141,14 +141,18 @@ export const deleteWord = id => {
 };
 
 export const uploadBook = (book, name) => {
+  const url = '/api/v1/books';
+
   return reqToPromise(
     superagent
-      .post(`${baseUrl}/api/v1/books`)
-      .attach('book-file', book, name)
+      .post(`${baseUrl}${url}`)
+      .attach('book-file', book, name),
+    { method: 'POST' },
+    url
   );
 };
 
-function reqToPromise(req) {
+function reqToPromise(req, options = {}, url = '') {
   return new Promise((resolve, reject) => {
     req.end((err, { status, body }) => {
       if (err) {
