@@ -49,6 +49,7 @@
     "bluebird": "^2.10.2",
     "body-parser": "^1.14.2",
     "chokidar": "^1.4.2",
+    "connect-busboy": "0.0.2",
     "cors": "^2.7.1",
     "dot-file-config": "^0.5.0",
     "execa": "^0.4.0",

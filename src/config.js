@@ -14,6 +14,7 @@ export const dataPath = process.env.DATA_PATH;
 
 export const dbPath = ensureDirectory(dataPath, 'media-center-db');
 export const screenshotPath = ensureDirectory(dataPath, 'media-center-screenshots');
+export const booksPath = ensureDirectory(dataPath, 'media-center-books');
 
 export const errorBoardPath = ensureDirectory(dataPath, 'media-center-error-board') + '/errors.db';
 export const errorBoardMount = '/error-board';

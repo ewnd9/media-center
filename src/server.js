@@ -2,6 +2,7 @@ import path from 'path';
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
+import busboy from 'connect-busboy';
 import cors from 'cors';
 import http from 'http';
 import socketIO from 'socket.io';
@@ -17,6 +18,7 @@ import MarksRouter from './routes/marks';
 import PostersRouter from './routes/posters';
 import WordsRouter from './routes/words';
 import DbRouter from './routes/db';
+import BooksRouter from './routes/books';
 
 import report from './agent';
 
@@ -30,6 +32,7 @@ function createServer({ db, services, config: { screenshotPath, port } }) {
   app.use(express.static('public'));
   app.use('/screenshots', express.static(screenshotPath));
   app.use(cors());
+  app.use(busboy());
 
   app.use('/', PaginationMiddleware);
 
@@ -41,6 +44,7 @@ function createServer({ db, services, config: { screenshotPath, port } }) {
   app.use('/', PostersRouter(services));
   app.use('/', WordsRouter(services));
   app.use('/', DbRouter(db, services));
+  app.use('/', BooksRouter(services));
 
   const httpServer = http.createServer(app);
   const io = socketIO(httpServer);

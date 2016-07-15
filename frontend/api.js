@@ -23,15 +23,7 @@ const fetch = (url, options = {}) => {
     req = req.set(options.headers);
   }
 
-  return new Promise((resolve, reject) => {
-    req.end((err, { status, body }) => {
-      if (err) {
-        reject(new Error(`${options.method || 'GET'} ${url} returned ${status}<br />${body.error.join('<br />')}`)); // possible xss :-(
-      } else {
-        resolve(body);
-      }
-    });
-  });
+  return reqToPromise(req);
   // return req
   //   .then(({ body }) => {
   //     return body;
@@ -147,3 +139,23 @@ export const postWord = (word, example) => {
 export const deleteWord = id => {
   return deleteRequest(`/api/v1/words/${id}`);
 };
+
+export const uploadBook = (book, name) => {
+  return reqToPromise(
+    superagent
+      .post(`${baseUrl}/api/v1/books`)
+      .attach('book-file', book, name)
+  );
+};
+
+function reqToPromise(req) {
+  return new Promise((resolve, reject) => {
+    req.end((err, { status, body }) => {
+      if (err) {
+        reject(new Error(`${options.method || 'GET'} ${url} returned ${status}<br />${body.error.join('<br />')}`)); // possible xss :-(
+      } else {
+        resolve(body);
+      }
+    });
+  });
+}

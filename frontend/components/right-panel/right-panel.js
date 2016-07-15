@@ -12,6 +12,8 @@ import YoutubeInput from '../youtube/youtube';
 import MarksList from '../marks-list/marks-list';
 import MarksView from '../marks-view/marks-view';
 
+import BooksList from '../books-list/books-list';
+
 import { Link, IndexRoute, Route } from 'react-router';
 
 const RightPanel = React.createClass({
@@ -23,6 +25,7 @@ const RightPanel = React.createClass({
     const SCREENSHOTS = 'Screens';
     const YOUTUBE = 'Youtube';
     const MARKS = 'Marks';
+    const BOOKS = 'Books';
 
     const elements = [];
 
@@ -44,6 +47,7 @@ const RightPanel = React.createClass({
       React.createElement(IndexRoute, { key: '/marks', component: MarksList }),
       React.createElement(Route, { key: '/marks/:id', path: '/marks/:id', component: MarksView, isFullWidth })
     ]));
+    elements.push(createRouterElement('/books', BOOKS, BooksList));
 
     const defaultRoute = isFullWidth && '/media' || '/trakt';
 
