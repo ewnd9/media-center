@@ -46,18 +46,27 @@ function validatePromise(request, responseSchema) {
       if (error) {
         reject(error);
       } else {
-        if (responseSchema !== false) {
-          const responseValidation = validate(response.body, responseSchema, { strict: true });
-
-          if (!responseValidation.isValid()) {
-            reject(errorMessage(response.body, responseValidation.errors));
-          } else {
-            resolve(response);
-          }
-        } else {
-          resolve(response);
-        }
+        resolve(response)
       }
     });
+  })
+  .then(response => {
+    if (responseSchema !== false) {
+      return validateResponse(responseSchema, response);
+    } else {
+      return response;
+    }
+  });
+}
+
+export function validateResponse(schema, response) {
+  return new Promise((resolve, reject) => {
+    const responseValidation = validate(response.body, schema, { strict: true });
+
+    if (!responseValidation.isValid()) {
+      reject(errorMessage(response.body, responseValidation.errors));
+    } else {
+      resolve(response);
+    }
   });
 }

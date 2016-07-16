@@ -3,6 +3,7 @@ import t, { validate } from 'tcomb-validation';
 import { schema as fileSchema } from '../../src/models/file';
 import { schema as markSchema } from '../../src/models/mark';
 import { wordSchema, wordExampleSchema } from '../../src/models/word';
+import { schema as bookSchema } from '../../src/models/book';
 
 export const fileScrobbleRequestSchema = t.struct({
   filename: t.String,
@@ -181,3 +182,34 @@ export const postWordRequestSchema = t.struct({
 
 export const wordResponseSchema = t.struct({ word: wordSchema });
 export const wordsArrayResponseSchema = t.struct({ words: t.list(wordSchema.extend({ _key: t.String })) });
+
+export const postBookSchema = t.struct({ book: bookSchema });
+
+const htmlElementSchema = t.struct({
+  attribs: t.maybe(t.dict(t.String, t.String)),
+  children: t.maybe(t.list(t.Any)),
+  isBlockElement: t.Boolean,
+  name: t.String,
+  text: t.maybe(t.String)
+});
+htmlElementSchema.meta.props.children = t.maybe(t.list(htmlElementSchema));
+
+export const bookResponseSchema = t.struct({
+  book: bookSchema.extend({
+    content: t.struct({
+      title: t.String,
+      lang: t.String,
+      creator: t.String,
+      chapters: t.list(
+        t.struct({
+          html: htmlElementSchema,
+          id: t.String
+        })
+      )
+    })
+  })
+});
+
+export const booksArrayResponseSchema = t.struct({
+  books: t.list(bookSchema)
+});
