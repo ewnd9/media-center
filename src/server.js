@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import http from 'http';
+import compression from 'compression';
 import socketIO from 'socket.io';
 import Bus from './bus';
 
@@ -24,13 +25,15 @@ import report from './agent';
 function createServer({ db, services, config: { screenshotPath, port } }) {
   const app = express();
 
+  app.use(morgan('request: :remote-addr :method :url :status'));
+  app.use(cors());
+
   app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
   app.use(bodyParser.json({ limit: '50mb' }));
 
-  app.use(morgan('request: :remote-addr :method :url :status'));
+  app.use(compression());
   app.use(express.static('public'));
   app.use('/screenshots', express.static(screenshotPath));
-  app.use(cors());
 
   app.use('/', PaginationMiddleware);
 
