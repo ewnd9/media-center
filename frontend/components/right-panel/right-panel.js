@@ -13,6 +13,7 @@ import MarksList from '../marks-list/marks-list';
 import MarksView from '../marks-view/marks-view';
 
 import BooksList from '../books-list/books-list';
+import BooksView from '../books-view/books-view';
 
 import { Link, IndexRoute, Route } from 'react-router';
 
@@ -47,7 +48,10 @@ const RightPanel = React.createClass({
       React.createElement(IndexRoute, { key: '/marks', component: MarksList }),
       React.createElement(Route, { key: '/marks/:id', path: '/marks/:id', component: MarksView, isFullWidth })
     ]));
-    elements.push(createRouterElement('/books', BOOKS, BooksList));
+    elements.push(createRouterElement('/books', BOOKS, null, [
+      React.createElement(IndexRoute, { key: '/books', component: BooksList }),
+      React.createElement(Route, { key: '/books/:id', path: '/books/:id', component: BooksView })
+    ]));
 
     const defaultRoute = isFullWidth && '/media' || '/trakt';
 

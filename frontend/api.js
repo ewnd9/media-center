@@ -140,6 +140,10 @@ export const deleteWord = id => {
   return deleteRequest(`/api/v1/words/${id}`);
 };
 
+export const getBook = id => {
+  return get(`/api/v1/books/${id}`);
+};
+
 export const uploadBook = (book, name) => {
   const url = '/api/v1/books';
 
