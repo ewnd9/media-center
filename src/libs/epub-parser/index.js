@@ -6,7 +6,7 @@ import translate from './parser';
 
 export default bookPath => {
   const zip = new AdmZip(bookPath);
-  
+
   const entries = zip.getEntries().reduce((result, zipEntry) => {
     result[zipEntry.entryName] = zipEntry;
     return result;
@@ -47,10 +47,15 @@ export default bookPath => {
         return getTextEntry(chapter.href)
           .then(data => {
             const $ = cheerio.load(data);
+            const children = translate($('body')[0])
+              .children
+              .reduce((total, curr) => {
+                return total.concat(curr.children);
+              }, []);
 
             return {
               id,
-              html: translate($('body')[0])
+              children
             };
           });
       });
