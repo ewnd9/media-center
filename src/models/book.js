@@ -1,7 +1,8 @@
 import t from 'tcomb-validation';
+import shortid from 'shortid';
 
 const Book = {
-  createId: ({ filename }) => filename,
+  createId: () => shortid.generate(),
   schema: t.struct({
     _id: t.maybe(t.String),
     _rev: t.maybe(t.String),

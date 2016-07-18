@@ -1,5 +1,6 @@
 import superagent from 'superagent';
 import notify from './notify';
+import report from './agent';
 
 let baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 
@@ -36,12 +37,18 @@ const fetch = (url, options = {}) => {
 
 export const get = (url, query = {}) => {
   return fetch(baseUrl + url, { query })
-    .catch(err => notify.error(err.message));
+    .catch(err => {
+      notify.error(err.message);
+      report(err, { url: window.location.href });
+    });
 };
 
 export const deleteRequest = (url, query = {}) => {
   return fetch(baseUrl + url, { method: 'delete', query })
-    .catch(err => notify.error(err.message));
+    .catch(err => {
+      notify.error(err.message);
+      report(err, { url: window.location.href });
+    });
 };
 
 export const post = (url, body) => {
@@ -53,7 +60,10 @@ export const post = (url, body) => {
     },
     body: JSON.stringify(body)
   })
-  .catch(err => notify.error(err.message));
+  .catch(err => {
+    notify.error(err.message);
+    report(err, { url: window.location.href });
+  });
 };
 
 export const playFile = (filename, media, position, noScrobble) => {
@@ -146,14 +156,15 @@ export const getBook = id => {
 
 export const uploadBook = (book, name) => {
   const url = '/api/v1/books';
+  const req = superagent
+    .post(`${baseUrl}${url}`)
+    .attach('book-file', book, name);
 
-  return reqToPromise(
-    superagent
-      .post(`${baseUrl}${url}`)
-      .attach('book-file', book, name),
-    { method: 'POST' },
-    url
-  );
+  return reqToPromise(req, { method: 'POST' }, url)
+    .catch(err => {
+      notify.error(err.message);
+      report(err, { url: window.location.href });
+    });
 };
 
 function reqToPromise(req, options = {}, url = '') {

@@ -1,19 +1,49 @@
 import React from 'react';
 import styles from './style.css';
 
-import { connect } from 'react-redux';
+import InteractiveText from '../marks-view/interactive-text/interactive-text';
 
+import { connect } from 'react-redux';
 import { fetchBook, changeChapter } from '../../actions/book-actions';
 
-const mapStateToProps = ({ book: { isFetching, book, chapterIndex } }) => ({ isFetching, book, chapterIndex });
-const mapDispatchToProps = { fetchBook, changeChapter };
+import { Link } from 'react-router';
+
+import {
+  showTooltip,
+  showTooltipAndFetchTranslations,
+  saveWord,
+  deleteWord
+} from '../../actions/mark-actions';
+
+const mapStateToProps = ({
+  book: {
+    isFetching,
+    book,
+    chapter,
+    chapterIndex
+  },
+  mark: {
+    activeTooltipId,
+    activeBlockIndex,
+    words,
+    translations
+  }
+}) => ({ isFetching, book, chapter, chapterIndex, activeTooltipId, activeBlockIndex, words, translations });
+
+const mapDispatchToProps = { fetchBook, changeChapter, showTooltip, showTooltipAndFetchTranslations, saveWord, deleteWord };
 
 const BooksView = React.createClass({
   componentDidMount() {
-    const { fetchBook } = this.props;
-    const id = this.props.routeParams.id;
+    const { fetchBook, routeParams: { id, chapter } } = this.props;
+    fetchBook(id, chapter);
+  },
+  componentWillUpdate(nextProps) {
+    const { changeChapter, routeParams: { chapter: chapterIndex } } = this.props;
+    const { routeParams: { chapter: nextChapterIndex } } = nextProps;
 
-    fetchBook(id);
+    if (chapterIndex !== nextChapterIndex) {
+      changeChapter(nextChapterIndex);
+    }
   },
   renderTerm(term, index) {
     return (
@@ -24,49 +54,93 @@ const BooksView = React.createClass({
       </span>
     );
   },
-  renderChapter(html, key) {
+  renderChapter(html, key, source) {
+    const {
+      words,
+      saveWord,
+      deleteWord,
+      translations,
+      activeTooltipId,
+      activeBlockIndex,
+      showTooltip,
+      showTooltipAndFetchTranslations
+    }  = this.props;
+
     const children = html.children && html.children.map((child, index) => {
-      return this.renderChapter(child, index);
+      return this.renderChapter(child, `${key}-${index}`, source);
     }) || null;
 
-    // const terms = html.text && nlpFn(html.text).map((sentence, sentenceIndex) => sentence.map((term, index) => this.renderTerm(term, sentenceIndex * 100 + index))) || '';
-    const terms = html.text && html.text.map((sentence, sentenceIndex) => sentence.map((term, index) => this.renderTerm(term, sentenceIndex * 100 + index))) || '';
+    // const terms = html.text && html.text.map((sentence, sentenceIndex) => sentence.map((term, index) => this.renderTerm(term, sentenceIndex * 100 + index))) || '';
+
+    let terms;
+
+    if (html.text) {
+      terms = (
+        <InteractiveText
+          key={key}
+          text={html.text}
+          textIndex={key}
+          source={source}
+          words={words}
+          saveWord={saveWord}
+          deleteWord={deleteWord}
+          translations={translations}
+          activeTooltipId={activeTooltipId}
+          activeBlockIndex={activeBlockIndex}
+          showTooltip={showTooltip}
+          showTooltipAndFetchTranslations={showTooltipAndFetchTranslations} />
+      );
+    } else {
+      terms = '';
+    }
+
+    const el = (
+      <span>
+        {children}
+        {terms}
+      </span>
+    );
 
     if (html.isBlockElement) {
       return (
-        <div key={key} className={styles.newLine}>
-          {children}
-          {terms}
-        </div>
+        <div key={key} className={styles.newLine}>{el}</div>
       );
     } else {
       return (
-        <span key={key}>
-          {children}
-          {terms}
-        </span>
+        <span key={key}>{el}</span>
       );
     }
   },
   render() {
-    const { book, chapterIndex, changeChapter } = this.props;
+    const { book, chapter, routeParams: { id: bookId, chapter: chapterIndexString } } = this.props;
+    const chapterIndex = chapterIndexString && +chapterIndexString || 1;
 
     if (!book) {
       return (<div>fetching</div>);
     }
 
     const chapters = book.content.chapters;
-    const chapter = chapters[chapterIndex];
+    const source = {
+      type: 'book',
+      author: book.content.author,
+      title: book.content.title
+    };
+
+    const pagination = (
+      <div className={styles.pagination}>
+        <Link className={styles.paginationButton} to={`/books/${bookId}/${chapterIndex - 1}`}>Prev</Link>
+        {' '}{chapterIndex}{' / '}{chapters.length}{' '}
+        <Link className={styles.paginationButton} to={`/books/${bookId}/${chapterIndex + 1}`}>Next</Link>
+      </div>
+    );
 
     return (
       <div>
-        <div>
-          {this.renderChapter(chapter, 0)}
+        {pagination}
+        <div className={styles.reader}>
+          {this.renderChapter(chapter, chapter.id, source)}
         </div>
-        <div>
-          <span onClick={changeChapter.bind(null, -1)}>Prev</span>
-          <span onClick={changeChapter.bind(null, +1)}>Next</span>
-        </div>
+        {pagination}
       </div>
     );
   }

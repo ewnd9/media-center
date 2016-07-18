@@ -1,12 +1,10 @@
-import nlp from '../nlp';
-
 function translate(el) {
   const name = el.name || 'text';
 
   return {
     name,
     isBlockElement: isBlockElement(name),
-    text: el.data && nlp(el.data),// && entities.decode(el.data),
+    text: el.data,
     attribs: el.attribs,
     children: el.children && el.children.filter && el.children.filter(child => child.type !== 'text' || child.data.trim()).map(child => translate(child)) || undefined
   };

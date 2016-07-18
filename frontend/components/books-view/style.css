@@ -1,3 +1,15 @@
 .newLine {
   margin-bottom: 10px;
 }
+
+.pagination {
+  margin-bottom: 10px;
+}
+
+.paginationButton {
+  cursor: pointer;
+}
+
+.reader {
+  margin-bottom: 10px;
+}

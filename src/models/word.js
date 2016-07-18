@@ -1,12 +1,25 @@
 import t from 'tcomb-validation';
 
+export const mediaExampleSourceSchema = t.struct({
+  imdb: t.String,
+  s: t.maybe(t.Number),
+  ep: t.maybe(t.Number)
+});
+
+export const bookExampleSourceSchema = t.struct({
+  type: t.enums.of(['book']),
+  author: t.String,
+  title: t.String
+});
+
+export const exampleSourceSchema = t.union([mediaExampleSourceSchema, bookExampleSourceSchema]);
+exampleSourceSchema.dispatch = function(x) {
+  return x.imdb ? mediaExampleSourceSchema : bookExampleSourceSchema;
+};
+
 export const wordExampleSchema = t.struct({
   text: t.String,
-  source: t.struct({
-    imdb: t.String,
-    s: t.maybe(t.Number),
-    ep: t.maybe(t.Number)
-  }),
+  source: exampleSourceSchema,
   translation: t.maybe(t.String)
 });
 

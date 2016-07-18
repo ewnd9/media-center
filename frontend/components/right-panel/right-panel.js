@@ -50,7 +50,8 @@ const RightPanel = React.createClass({
     ]));
     elements.push(createRouterElement('/books', BOOKS, null, [
       React.createElement(IndexRoute, { key: '/books', component: BooksList }),
-      React.createElement(Route, { key: '/books/:id', path: '/books/:id', component: BooksView })
+      React.createElement(Route, { key: '/books/:id', path: '/books/:id', component: BooksView }),
+      React.createElement(Route, { key: '/books/:id/:chapter', path: '/books/:id/:chapter', component: BooksView })
     ]));
 
     const defaultRoute = isFullWidth && '/media' || '/trakt';

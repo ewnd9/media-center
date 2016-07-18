@@ -5,7 +5,7 @@ import InteractivePopup from '../interactive-popup/interactive-popup';
 
 const InteractiveText = React.createClass({
   shouldComponentUpdate(nextProps) {
-    const { activeBlockIndex: currIndex, blockIndex: index } = this.props;
+    const { activeBlockIndex: currIndex, textIndex: index } = this.props;
     const { activeBlockIndex: nextIndex } = nextProps;
 
     return (
@@ -59,34 +59,29 @@ const InteractiveText = React.createClass({
   },
   render() {
     const {
-      block,
-      blockIndex,
+      text,
+      textIndex,
       activeTooltipId,
       words,
       translations
     } = this.props;
 
     return (
-      <div key={block.startTimeMs} className={styles.line}>
-        <div className={styles.time}>{block.startTime} -> {block.endTime}</div>
-        { block.text
-            .map((line, lineIndex) => (
-              <div key={lineIndex}>
-                { line.map((sentence, sentenceIndex) => (
-                    <span key={sentenceIndex}>
-                      { sentence.map((term, termIndex) => {
-                          const id = `term-${[blockIndex, lineIndex, sentenceIndex, termIndex].join('-')}`;
-                          const isSelected = activeTooltipId && activeTooltipId === id;
-                          const savedId = words[id] && words[id]._id || false;
-                          const t = translations[id] || null;
+      <div>
+        {
+          text.map((sentence, sentenceIndex) => (
+            <span key={sentenceIndex}>
+              { sentence.map((term, termIndex) => {
+                  const id = `term-${[textIndex, sentenceIndex, termIndex].join('-')}`;
+                  const isSelected = activeTooltipId && activeTooltipId === id;
+                  const savedId = words[id] && words[id]._id || false;
+                  const t = translations[id] || null;
 
-                          return this.renderTerm(id, blockIndex, sentence, term, isSelected, savedId, t);
-                        })
-                      }
-                    </span>
-                  )) }
-              </div>
-            ))
+                  return this.renderTerm(id, textIndex, sentence, term, isSelected, savedId, t);
+                })
+              }
+            </span>
+          ))
         }
       </div>
     );

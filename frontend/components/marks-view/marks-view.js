@@ -14,7 +14,7 @@ import {
 
 import ControlPanel from './control-panel/control-panel';
 import Spinner from '../ui/spinner/spinner';
-import InteractiveText from './interactive-text/interactive-text';
+import InteractiveSubtitles from './interactive-subtitles/interactive-subtitles';
 
 const mapStateToProps = ({ mark: { mark, lines, isFetching, activeTooltipId, activeBlockIndex, words, translations } }) =>
   ({ mark, lines, isFetching, activeTooltipId, activeBlockIndex, words, translations });
@@ -79,7 +79,7 @@ export const MarksView = React.createClass({
     const source = { imdb, s, ep };
 
     return (
-      <InteractiveText
+      <InteractiveSubtitles
         key={blockIndex}
         block={block}
         blockIndex={blockIndex}

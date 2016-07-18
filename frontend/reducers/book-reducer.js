@@ -4,9 +4,12 @@ import {
   CHANGE_CHAPTER
 } from '../actions/book-actions';
 
+import { nlp } from '../shared';
+
 export default function(state = {
   isFetching: false,
   book: null,
+  chapter: null,
   chapterIndex: 0
 }, action) {
   switch (action.type) {
@@ -19,20 +22,30 @@ export default function(state = {
       return {
         ...state,
         isFetching: false,
-        book: action.book
+        book: action.book,
+        chapter: getChapter(action.book, action.chapterIndex)
       };
     case CHANGE_CHAPTER:
-      return changeChapter(state, action.diff);
+      return {
+        ...state,
+        chapter: getChapter(state.book, action.index)
+      };
     default:
       return state;
   }
 }
 
-function changeChapter(state, diff) {
-  const { chapterIndex, book: { content: { chapters } } } = state;
+function getChapter(book, index) {
+  const i = index && +index || 1;
+  const chapter = book.content.chapters[i - 1];
 
+  return processNlp(chapter);
+}
+
+function processNlp(el) {
   return {
-    ...state,
-    chapterIndex: (chapterIndex + diff + chapters.length) % chapters.length
+    ...el,
+    text: el.text && nlp(el.text),
+    children: el.children && el.children.map(child => processNlp(child))
   };
 }
