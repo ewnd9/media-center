@@ -1,11 +1,19 @@
 export default Model;
 
 function Model(db, createId, indexes, validate) {
-  this.createId = createId;
+  this._createId = createId;
   this.db = db;
   this.indexes = indexes || {};
   this.validate = validate;
 }
+
+Model.prototype.createId = function(data) {
+  if (typeof data === 'object' && data._id) {
+    return data._id;
+  } else {
+    return this._createId(data);
+  }
+};
 
 Model.prototype.onNotFound = function(err, fn) {
   if (err.status === 404) {
@@ -66,6 +74,10 @@ Model.prototype.findAllDocs = function({ descending, limit, since }) {
 
 Model.prototype.put = function(id, _data) {
   const data = _data || id;
+
+  if (data._key) {
+    delete data._key;
+  }
 
   const doc = {
     ...data,
