@@ -41,12 +41,7 @@ const MediaList = React.createClass({
     const {
       mode,
       files,
-      activeKey,
-
-      openModal,
-      playFile,
-      addToHistory,
-      setActiveKey
+      activeKey
     } = this.props;
 
     const isUnwatched = mode === MEDIA_LIST_UNWATCHED;
@@ -73,8 +68,8 @@ const MediaList = React.createClass({
           isNextRowFounded = true;
         }
 
-        total.push(this.renderExpandedActiveItems(openModal, playFile, addToHistory, isNextRowAfterActive, activeChildren, i++));
-        total.push(this.renderPoster(openModal, setActiveKey, file, i++));
+        total.push(this.renderExpandedActiveItems(isNextRowAfterActive, activeChildren, i++));
+        total.push(this.renderPoster(file, i++));
 
         if (key === activeKey && domChildren.length > 0) {
           activeOffset = domChildren[index].offsetTop;
@@ -94,7 +89,9 @@ const MediaList = React.createClass({
       </div>
     );
   },
-  renderPoster(openModal, setActiveKey, file, i) {
+  renderPoster(file, i) {
+    const { openModal, setActiveKey } = this.props;
+    
     return (
       <MediaListPoster
         file={file}
@@ -104,8 +101,8 @@ const MediaList = React.createClass({
         openModal={openModal} />
     );
   },
-  renderExpandedActiveItems(openModal, playFile, addToHistory, hasChildren, activeChildren, i) {
-    const { isLeftPanel } = this.props;
+  renderExpandedActiveItems(hasChildren, activeChildren, i) {
+    const { isLeftPanel, openModal, playFile, addToHistory } = this.props;
 
     const child = hasChildren && (
       <div
