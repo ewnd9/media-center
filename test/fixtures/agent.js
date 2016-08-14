@@ -34,7 +34,7 @@ export default server => {
       return validatePromise(request.post(url).send(body), responseSchema);
     }
   };
-}
+};
 
 function errorMessage(obj, errors) {
   return new Error(`${JSON.stringify(obj, null, 2)}\n${errors.map(_ => _.message).join('\n')}`);
@@ -46,7 +46,7 @@ function validatePromise(request, responseSchema) {
       if (error) {
         reject(error);
       } else {
-        resolve(response)
+        resolve(response);
       }
     });
   })

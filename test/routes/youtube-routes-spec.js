@@ -38,4 +38,4 @@ test('POST /api/v1/youtube', async t => {
   t.truthy(t.context.stub.calledOnce === true);
   t.truthy(t.context.stub.firstCall.args[0].uri === 'youtube-url');
   t.truthy(t.context.stub.firstCall.args[0].traktScrobble === false);
-})
+});

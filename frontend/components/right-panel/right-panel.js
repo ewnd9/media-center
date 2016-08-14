@@ -9,13 +9,7 @@ import TraktReport from '../trakt-report/trakt-report';
 import MediaList from '../media-list/media-list';
 import YoutubeInput from '../youtube/youtube';
 
-import MarksList from '../marks-list/marks-list';
-import MarksView from '../marks-view/marks-view';
-
-import BooksList from '../books-list/books-list';
-import BooksView from '../books-view/books-view';
-
-import { Link, IndexRoute, Route } from 'react-router';
+import { Link } from 'react-router';
 
 const RightPanel = React.createClass({
   render: function() {
@@ -25,8 +19,6 @@ const RightPanel = React.createClass({
     const UPCOMING = 'Upcoming';
     const SCREENSHOTS = 'Screens';
     const YOUTUBE = 'Youtube';
-    const MARKS = 'Marks';
-    const BOOKS = 'Books';
 
     const elements = [];
 
@@ -44,15 +36,6 @@ const RightPanel = React.createClass({
     elements.push(createRouterElement('/trakt', UPCOMING, TraktReport));
     elements.push(createRouterElement('/screenshots', SCREENSHOTS, ScreenshotsGallery));
     elements.push(createRouterElement('/youtube', YOUTUBE, YoutubeInput));
-    elements.push(createRouterElement('/marks', MARKS, null, [
-      React.createElement(IndexRoute, { key: '/marks', component: MarksList }),
-      React.createElement(Route, { key: '/marks/:id', path: '/marks/:id', component: MarksView, isFullWidth })
-    ]));
-    elements.push(createRouterElement('/books', BOOKS, null, [
-      React.createElement(IndexRoute, { key: '/books', component: BooksList }),
-      React.createElement(Route, { key: '/books/:id', path: '/books/:id', component: BooksView }),
-      React.createElement(Route, { key: '/books/:id/:chapter', path: '/books/:id/:chapter', component: BooksView })
-    ]));
 
     const defaultRoute = isFullWidth && '/media' || '/trakt';
 

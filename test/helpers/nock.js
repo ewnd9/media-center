@@ -23,7 +23,7 @@ function setupNock(filename, functionName) {
     beforeFn,
     afterFn
   };
-};
+}
 
 export function nockBefore(filename, t) {
   const nock = setupNock(filename, t._test.title.replace('beforeEach for ', '').replace(/[\W\-]+/g, '-'));
@@ -40,4 +40,4 @@ export default (filename, test) => {
   test.afterEach(t => {
     t.context.nockEnd();
   });
-}
+};

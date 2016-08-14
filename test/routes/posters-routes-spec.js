@@ -3,7 +3,6 @@ import 'babel-core/register';
 
 import { agent } from 'supertest';
 import createApp from '../fixtures/create-app';
-import { generateMark } from '../fixtures/mocks-marks';
 import { showImdb } from '../fixtures/create-fs';
 
 test.beforeEach(async t => {

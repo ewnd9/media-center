@@ -14,11 +14,7 @@ import FilesRouter from './routes/files';
 import ScreenshotsRouter from './routes/screenshots';
 import YoutubeRouter from './routes/youtube';
 import TraktRouter from './routes/trakt';
-import MarksRouter from './routes/marks';
 import PostersRouter from './routes/posters';
-import WordsRouter from './routes/words';
-import DbRouter from './routes/db';
-import BooksRouter from './routes/books';
 
 import report from './agent';
 
@@ -41,11 +37,7 @@ function createServer({ db, services, config: { screenshotPath, port } }) {
   app.use('/', YoutubeRouter(services));
   app.use('/', ScreenshotsRouter(screenshotPath));
   app.use('/', TraktRouter(services));
-  app.use('/', MarksRouter(services));
   app.use('/', PostersRouter(services));
-  app.use('/', WordsRouter(services));
-  app.use('/', DbRouter(db, services));
-  app.use('/', BooksRouter(services));
 
   const httpServer = http.createServer(app);
   const io = socketIO(httpServer);

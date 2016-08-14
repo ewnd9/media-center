@@ -1,9 +1,6 @@
 import t, { validate } from 'tcomb-validation';
 
 import { schema as fileSchema } from '../../src/models/file';
-import { schema as markSchema } from '../../src/models/mark';
-import { wordSchema, wordExampleSchema } from '../../src/models/word';
-import { schema as bookSchema } from '../../src/models/book';
 
 export const fileScrobbleRequestSchema = t.struct({
   filename: t.String,
@@ -54,39 +51,6 @@ export const markRequestSchema = t.struct({
   })
 });
 
-export const markResponseSchema = markSchema;
-
-export const subtitlesNlpTermSchema = t.struct({
-  whitespace: t.struct({ preceding: t.maybe(t.String), trailing: t.maybe(t.String) }),
-  text: t.String,
-  normal: t.String,
-  expansion: t.maybe(t.String),
-  reasoning: t.list(t.String),
-  pos: t.dict(t.String, t.Boolean),
-  firstName: t.maybe(t.String),
-  middleName: t.maybe(t.String),
-  lastName: t.maybe(t.String),
-  honourific: t.maybe(t.String),
-  tag: t.String
-});
-
-export const subtitlesNlpSchema = t.list(t.list(t.list(subtitlesNlpTermSchema)));
-export const markSubtitlesResponseSchema = markSchema.extend({
-  subtitles: t.list(
-    t.struct({
-      id: t.maybe(t.String),
-      startTime: t.maybe(t.String),
-      startTimeMs: t.Number,
-      endTime: t.maybe(t.String),
-      endTimeMs: t.maybe(t.Number),
-      text: t.maybe(subtitlesNlpSchema)
-    })
-  )
-});
-
-// export const markResponseSchema = t.struct({ mark: markSchema });
-
-export const marksArrayResponseSchema = t.list(markSchema.extend({ posterUrl: t.String }));
 export const traktSuggestionsResponseSchema = t.list(t.struct({ label: t.String, value: t.String }));
 
 export const traktIds = t.struct({
@@ -171,45 +135,3 @@ export const filesArrayResponseSchema = t.list(t.struct({
   summary: t.String,
   posterUrl: t.String
 }));
-
-export const postWordRequestSchema = t.struct({
-  word: t.struct({
-    type: t.String,
-    word: t.String
-  }),
-  example: wordExampleSchema
-});
-
-export const wordResponseSchema = t.struct({ word: wordSchema });
-export const wordsArrayResponseSchema = t.struct({ words: t.list(wordSchema.extend({ _key: t.String })) });
-
-export const postBookSchema = t.struct({ book: bookSchema });
-
-const htmlElementSchema = t.struct({
-  attribs: t.maybe(t.dict(t.String, t.String)),
-  children: t.maybe(t.list(t.Any)),
-  isBlockElement: t.Boolean,
-  name: t.String,
-  text: t.maybe(t.String)
-});
-htmlElementSchema.meta.props.children = t.maybe(t.list(htmlElementSchema));
-
-export const bookResponseSchema = t.struct({
-  book: bookSchema.extend({
-    content: t.struct({
-      title: t.String,
-      lang: t.String,
-      creator: t.String,
-      chapters: t.list(
-        t.struct({
-          html: htmlElementSchema,
-          id: t.String
-        })
-      )
-    })
-  })
-});
-
-export const booksArrayResponseSchema = t.struct({
-  books: t.list(bookSchema)
-});

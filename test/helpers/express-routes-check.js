@@ -19,7 +19,7 @@ export default (app, testFilter) => {
 
     return total;
   }, []);
-}
+};
 
 // if (false) {
 //   const createApp = require('../lib/server').default;

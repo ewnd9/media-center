@@ -8,19 +8,11 @@ PouchDB.adapter('writableStream', adapters.writableStream);
 
 import File from './file';
 import Prefix from './prefix';
-import Mark from './mark';
-import Subtitles from './subtitles';
-import Word from './word';
-import Book from './book';
 
 export default (dbPath, dbOptions = {}) => {
   const initializers = {
     File,
-    Prefix,
-    Mark,
-    Subtitles,
-    Word,
-    Book
+    Prefix
   };
 
   const models = Object

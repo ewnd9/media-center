@@ -42,8 +42,8 @@ export function mockFs() {
       })
     }
   });
-};
+}
 
 export function unmockFs() {
   mock.restore();
-};
+}
