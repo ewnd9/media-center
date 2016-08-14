@@ -91,7 +91,7 @@ const MediaList = React.createClass({
   },
   renderPoster(file, i) {
     const { openModal, setActiveKey } = this.props;
-    
+
     return (
       <MediaListPoster
         file={file}
@@ -102,7 +102,7 @@ const MediaList = React.createClass({
     );
   },
   renderExpandedActiveItems(hasChildren, activeChildren, i) {
-    const { isLeftPanel, openModal, playFile, addToHistory } = this.props;
+    const { isLeftPanel, openModal, playFile, addToHistory, addToHistoryKeyInProgress } = this.props;
 
     const child = hasChildren && (
       <div
@@ -117,7 +117,8 @@ const MediaList = React.createClass({
                   index={index}
                   openModal={openModal}
                   playFile={playFile}
-                  addToHistory={addToHistory} />
+                  addToHistory={addToHistory}
+                  addToHistoryKeyInProgress={addToHistoryKeyInProgress} />
               );
             })
         }

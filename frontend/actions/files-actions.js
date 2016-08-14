@@ -72,11 +72,15 @@ export function setHidden(file, filename) {
 
 export function addToHistory(file) {
   return dispatch => {
-    dispatch({ type: ADD_TO_HISTORY_REQUEST });
+    dispatch({ type: ADD_TO_HISTORY_REQUEST, file });
 
     return api
       .addToHistory(file.file, file.db)
-      .then(() => dispatch({ type: ADD_TO_HISTORY_SUCCESS }));
+      .then(() => {
+        dispatch({ type: ADD_TO_HISTORY_SUCCESS });
+
+        return fetchFiles()(dispatch);
+      });
   };
 }
 

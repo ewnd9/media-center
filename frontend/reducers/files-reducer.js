@@ -1,9 +1,16 @@
-import { REQUEST_FILES, RECIEVE_FILES, FILES_SET_ACTIVE_KEY } from '../actions/files-actions';
+import {
+  REQUEST_FILES,
+  RECIEVE_FILES,
+  FILES_SET_ACTIVE_KEY,
+  ADD_TO_HISTORY_REQUEST,
+  ADD_TO_HISTORY_SUCCESS
+} from '../actions/files-actions';
 
 function files(state = {
   isFetching: false,
   files: [],
-  activeKey: null
+  activeKey: null,
+  addToHistoryKeyInProgress: null
 }, action) {
   switch (action.type) {
     case REQUEST_FILES:
@@ -16,6 +23,16 @@ function files(state = {
         ...state,
         isFetching: false,
         files: action.files
+      };
+    case ADD_TO_HISTORY_REQUEST:
+      return {
+        ...state,
+        addToHistoryKeyInProgress: action.file.file
+      };
+    case ADD_TO_HISTORY_SUCCESS:
+      return {
+        ...state,
+        addToHistoryKeyInProgress: null
       };
     case FILES_SET_ACTIVE_KEY:
       return {

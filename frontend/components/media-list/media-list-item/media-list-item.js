@@ -4,6 +4,8 @@ import styles from './style.css';
 import moment from 'moment';
 import { formatTitle } from '../../../utils';
 
+import Spinner from '../../ui/inline-spinner/inline-spinner';
+
 export default React.createClass({
   handleClick(file, position) {
     const { playFile, openModal } = this.props;
@@ -22,7 +24,8 @@ export default React.createClass({
     const {
       file: item,
       index,
-      openModal
+      openModal,
+      addToHistoryKeyInProgress
     } = this.props;
 
     const file = item.fileName || item.dir;
@@ -86,9 +89,16 @@ export default React.createClass({
                     [Change Media]
                   </a>
                   {' '}
-                  <a onClick={this.handleHistoryClick.bind(this, item)}>
-                    [Add To History]
-                  </a>
+
+                  {
+                    addToHistoryKeyInProgress === item.file && (
+                      <Spinner />
+                    ) || (
+                      <a onClick={this.handleHistoryClick.bind(this, item)}>
+                        [Add To History]
+                      </a>
+                    )
+                  }
                 </span>
               )
             }

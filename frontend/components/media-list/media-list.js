@@ -11,7 +11,9 @@ import { MEDIA_LIST_ALL, MEDIA_LIST_UNWATCHED } from '../../constants';
 import { fetchFiles, playFile, addToHistory, setActiveKey } from '../../actions/files-actions';
 import { openModal } from '../../actions/modal-actions';
 
-const mapStateToProps = ({ files: { files, isFetching, activeKey }}) => ({ files, isFetching, activeKey });
+const mapStateToProps = ({ files: { files, isFetching, activeKey, addToHistoryKeyInProgress }}) => ({
+  files, isFetching, activeKey, addToHistoryKeyInProgress
+});
 const mapDispatchToProps = { fetchFiles, playFile, openModal, addToHistory, setActiveKey };
 
 const MediaList = React.createClass({
@@ -24,6 +26,7 @@ const MediaList = React.createClass({
       files,
       isFetching,
       activeKey,
+      addToHistoryKeyInProgress,
 
       openModal,
       playFile,
@@ -44,7 +47,8 @@ const MediaList = React.createClass({
         isLeftPanel,
         files,
         mode,
-        activeKey
+        activeKey,
+        addToHistoryKeyInProgress
       })
     });
 
