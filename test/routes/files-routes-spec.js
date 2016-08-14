@@ -45,10 +45,11 @@ import {
   playbackInfoResponseSchema
 } from '../fixtures/api-schemas';
 
-import { mockFs, unmockFs } from '../fixtures/create-fs';
+// import { mockFs, unmockFs } from '../fixtures/create-fs';
 
 test('GET /api/v1/files', async t => {
-  const { body } = await t.context.request.get('/api/v1/files', {}, filesArrayResponseSchema);
+  // const { body } = await t.context.request.get('/api/v1/files', {}, filesArrayResponseSchema);
+  await t.context.request.get('/api/v1/files', {}, filesArrayResponseSchema);
   // real schema test in '/test/find-files-spec.js'
 });
 
@@ -63,7 +64,7 @@ test('POST /api/v1/files/scrobble', async t => {
   const d0 = await t.context.db.File.update(filename, media);
   t.is(media.imdb, d0.imdb);
 
-  const result = await t.context.request.post('/api/v1/files/scrobble', {
+  await t.context.request.post('/api/v1/files/scrobble', {
     filename,
     media
   }, fileScrobbleRequestSchema, statusStringResponse);
@@ -164,5 +165,6 @@ test('GET /api/v1/playback/status', async t => {
   const app = await createApp({ playerServiceMock });
   const request = agent(app.server);
 
-  const { body } = await request.get('/api/v1/playback/status', {}, playbackInfoResponseSchema);
+  // const { body } = await request.get('/api/v1/playback/status', {}, playbackInfoResponseSchema);
+  await request.get('/api/v1/playback/status', {}, playbackInfoResponseSchema);
 });

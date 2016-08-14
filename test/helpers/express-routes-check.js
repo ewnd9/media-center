@@ -1,7 +1,5 @@
 'use strict';
 
-const lsRoute = require('express-ls-routes');
-const chalk = require('chalk');
 const globby = require('globby');
 const parse = require('babylon').parse;
 const traverse = require('babel-core').traverse;
@@ -59,7 +57,7 @@ function getRoutes(app) {
         if (!route.route) {
           return;
         }
-        
+
         result.push(`${Object.keys(route.route.methods).map(key => key.toUpperCase()).join(' ')} ${route.route.path}`);
       });
     }
@@ -96,7 +94,7 @@ function getExpressionsArguments(file, predicates) {
   const result = [];
 
   traverse(ast, {
-    ExpressionStatement(path, parent) {
+    ExpressionStatement(path) {
       const node = path.node;
 
       if (!node.expression.callee) {

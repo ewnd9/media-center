@@ -24,8 +24,6 @@ import {
 
   showFile1,
   showFile2,
-  showFile3,
-  showFile4,
 
   movieFolder,
   movieFile,
@@ -49,7 +47,7 @@ async function addMockFile(db) {
 
 test('#findFiles add new file', async t => {
   const db = await createDb();
-  const res = await addMockFile(db);
+  await addMockFile(db);
 
   const data = await db.Prefix.db.allDocs({
     include_docs: true
@@ -61,7 +59,7 @@ test('#findFiles add new file', async t => {
 
 test('#findFiles', async t => {
   const db = await createDb();
-  const res = await addMockFile(db);
+  await addMockFile(db);
 
   mockFs();
 

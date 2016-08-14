@@ -18,6 +18,7 @@ import {
 } from '../fixtures/api-schemas';
 
 test('GET /api/v1/screenshots', async t => {
-  const { body } = await t.context.request.get('/api/v1/screenshots', {}, screenshotsResponseSchema);
+  // const { body } = await t.context.request.get('/api/v1/screenshots', {}, screenshotsResponseSchema);
+  await t.context.request.get('/api/v1/screenshots', {}, screenshotsResponseSchema);
   // rejection on schema mismatch
 });

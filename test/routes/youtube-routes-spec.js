@@ -28,7 +28,8 @@ import {
 test('POST /api/v1/youtube', async t => {
   const query = 'https://www.youtube.com/watch?v=8Pb-MQCPQsc';
 
-  const { body } = await t.context.request.post(
+  // const { body } =
+  await t.context.request.post(
     '/api/v1/youtube',
     { query },
     youtubeRequestSchema,

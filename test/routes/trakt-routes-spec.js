@@ -31,12 +31,14 @@ test.serial('GET /api/v1/report', async t => {
   const time = new Date(1467378356960); // july 1st 2016
   tk.freeze(time);
 
-  const { body } = await t.context.request.get('/api/v1/report', {}, traktReportResponseSchema);
+  // const { body } = await t.context.request.get('/api/v1/report', {}, traktReportResponseSchema);
+  await t.context.request.get('/api/v1/report', {}, traktReportResponseSchema);
   // rejection on schema mismatch
   tk.reset();
 });
 
 test.serial('GET /api/v1/suggestions', async t => {
-  const { body } = await t.context.request.get('/api/v1/suggestions', { type: 'show', title: showTitle }, traktSuggestionsResponseSchema);
+  // const { body } = await t.context.request.get('/api/v1/suggestions', { type: 'show', title: showTitle }, traktSuggestionsResponseSchema);
+  await t.context.request.get('/api/v1/suggestions', { type: 'show', title: showTitle }, traktSuggestionsResponseSchema);
   // rejection on schema mismatch
 });
