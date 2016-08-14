@@ -12,7 +12,7 @@ Media Center for Raspberry Pi with a seamless [trakt.tv](http://trakt.tv/) scrob
 Backend:
 
 - `express`
-- `pouchdb` (only as embedded db for now, without a syncing to browser or anywhere)
+- `leveldb/pouchdb`
 - `socket.io`
 
 Transpiled with `babel` (`es2015` + `stage-0`)
@@ -20,22 +20,21 @@ Transpiled with `babel` (`es2015` + `stage-0`)
 Frontend:
 
 - `react`
-- `react-hmr` in development
+- `redux`
 - `post-css` (`cssnext` + `autoprefixer`)
 
 Transpiled with `babel` (`es2015` + `stage-0` + `react`) and bundled with `webpack`
 
 ## Install
 
-```
-$ npm install -g media-center
-```
+Prerequisites: `raspberry pi` with `raspbian` and `docker`
 
-## Usage
-
-```
-$ cp example.ecosystem.json ecosystem.json
-$ pm2 start ecosystem.json
+```sh
+$ git clone https://github.com/ewnd9/media-center.git
+$ cd media-center
+$ cp example.deploy.sh deploy.sh
+# insert your env variables in `deploy.sh`
+$ ./deploy.sh
 ```
 
 ### Trakt auth token
@@ -47,13 +46,6 @@ You could exchange a pin code from https://trakt.tv/pin/6495 for it via [scripts
 ### Setup raspberry
 
 [docs/raspberry-setup.md](docs/raspberry-setup.md)
-
-### Deploy to raspberry script
-
-```
-$ cp example.deploy.sh deploy.sh # replace user@ip to yours
-$ chmod +x deploy.sh
-```
 
 ## Credits
 
