@@ -94,7 +94,7 @@ export default React.createClass({
             }
             { item.streamUrl && (
               <a target="_blank" href={`${item.streamUrl}#${streamUrlParts.join('&')}`}>
-                [Stream]
+                {' '}[Stream]
               </a>
             ) || '' }
           </div>
