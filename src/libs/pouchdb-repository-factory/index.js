@@ -1,10 +1,13 @@
 export default Model;
 
-function Model(db, createId, indexes, validate) {
+const log = console.log.bind(console);
+
+function Model(db, { createId, indexes, migrations }, validate) {
   this._createId = createId;
   this.db = db;
   this.indexes = indexes || {};
   this.validate = validate;
+  this.migrations = migrations;
 }
 
 Model.prototype.createId = function(data) {
@@ -145,4 +148,28 @@ Model.prototype.ensureIndexes = function() {
     });
 
   return Promise.all(promises);
+};
+
+Model.prototype.ensureMigrations = function() {
+  if (!this.db.migrate) {
+    return Promise.reject(`pouchdb-migrate is missing - PouchDB.plugin(require('pouchdb-migrate'))`);
+  }
+
+  const result = Promise.resolve();
+
+  if (!this.migrations) {
+    return result;
+  }
+
+  return this.migrations.reduce((prev, migration, index) => {
+    return prev.then(() => {
+      log(`start migration ${index + 1} / ${this.migrations.length}`);
+
+      return this.db
+        .migrate(migration)
+        .then(() => {
+          log(`finish ${index + 1} / ${this.migrations.length}`);
+        });
+    });
+  }, result);
 };

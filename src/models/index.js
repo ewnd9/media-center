@@ -3,8 +3,11 @@ import t from 'tcomb-validation';
 import Repository from '../libs/pouchdb-repository-factory/';
 
 import { plugin as ReplicationPlugin, adapters } from 'pouchdb-replication-stream';
+import MigratePlugin from 'pouchdb-migrate';
+
 PouchDB.plugin(ReplicationPlugin);
 PouchDB.adapter('writableStream', adapters.writableStream);
+PouchDB.plugin(MigratePlugin);
 
 import File from './file';
 import Prefix from './prefix';
@@ -14,6 +17,10 @@ export default (dbPath, dbOptions = {}) => {
     File,
     Prefix
   };
+
+  if (!('auto_compaction' in dbOptions)) {
+    dbOptions.auto_compaction = true;
+  }
 
   const models = Object
     .keys(initializers)
@@ -26,7 +33,7 @@ export default (dbPath, dbOptions = {}) => {
       const obj = initializers[key];
       const validate = validateFactory(obj.schema);
 
-      result[key] = new Repository(db, obj.createId, obj.indexes, validate);
+      result[key] = new Repository(db, obj, validate);
 
       return result;
     }, {});
@@ -35,7 +42,10 @@ export default (dbPath, dbOptions = {}) => {
     .keys(models)
     .map(key => {
       initializers[key].associate(models);
-      return models[key].ensureIndexes();
+
+      return models[key].db.compact()
+        .then(() => models[key].ensureMigrations())
+        .then(() => models[key].ensureIndexes());
     });
 
   return Promise.all(promises).then(() => models);

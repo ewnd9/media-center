@@ -41,7 +41,7 @@ const File = {
               .then(() => result);
           } else {
             return result;
-          }          
+          }
         });
     };
   }
