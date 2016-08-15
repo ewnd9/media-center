@@ -3,7 +3,8 @@ import Spinner from 'react-spinkit';
 
 const style = {
   display: 'inline-block',
-  height: 10
+  height: 10,
+  textAlign: 'center'
 };
 
 const spinnerStyle = {
