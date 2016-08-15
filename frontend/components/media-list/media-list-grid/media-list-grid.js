@@ -54,6 +54,12 @@ const MediaList = React.createClass({
 
     const domChildren = activeKey ? this.retrieveDomChildren() : [];
 
+    if (activeKey && domChildren.length === 0) {
+      // initially we don't need children because they are hidden, but
+      // if we refetch files we have an empty list and activeKey
+      requestAnimationFrame(() => this.forceUpdate());
+    }
+
     const renderedFiles = files
       .filter(file => {
         return !isUnwatched || (!file.watched && !file.hidden);
