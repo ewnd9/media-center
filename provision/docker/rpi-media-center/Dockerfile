@@ -1,4 +1,4 @@
-FROM ewnd9/rpi-node-omxplayer
+FROM ewnd9/rpi-node-omxplayer:6.3.1
 
 EXPOSE 4000
 
