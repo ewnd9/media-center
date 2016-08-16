@@ -1,12 +1,9 @@
 import PouchDB from 'pouchdb';
 import t from 'tcomb-validation';
-import Repository from '../libs/pouchdb-repository-factory/';
+import Model from 'pouchdb-model';
 
-import { plugin as ReplicationPlugin, adapters } from 'pouchdb-replication-stream';
 import MigratePlugin from 'pouchdb-migrate';
 
-PouchDB.plugin(ReplicationPlugin);
-PouchDB.adapter('writableStream', adapters.writableStream);
 PouchDB.plugin(MigratePlugin);
 
 import File from './file';
@@ -33,7 +30,7 @@ export default (dbPath, dbOptions = {}) => {
       const obj = initializers[key];
       const validate = validateFactory(obj.schema);
 
-      result[key] = new Repository(db, obj, validate);
+      result[key] = new Model(db, obj, validate);
 
       return result;
     }, {});

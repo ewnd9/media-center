@@ -75,6 +75,7 @@
     "opensubtitles-universal-api": "^1.1.0",
     "pouchdb": "^5.1.0",
     "pouchdb-migrate": "^1.1.1",
+    "pouchdb-model": "^0.1.1",
     "pouchdb-replication-stream": "^1.2.6",
     "sanitize-html": "^1.11.4",
     "shortid": "^2.2.6",
