@@ -4,10 +4,10 @@ export default (originalUrl, host, port) => {
   const hostUrl = new URL(`http://${host}/`);
 
   const url = new URL(originalUrl);
-  url.hostname = hostUrl.hostname;
+  url.set('hostname', hostUrl.hostname);
 
   if (port) {
-    url.port = hostUrl.port;
+    url.set('port', hostUrl.port);
   }
 
   return url.toString();
