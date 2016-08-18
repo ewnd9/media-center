@@ -74,7 +74,7 @@ function modal(state = {
     case MODAL_CHANGE_FIELD:
       return isValid({
         ...state,
-        [action.field]: action.value
+        [action.field]: action.field === 's' || action.field === 'ep' ? +action.value : action.value
       });
     default:
       return state;
