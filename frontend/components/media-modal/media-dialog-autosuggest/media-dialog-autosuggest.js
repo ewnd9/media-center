@@ -5,13 +5,21 @@ import Autosuggest from 'react-autosuggest';
 import { debounce } from 'lodash';
 import { t, propTypes } from 'tcomb-react';
 
+import IconButton from '../../ui/icon-button/icon-button';
+
 function getSuggestionValue(suggestion) {
   return suggestion.label;
 }
 
 function renderSuggestion(suggestion) {
   return (
-    <span>{suggestion.label}</span>
+    <span>
+      <span
+        className={`glyphicon glyphicon-film`}
+        aria-hidden="true" />
+      {' '}
+      {suggestion.label}
+    </span>
   );
 }
 
