@@ -16,7 +16,7 @@ export default (db, rootDir) => {
 
 function parseVideoFiles(db, rootDir, allVideos) {
   const media = allVideos
-    .filter(item => !((/(?:\.|\/)(?:sample|rarbg\.com)\./i).test(item)))
+    .filter(item => !((/(?:\.|\/)(?:sample|rarbg\.com|etrg)\./i).test(item)))
     .map(canonicalPath => {
       const video = canonicalPath
         .replace(new RegExp('^' + rootDir + '/'), '');
