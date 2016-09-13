@@ -1,0 +1,14 @@
+- hosts: all
+  remote_user: pi
+  tasks:
+    - name: add the ssh key
+      become: true
+      authorized_key: user="pi" key="{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
+    - name: copy the ssh config
+      become: true
+      template: src=templates/sshd_config dest=/etc/ssh/sshd_config
+
+    - name: restart ssh service
+      become: true
+      shell: service ssh restart

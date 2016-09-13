@@ -1,0 +1,44 @@
+---
+- hosts: all
+  remote_user: pi
+  tasks:
+    - name: apt-get update
+      become: true
+      shell: apt-get update
+
+    # # upgrade is too long, skipping
+    # - name: apt-get upgrade
+    #   become: true
+    #   shell: apt-get upgrade -y
+
+    - name: add http package
+      become: true
+      shell: apt-get install -y apt-transport-https
+
+    - name: add the gpg key to the docker-hypriot repository
+      become: true
+      shell: wget -q https://packagecloud.io/gpg.key -O - | apt-key add -
+
+    - name: add the docker repository to the sources
+      become: true
+      shell: echo 'deb https://packagecloud.io/Hypriot/Schatzkiste/debian/ wheezy main' | tee /etc/apt/sources.list.d/hypriot.list
+
+    - name: apt-get update
+      become: true
+      shell: apt-get update
+
+    - name: apt-get install -y docker-hypriot docker-compose
+      become: true
+      shell: apt-get install -y docker-hypriot docker-compose
+
+    - name: add pi user to the docker group
+      become: true
+      shell: usermod -aG docker pi
+
+    - name: enable the docker service
+      become: true
+      shell: systemctl enable docker
+
+    - name: reboot
+      become: true
+      shell: reboot
