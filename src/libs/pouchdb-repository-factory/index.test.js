@@ -1,8 +1,8 @@
 import test from 'ava';
 import 'babel-core/register';
 
-import PouchDB from 'pouchdb';
-import 'pouchdb/extras/memory';
+import PouchDB from 'pouchdb-node';
+PouchDB.plugin(require('pouchdb-adapter-memory'));
 
 import Model from './index';
 

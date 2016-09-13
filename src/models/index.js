@@ -1,4 +1,4 @@
-import PouchDB from 'pouchdb';
+import PouchDB from 'pouchdb-node';
 import t from 'tcomb-validation';
 import Model from 'pouchdb-model';
 

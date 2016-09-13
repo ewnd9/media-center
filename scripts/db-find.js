@@ -1,6 +1,6 @@
 'use strict';
 
-const PouchDB = require('pouchdb');
+const PouchDB = require('pouchdb-node');
 
 /*
 node db-select <path-to-db> <prefix>
