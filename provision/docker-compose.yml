@@ -34,14 +34,12 @@ services:
       - "4000:3000"
     volumes:
       - ${DATA}:/data
-      - ${DATA_TRASH}:/trash
       - ${DB}:/db
     links:
       - minidlna
     environment:
       - NODE_ENV=production
       - MEDIA_PATH=/data
-      - MEDIA_TRASH_PATH=/trash
       - DATA_PATH=/db
       - NODE_DISABLE_X11_SUPPORT=true
       - TRAKT_TOKEN=${TRAKT_TOKEN}
