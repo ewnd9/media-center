@@ -5,8 +5,6 @@ import Autosuggest from 'react-autosuggest';
 import { debounce } from 'lodash';
 import { t, propTypes } from 'tcomb-react';
 
-import IconButton from '../../ui/icon-button/icon-button';
-
 function getSuggestionValue(suggestion) {
   return suggestion.label;
 }
