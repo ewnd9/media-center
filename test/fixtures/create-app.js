@@ -13,6 +13,9 @@ export default ({ traktMock = defaultTrackMock, playerServiceMock, marksServiceM
   const tmpDir = generateTmpDir();
   mkdirp.sync(tmpDir);
 
+  const tmpTrashDir = generateTmpDir();
+  mkdirp.sync(tmpTrashDir);
+
   const servicesMocks = {
     './trakt-service': {
       default: createTraktService
@@ -31,6 +34,7 @@ export default ({ traktMock = defaultTrackMock, playerServiceMock, marksServiceM
     './config': {
       dbPath: tmpDir,
       mediaPath: tmpDir,
+      mediaTrashPath: tmpTrashDir,
       screenshotPath: tmpDir,
       trakt: traktMock,
       port: (Math.random() * 64514) | 0 + 1024

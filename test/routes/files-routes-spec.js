@@ -8,6 +8,8 @@ import agent from '../fixtures/agent';
 import createApp from '../fixtures/create-app';
 import { generateMedia } from '../fixtures/mocks-media';
 
+import { createFile, isFileExists } from '../fixtures/create-fs-files';
+
 test.beforeEach(async t => {
   const addToHistory = sinon.stub().returns(Promise.resolve());
   const getReport = sinon.stub().returns(Promise.resolve());
@@ -21,9 +23,10 @@ test.beforeEach(async t => {
     startScrobble
   };
 
-  const { db, server } = await createApp({ traktMock });
+  const { db, server, config } = await createApp({ traktMock });
 
   t.context.db = db;
+  t.context.config = config;
   t.context.server = server;
   t.context.request = agent(server);
 
@@ -167,4 +170,21 @@ test('GET /api/v1/playback/status', async t => {
 
   // const { body } = await request.get('/api/v1/playback/status', {}, playbackInfoResponseSchema);
   await request.get('/api/v1/playback/status', {}, playbackInfoResponseSchema);
+});
+
+test('DELETE /api/v1/files/:filename', async t => {
+  const { request } = t.context;
+
+  const file = 'a/b.avi';
+  const fullPath = `${t.context.config.mediaPath}/${file}`;
+  const trashPath = `${t.context.config.mediaTrashPath}/${file}`;
+
+  await createFile(fullPath);
+  t.truthy(await isFileExists(fullPath));
+  t.falsy(await isFileExists(trashPath));
+
+  await request.delete(`/api/v1/files/${encodeURIComponent(file)}`, {}, statusStringResponse);
+
+  t.falsy(await isFileExists(fullPath));
+  t.truthy(await isFileExists(trashPath));
 });

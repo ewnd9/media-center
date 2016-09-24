@@ -18,7 +18,8 @@ import PostersRouter from './routes/posters';
 
 import report from './agent';
 
-function createServer({ db, services, config: { screenshotPath, port } }) {
+function createServer({ db, services, config }) {
+  const { screenshotPath, port } = config;
   const app = express();
 
   app.use(morgan('request: :remote-addr :method :url :status'));
@@ -74,7 +75,7 @@ function createServer({ db, services, config: { screenshotPath, port } }) {
       });
   }
 
-  return { server, app, bus, db, services };
+  return { server, app, bus, db, services, config };
 }
 
 export default createServer;
