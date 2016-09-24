@@ -107,6 +107,22 @@ const MediaList = React.createClass({
         openModal={openModal} />
     );
   },
+  renderLinks(list) {
+    if (list[0] && list[0].db) {
+      return (
+        <div className={styles.linksPanel}>
+          <a target="_blank" href={`http://www.imdb.com/title/${list[0].db.imdb}/`}>
+            <span
+              className="glyphicon glyphicon-cd"
+              aria-hidden="true"></span>
+            {' IMDB'}
+          </a>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  },
   renderExpandedActiveItems(hasChildren, activeChildren, i) {
     const {
       isLeftPanel,
@@ -121,6 +137,9 @@ const MediaList = React.createClass({
     const child = hasChildren && (
       <div
         className={`${styles.filesList} ${isLeftPanel ? styles.textAlignRight : ''}`}>
+
+        { this.renderLinks(activeChildren) }
+
         {
           activeChildren
             .map((media, index) => {
