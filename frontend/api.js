@@ -89,6 +89,10 @@ export const addToHistory = (filename, media) => {
   });
 };
 
+export const deleteFile = filename => {
+  return deleteRequest(`/api/v1/files/${encodeURIComponent(filename)}`);
+};
+
 export const setHidden = (file, filename) => {
   return post('/api/v1/files/hidden', {
     filename,

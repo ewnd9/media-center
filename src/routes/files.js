@@ -66,5 +66,14 @@ export default ({ filesService, playerService }) => {
       .catch(err => next(err));
   });
 
+  router.delete('/api/v1/files/:filename', (req, res, next) => {
+    const { filename } = req.params;
+
+    filesService
+      .deleteFile(filename)
+      .then(() => res.json({ status: 'ok' }))
+      .catch(err => next(err));
+  });
+
   return router;
 };

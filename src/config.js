@@ -10,6 +10,7 @@ const ensureDirectory = (parentDirectory, directory) => {
 };
 
 export const mediaPath = (process.env.MEDIA_PATH || '').replace(/\/$/, '');
+export const mediaTrashPath = (process.env.MEDIA_TRASH_PATH || '').replace(/\/$/, '');
 export const dataPath = process.env.DATA_PATH;
 
 export const dbPath = ensureDirectory(dataPath, 'media-center-db');

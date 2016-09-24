@@ -108,7 +108,15 @@ const MediaList = React.createClass({
     );
   },
   renderExpandedActiveItems(hasChildren, activeChildren, i) {
-    const { isLeftPanel, openModal, playFile, addToHistory, addToHistoryKeyInProgress } = this.props;
+    const {
+      isLeftPanel,
+      openModal,
+      playFile,
+      addToHistory,
+      addToHistoryKeyInProgress,
+      deleteFile,
+      deleteFileKeyInProgress
+    } = this.props;
 
     const child = hasChildren && (
       <div
@@ -124,7 +132,9 @@ const MediaList = React.createClass({
                   openModal={openModal}
                   playFile={playFile}
                   addToHistory={addToHistory}
-                  addToHistoryKeyInProgress={addToHistoryKeyInProgress} />
+                  addToHistoryKeyInProgress={addToHistoryKeyInProgress}
+                  deleteFile={deleteFile}
+                  deleteFileKeyInProgress={deleteFileKeyInProgress} />
               );
             })
         }

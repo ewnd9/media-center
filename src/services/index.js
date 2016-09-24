@@ -8,7 +8,7 @@ function init(db, storage, config) {
   const registry = new Registry('services');
   registry.define('configService', config);
 
-  registry.define('filesService', createFilesService(db, config.mediaPath));
+  registry.define('filesService', createFilesService(db, config.mediaPath, config.mediaTrashPath));
   registry.define('playerService', createPlayerService(config.trakt));
   registry.define('traktService', createTraktService(config.trakt, config.dbPath));
 

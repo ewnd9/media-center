@@ -9,6 +9,9 @@ export const PLAY_FILE_SUCCESS = 'PLAY_FILE_SUCCESS';
 export const ADD_TO_HISTORY_REQUEST = 'ADD_TO_HISTORY_REQUEST';
 export const ADD_TO_HISTORY_SUCCESS = 'ADD_TO_HISTORY_SUCCESS';
 
+export const DELETE_FILE_REQUEST = 'DELETE_FILE_REQUEST';
+export const DELETE_FILE_SUCCESS = 'DELETE_FILE_SUCCESS';
+
 export const SAVE_INFO_REQUEST = 'SAVE_INFO_REQUEST';
 export const SAVE_INFO_SUCCESS = 'SAVE_INFO_SUCCESS';
 
@@ -78,6 +81,20 @@ export function addToHistory(file) {
       .addToHistory(file.file, file.db)
       .then(() => {
         dispatch({ type: ADD_TO_HISTORY_SUCCESS });
+
+        return fetchFiles()(dispatch);
+      });
+  };
+}
+
+export function deleteFile(file) {
+  return dispatch => {
+    dispatch({ type: DELETE_FILE_REQUEST, file });
+
+    return api
+      .deleteFile(file.file)
+      .then(() => {
+        dispatch({ type: DELETE_FILE_SUCCESS });
 
         return fetchFiles()(dispatch);
       });

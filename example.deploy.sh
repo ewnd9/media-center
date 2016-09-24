@@ -23,6 +23,7 @@ cat > $START_SCRIPT << EOF
 #!/bin/sh
 
 export DATA="$DEST_DIR/mc-data"
+export DATA_TRASH="$DEST_DIR/mc-trash"
 export DB="$DEST_DIR/mc-db"
 export CACHE="$DEST_DIR/mc-cache"
 export TRAKT_TOKEN="$TRAKT_TOKEN"

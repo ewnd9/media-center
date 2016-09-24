@@ -3,14 +3,17 @@ import {
   RECIEVE_FILES,
   FILES_SET_ACTIVE_KEY,
   ADD_TO_HISTORY_REQUEST,
-  ADD_TO_HISTORY_SUCCESS
+  ADD_TO_HISTORY_SUCCESS,
+  DELETE_FILE_REQUEST,
+  DELETE_FILE_SUCCESS
 } from '../actions/files-actions';
 
 function files(state = {
   isFetching: false,
   files: [],
   activeKey: null,
-  addToHistoryKeyInProgress: null
+  addToHistoryKeyInProgress: null,
+  deleteFileKeyInProgress: null
 }, action) {
   switch (action.type) {
     case REQUEST_FILES:
@@ -33,6 +36,16 @@ function files(state = {
       return {
         ...state,
         addToHistoryKeyInProgress: null
+      };
+    case DELETE_FILE_REQUEST:
+      return {
+        ...state,
+        deleteFileKeyInProgress: action.file.file
+      };
+    case DELETE_FILE_SUCCESS:
+      return {
+        ...state,
+        deleteFileKeyInProgress: null
       };
     case FILES_SET_ACTIVE_KEY:
       return {

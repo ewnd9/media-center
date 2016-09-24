@@ -3,14 +3,22 @@ import Cache from '../utils/cache';
 import proxy from '../utils/proxy';
 import dlnaQuery from '../libs/dlna-query';
 import replaceHostname from '../libs/replace-link-hostname';
+import fs from 'fs';
+import pify from 'pify';
+import path from 'path';
+import mkdirp from 'mkdirp';
+
+const moveFile = pify(fs.rename);
+const mkdir = pify(mkdirp);
 
 export const FIND_FILES = 'FIND_FILES';
 
-function FilesService(models, rootDir) {
+function FilesService(models, rootDir, trashDir) {
   this.cache = new Cache();
 
   this.models = models;
   this.rootDir = rootDir;
+  this.trashDir = trashDir;
 
   this._addFile = proxy(models.File, models.File.add);
   this._updateFile = proxy(models.File, models.File.update);
@@ -120,6 +128,22 @@ FilesService.prototype.addToHistory = function(uri, media) {
     }));
 };
 
-export default function(db, mediaPath) {
-  return new FilesService(db, mediaPath);
+FilesService.prototype.deleteFile = function(filename) {
+  const srcFile = safePathJoin(this.rootDir, filename);
+  const destFile = safePathJoin(this.trashDir, filename);
+
+  const destDir = path.dirname(destFile);
+
+  return mkdir(destDir)
+    .then(() => moveFile(srcFile, destFile));
+};
+
+export default function(db, mediaPath, mediaTrashPath) {
+  return new FilesService(db, mediaPath, mediaTrashPath);
+}
+
+function safePathJoin(base, file) {
+  // https://security.stackexchange.com/questions/123720/how-to-prevent-directory-traversal-when-joining-paths-in-node-js
+  const safe = path.normalize(file).replace(/^(\.\.[\/\\])+/, '');
+  return path.join(base, safe);
 }

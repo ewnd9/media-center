@@ -20,12 +20,17 @@ export default React.createClass({
     const { addToHistory } = this.props;
     addToHistory(file);
   },
+  handleDeleteClick(file) {
+    const { deleteFile } = this.props;
+    deleteFile(file);
+  },
   render() {
     const {
       file: item,
       index,
       openModal,
-      addToHistoryKeyInProgress
+      addToHistoryKeyInProgress,
+      deleteFileKeyInProgress
     } = this.props;
 
     const file = item.fileName || item.dir;
@@ -100,6 +105,16 @@ export default React.createClass({
                     )
                   }
                 </span>
+              )
+            }
+            {' '}
+            {
+              deleteFileKeyInProgress === item.file && (
+                <Spinner />
+              ) || (
+                <a onClick={this.handleDeleteClick.bind(this, item)}>
+                  [Delete]
+                </a>
               )
             }
             { item.streamUrl && (

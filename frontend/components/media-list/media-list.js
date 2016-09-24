@@ -8,13 +8,13 @@ import Tabs from '../ui/tabs/tabs';
 import Spinner from '../ui/spinner/spinner';
 
 import { MEDIA_LIST_ALL, MEDIA_LIST_UNWATCHED } from '../../constants';
-import { fetchFiles, playFile, addToHistory, setActiveKey } from '../../actions/files-actions';
+import { fetchFiles, playFile, addToHistory, setActiveKey, deleteFile } from '../../actions/files-actions';
 import { openModal } from '../../actions/modal-actions';
 
-const mapStateToProps = ({ files: { files, isFetching, activeKey, addToHistoryKeyInProgress }}) => ({
-  files, isFetching, activeKey, addToHistoryKeyInProgress
+const mapStateToProps = ({ files: { files, isFetching, activeKey, addToHistoryKeyInProgress, deleteFileKeyInProgress }}) => ({
+  files, isFetching, activeKey, addToHistoryKeyInProgress, deleteFileKeyInProgress
 });
-const mapDispatchToProps = { fetchFiles, playFile, openModal, addToHistory, setActiveKey };
+const mapDispatchToProps = { fetchFiles, playFile, openModal, addToHistory, setActiveKey, deleteFile };
 
 const MediaList = React.createClass({
   componentDidMount() {
@@ -27,10 +27,12 @@ const MediaList = React.createClass({
       isFetching,
       activeKey,
       addToHistoryKeyInProgress,
+      deleteFileKeyInProgress,
 
       openModal,
       playFile,
       addToHistory,
+      deleteFile,
       setActiveKey
     } = this.props;
 
@@ -42,13 +44,15 @@ const MediaList = React.createClass({
         openModal,
         playFile,
         addToHistory,
+        deleteFile,
         setActiveKey,
 
         isLeftPanel,
         files,
         mode,
         activeKey,
-        addToHistoryKeyInProgress
+        addToHistoryKeyInProgress,
+        deleteFileKeyInProgress
       })
     });
 
