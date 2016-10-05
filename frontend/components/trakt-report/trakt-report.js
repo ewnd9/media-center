@@ -37,7 +37,7 @@ const TraktReport = React.createClass({
         </a>
       );
 
-      const body = titles.join(', ');
+      const body = (titles || []).join(', ');
 
       return (
         <ListItemShow
