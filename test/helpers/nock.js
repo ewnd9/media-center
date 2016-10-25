@@ -1,7 +1,8 @@
 import nock, { back as nockBack } from 'nock';
-nockBack.fixtures = __dirname + '/../fixtures';
 
-function setupNock(filename, functionName) {
+function setupNock(filename, functionName, dirName) {
+  nockBack.fixtures = dirName || __dirname + '/../fixtures'; // causes bugs with ava concurrent run mode
+
   const data = filename.split('/');
   const fixtureName = data[data.length - 1].split('.')[0] + '/' + functionName + '.json';
   let nockDone = null;
@@ -25,8 +26,13 @@ function setupNock(filename, functionName) {
   };
 }
 
-export function nockBefore(filename, t) {
-  const nock = setupNock(filename, t._test.title.replace('beforeEach for ', '').replace(/[\W\-]+/g, '-'));
+export function nockBefore(filename, t, dirName) {
+  const title = t._test.title
+    .replace('beforeEach for ', '')
+    .replace(/[\W\-]+/g, '-');
+
+  const nock = setupNock(filename, title, dirName);
+
   nock.beforeFn();
   return nock;
 }

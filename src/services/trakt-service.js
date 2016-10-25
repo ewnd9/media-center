@@ -10,9 +10,10 @@ import getPosterUrl from '../utils/poster-url';
 
 export const REPORT_CACHE = 'REPORT_CACHE';
 
-function TraktService(trakt, filePath) {
+function TraktService(trakt, filePath, tmdbApi) {
   this.cache = new Cache();
   this.trakt = trakt;
+  this.tmdbApi = tmdbApi;
   this.filePath = filePath + '/posters';
   mkdirp(this.filePath);
 
@@ -78,20 +79,10 @@ TraktService.prototype.getPlaceholderPosterStream = function() {
 
 TraktService.prototype.getPosterStreamFromTrakt = function(type, imdbId) {
   if (type === 'show') {
-    return this.trakt
-      .getShow(imdbId, 'images')
-      .then(show => {
-        return show.images.poster.thumb;
-      });
+    return this.tmdbApi.getShowPosterByImdb(imdbId);
   } else {
-    return this.trakt
-      .getMovie(imdbId, 'images')
-      .then(movie => {
-        return movie.images.poster.thumb;
-      });
+    return this.tmdbApi.getMoviePosterByImdb(imdbId);
   }
 };
 
-export default function(trakt, filePath) {
-  return new TraktService(trakt, filePath);
-}
+export default TraktService;
