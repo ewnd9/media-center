@@ -7,27 +7,27 @@ function TmdbApi(key) {
   this.key = key;
 }
 
-TmdbApi.prototype.getMovieIdByImdb = function(imdb) {
+TmdbApi.prototype.getRequest = function(url, query = {}) {
   return request
-    .get(`${ROOT_URL}/3/find/${imdb}`)
+    .get(`${ROOT_URL}${url}`)
     .query({
       api_key: this.key,
-      external_source: 'imdb_id'
+      ...query
     })
-    .then(res => {
-      return res.body.movie_results[0].id;
-    });
+    .then(res => res.body);
+};
+
+TmdbApi.prototype.searchByImdb = function(imdb) {
+  return this.getRequest(`/3/find/${imdb}`, { external_source: 'imdb_id' });
+};
+
+TmdbApi.prototype.getMovieIdByImdb = function(imdb) {
+  return this.searchByImdb(imdb)
+    .then(res => res.movie_results[0].id);
 };
 
 TmdbApi.prototype.getMovie = function(id) {
-  return request
-    .get(`${ROOT_URL}/3/movie/${id}`)
-    .query({
-      api_key: this.key
-    })
-    .then(res => {
-      return res.body;
-    });
+  return this.getRequest(`/3/movie/${id}`);
 };
 
 TmdbApi.prototype.getMovieByImdb = function(imdb) {
@@ -41,26 +41,14 @@ TmdbApi.prototype.getMoviePosterByImdb = function(imdb) {
 };
 
 TmdbApi.prototype.getShowIdByImdb = function(imdb) {
-  return request
-    .get(`${ROOT_URL}/3/find/${imdb}`)
-    .query({
-      api_key: this.key,
-      external_source: 'imdb_id'
-    })
+  return this.searchByImdb(imdb)
     .then(res => {
-      return res.body.tv_results[0].id;
+      return res.tv_results[0].id;
     });
 };
 
 TmdbApi.prototype.getShow = function(id) {
-  return request
-    .get(`${ROOT_URL}/3/tv/${id}`)
-    .query({
-      api_key: this.key
-    })
-    .then(res => {
-      return res.body;
-    });
+  return this.getRequest(`/3/tv/${id}`);
 };
 
 TmdbApi.prototype.getShowByImdb = function(imdb) {
