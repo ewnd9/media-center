@@ -6,7 +6,7 @@ export default React.createClass({
     const { posterUrl, title, body, badge } = this.props;
 
     return (
-      <div className={`${styles.marginBottom} clearfix`}>
+      <div className={`${styles.container}`}>
         <div className={styles.imgWrapper}>
           <img
             src={posterUrl}
