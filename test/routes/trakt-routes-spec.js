@@ -23,18 +23,34 @@ test.afterEach(t => {
 });
 
 import {
+  statusStringResponse,
   traktReportResponseSchema,
   traktSuggestionsResponseSchema
 } from '../fixtures/api-schemas';
 
-test.serial('GET /api/v1/report', async t => {
-  const time = new Date(1467378356960); // july 1st 2016
-  tk.freeze(time);
+test.serial('GET /api/v1/trakt/report', async t => {
+  const { services: { traktService }, db: { EpisodeScrobble } } = t.context.app;
 
-  // const { body } = await t.context.request.get('/api/v1/report', {}, traktReportResponseSchema);
-  await t.context.request.get('/api/v1/report', {}, traktReportResponseSchema);
+  await traktService.syncShowsHistory();
+
+  let docs;
+
+  docs = await EpisodeScrobble.findAll();
+  t.truthy(docs.length > 1500);
+
+  const toDelete = docs.slice(10).map(doc => ({ _id: doc._id, _rev: doc._rev, _deleted: true }));
+  await EpisodeScrobble.db.bulkDocs(toDelete);
+
+  docs = await EpisodeScrobble.findAll();
+  t.truthy(docs.length === 10);
+
+  await t.context.request.get('/api/v1/trakt/report', {}, traktReportResponseSchema);
   // rejection on schema mismatch
-  tk.reset();
+});
+
+test.serial('GET /api/v1/trakt/sync/shows', async t => {
+  await t.context.request.get('/api/v1/trakt/sync/shows', {}, statusStringResponse);
+  // rejection on schema mismatch
 });
 
 test.serial('GET /api/v1/suggestions', async t => {
