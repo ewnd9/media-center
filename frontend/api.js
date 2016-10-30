@@ -122,7 +122,7 @@ export const getMediaSuggestion = (type, title) => {
 };
 
 export const getReport = () => {
-  return get('/api/v1/report');
+  return get('/api/v1/trakt/report');
 };
 
 export const playYoutubeLink = query => {

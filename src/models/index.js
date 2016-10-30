@@ -8,11 +8,15 @@ PouchDB.plugin(MigratePlugin);
 
 import File from './file';
 import Prefix from './prefix';
+import EpisodeScrobble from './episode-scrobble';
+import Show from './show';
 
 export default (dbPath, dbOptions = {}) => {
   const initializers = {
     File,
-    Prefix
+    Prefix,
+    EpisodeScrobble,
+    Show
   };
 
   if (!('auto_compaction' in dbOptions)) {
@@ -38,7 +42,9 @@ export default (dbPath, dbOptions = {}) => {
   const promises = Object
     .keys(models)
     .map(key => {
-      initializers[key].associate(models);
+      if (initializers[key].associate) {
+        initializers[key].associate(models);
+      }
 
       return models[key].db.compact()
         .then(() => models[key].ensureMigrations())

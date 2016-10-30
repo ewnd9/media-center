@@ -47,8 +47,8 @@ TmdbApi.prototype.getShowIdByImdb = function(imdb) {
     });
 };
 
-TmdbApi.prototype.getShow = function(id) {
-  return this.getRequest(`/3/tv/${id}`);
+TmdbApi.prototype.getShow = function(id, query) {
+  return this.getRequest(`/3/tv/${id}`, query);
 };
 
 TmdbApi.prototype.getShowByImdb = function(imdb) {

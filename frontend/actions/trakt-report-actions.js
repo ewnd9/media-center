@@ -22,8 +22,8 @@ export function fetchTraktReport() {
 
     return api
       .getReport()
-      .then(report => {
-        return dispatch(recieveTraktReport(report.filter(_ => _.length > 0)));
+      .then(({ report }) => {
+        return dispatch(recieveTraktReport(report));
       });
   };
 }

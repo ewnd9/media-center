@@ -3,7 +3,7 @@ import styles from './style.css';
 
 export default React.createClass({
   render() {
-    const { posterUrl, title, body } = this.props;
+    const { posterUrl, title, body, badge } = this.props;
 
     return (
       <div className={`${styles.marginBottom} clearfix`}>
@@ -13,9 +13,13 @@ export default React.createClass({
             className={styles.img} />
         </div>
 
-        <div>
-          <div className={styles.title}>{title}</div>
-          <div className={styles.body}>{body}</div>
+        <div className={styles.contentWrapper}>
+          <div className={styles.title}>
+            {title}
+            {' '}
+            {badge && <span className={styles.badge}>({badge})</span> || null}
+          </div>
+          <div className={styles.body}>{Array.isArray(body) ? body.map((body, index) => <div key={index}>{body}</div>) : body}</div>
         </div>
 
       </div>
