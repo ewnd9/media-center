@@ -12,6 +12,7 @@ import fsCache from '../utils/fs-cache';
 import getPosterUrl from '../utils/poster-url';
 
 import { lastDateIndex } from '../models/episode-scrobble';
+import { imdbIndex } from '../models/show';
 
 export const REPORT_CACHE = 'REPORT_CACHE';
 
@@ -95,8 +96,127 @@ TraktService.prototype.getLastShowScrobbles = function() {
   return EpisodeScrobble.findByIndex(lastDateIndex, { descending: true, limit: 20 });
 };
 
+TraktService.prototype._updateShow = function(tmdb, imdb, options) {
+  const { tmdbApi } = this;
+  const fn = tmdb ? tmdbApi.getShow(tmdb, options) : tmdbApi.getShowByImdb(imdb, options);
+
+  return fn
+    .then(show => {
+      return this._formatTmdbData(show.id, imdb, show);
+    });
+};
+
+TraktService.prototype._fetchFullShow = function(show) {
+  const { tmdbApi, db: { Show } } = this;
+  const { tmdb, imdb } = show;
+
+  const seasonsQuery = uniq(show.tmdbData.seasons
+    .map(season => `season/${season.season_number}`));
+
+  const groups = groupToPartition(seasonsQuery, 20); // tmdb api limit
+
+  return Promise
+    .all(
+      groups.map(group => {
+        const options = {
+          append_to_response: group.join(',')
+        };
+
+        return tmdbApi.getShow(tmdb, options);
+      })
+    )
+    .then(shows => {
+      const show = shows.reduce((total, curr) => {
+        if (!total) {
+          return curr;
+        } else {
+          for (const key in curr) {
+            if (key.indexOf('season/') === 0) {
+              total[key] = curr[key];
+            }
+          }
+
+          return total;
+        }
+      });
+
+      return Show.update(this._formatTmdbData(tmdb, imdb, show));
+    });
+};
+
+TraktService.prototype._fetchShow = function(tmdb, imdb) {
+  const { db: { Show } } = this;
+
+  const fn = tmdb ? (
+    Show
+      .findOneOrInit(
+        { tmdb },
+        () => this._updateShow(tmdb, imdb).then(data => Show.put(data))
+      )
+  ) : (
+    Show.db
+      .query(imdbIndex, { key: imdb, include_docs: true })
+      .then(res => {
+        if (res.rows.length > 0) {
+          return res.rows[0].doc;
+        } else {
+          return this._updateShow(tmdb, imdb).then(data => Show.put(data));
+        }
+      })
+  );
+
+  return fn
+    .then(show => {
+      const diff = (Date.now() - new Date(show.syncedAt).getTime()) / 1000 / 60 / 60 / 24 | 0;
+
+      if (!show.tmdbData['season/1'] || (show.status !== 'Ended' && diff > 10)) {
+        return this._fetchFullShow(show);
+      }
+
+      return show;
+    });
+};
+
+TraktService.prototype._formatTmdbData = function(tmdb, imdb, show) {
+  return {
+    imdb,
+    tmdb: +tmdb,
+    tmdbData: show,
+    title: show.name,
+    status: show.status,
+    syncedAt: new Date().toISOString()
+  };
+};
+
+TraktService.prototype._mergeEpisodeScrobbles = function(show, docs) {
+  show.episodes = [];
+
+  Object
+    .keys(show.tmdbData)
+    .filter(key => key.indexOf('season/') === 0)
+    .map(seasonName => {
+      const season = show.tmdbData[seasonName];
+
+      if (seasonName !== 'season/0') {
+        show.episodes = show.episodes.concat(
+          season.episodes
+            .filter(ep => ep.season_number > 0 && ep.episode_number > 0)
+            .map(ep => {
+              ep.watched = !!docs.find(doc => doc.s === ep.season_number && doc.ep === ep.episode_number);
+              return ep;
+            })
+        );
+      }
+
+      delete show.tmdbData[seasonName];
+    });
+
+  return show;
+};
+
 TraktService.prototype.getShowReport = function() {
-  const { tmdbApi, db: { EpisodeScrobble, Show } } = this;
+  const { db: { EpisodeScrobble } } = this;
+  const that = this;
 
   return EpisodeScrobble
     .findAll({})
@@ -111,101 +231,11 @@ TraktService.prototype.getShowReport = function() {
         );
     });
 
-  function updateShow(tmdb, imdb, options) {
-    return tmdbApi
-      .getShow(tmdb, options)
-      .then(show => {
-        const data = {
-          imdb,
-          tmdb: +tmdb,
-          tmdbData: show,
-          title: show.name,
-          status: show.status
-        };
-
-        return data;
-      });
-  }
-
   function fetchShow(tmdb, docs) {
     const imdb = docs[0].imdb;
 
-    return Show
-      .findOneOrInit(
-        { tmdb },
-        () => updateShow(tmdb, imdb).then(data => Show.put(data))
-      )
-      .then(show => {
-        if (!show.tmdbData['season/1']) {
-          const seasonsQuery = uniq(show.tmdbData.seasons
-            .map(season => `season/${season.season_number}`));
-
-          const groups = groupToPartition(seasonsQuery, 20); // tmdb api limit
-
-          return Promise
-            .all(
-              groups.map(group => {
-                const options = {
-                  append_to_response: group.join(',')
-                };
-
-                return tmdbApi.getShow(tmdb, options);
-              })
-            )
-            .then(shows => {
-              const show = shows.reduce((total, curr) => {
-                if (!total) {
-                  return curr;
-                } else {
-                  for (const key in curr) {
-                    if (key.indexOf('season/') === 0) {
-                      total[key] = curr[key];
-                    }
-                  }
-
-                  return total;
-                }
-              });
-
-              const data = {
-                imdb,
-                tmdb: +tmdb,
-                tmdbData: show,
-                title: show.name,
-                status: show.status
-              };
-
-              return Show.update(data);
-            });
-        }
-
-        return show;
-      })
-      .then(show => {
-        show.episodes = [];
-
-        Object
-          .keys(show.tmdbData)
-          .filter(key => key.indexOf('season/') === 0)
-          .map(seasonName => {
-            const season = show.tmdbData[seasonName];
-
-            if (seasonName !== 'season/0') {
-              show.episodes = show.episodes.concat(
-                season.episodes
-                  .filter(ep => ep.season_number > 0 && ep.episode_number > 0)
-                  .map(ep => {
-                    ep.watched = !!docs.find(doc => doc.s === ep.season_number && doc.ep === ep.episode_number);
-                    return ep;
-                  })
-              );
-            }
-
-            delete show.tmdbData[seasonName];
-          });
-
-        return show;
-      });
+    return that._fetchShow(tmdb, imdb)
+      .then(show => that._mergeEpisodeScrobbles(show, docs));
   }
 };
 
@@ -219,6 +249,22 @@ TraktService.prototype.getShowReportWithPosterUrls = function(host) {
         });
 
       return reports;
+    });
+};
+
+TraktService.prototype.findShowByImdb = function(imdb, host) {
+  return Promise
+    .all([
+      this._fetchShow(null, imdb),
+      this.db.EpisodeScrobble.db.allDocs({
+        startkey: `episode-scrobble:${imdb}`,
+        endkey: `episode-scrobble:${imdb}\uffff`,
+        include_docs: true
+      })
+    ])
+    .then(([show, docs]) => {
+      show.posterUrl = getPosterUrl('show', show.imdb, undefined, host);
+      return this._mergeEpisodeScrobbles(show, docs.rows.map(row => row.doc));
     });
 };
 

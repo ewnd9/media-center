@@ -26,13 +26,13 @@ TmdbApi.prototype.getMovieIdByImdb = function(imdb) {
     .then(res => res.movie_results[0].id);
 };
 
-TmdbApi.prototype.getMovie = function(id) {
-  return this.getRequest(`/3/movie/${id}`);
+TmdbApi.prototype.getMovie = function(id, query) {
+  return this.getRequest(`/3/movie/${id}`, query);
 };
 
-TmdbApi.prototype.getMovieByImdb = function(imdb) {
+TmdbApi.prototype.getMovieByImdb = function(imdb, query) {
   return this.getMovieIdByImdb(imdb)
-    .then(id => this.getMovie(id));
+    .then(id => this.getMovie(id, query));
 };
 
 TmdbApi.prototype.getMoviePosterByImdb = function(imdb) {
@@ -51,9 +51,9 @@ TmdbApi.prototype.getShow = function(id, query) {
   return this.getRequest(`/3/tv/${id}`, query);
 };
 
-TmdbApi.prototype.getShowByImdb = function(imdb) {
+TmdbApi.prototype.getShowByImdb = function(imdb, query) {
   return this.getShowIdByImdb(imdb)
-    .then(id => this.getShow(id));
+    .then(id => this.getShow(id), query);
 };
 
 TmdbApi.prototype.getShowPosterByImdb = function(imdb) {
