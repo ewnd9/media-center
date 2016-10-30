@@ -19,10 +19,17 @@ export default ({ traktService }) => {
       .catch(() => res.json([])); // why
   });
 
-  router.get('/api/v1/report', (req, res, next) => {
+  router.get('/api/v1/trakt/report', (req, res, next) => {
     traktService
-      .getReportWithPosterUrls(req.headers.host)
-      .then(data => res.json(data))
+      .getShowReportWithPosterUrls(req.headers.host)
+      .then(report => res.json({ report }))
+      .catch(err => next(err));
+  });
+
+  router.get('/api/v1/trakt/sync/shows', (req, res, next) => {
+    traktService
+      .syncShowsHistory()
+      .then(() => res.json({ status: 'ok' }))
       .catch(err => next(err));
   });
 

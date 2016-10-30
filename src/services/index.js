@@ -10,7 +10,7 @@ function init(db, storage, config) {
 
   registry.define('filesService', createFilesService(db, config.mediaPath, config.mediaTrashPath));
   registry.define('playerService', createPlayerService(config.trakt));
-  registry.define('traktService', new TraktService(config.trakt, config.dbPath, config.tmdbApi));
+  registry.define('traktService', new TraktService(config.trakt, config.dbPath, config.tmdbApi, db));
 
   return registry.services;
 }

@@ -4,8 +4,9 @@ import Spinner from '../ui/spinner/spinner';
 import { connect } from 'react-redux';
 
 import { fetchTraktReport } from '../../actions/trakt-report-actions';
-
 import ListItemShow from '../ui/list-item-show/list-item-show';
+
+import { groupShowsByAirDatesFlatten } from 'show-episode-format';
 
 const mapStateToProps = ({ traktReport: { isFetching, report } }) => ({ isFetching, report });
 const mapDispatchToProps = { fetchTraktReport };
@@ -30,20 +31,35 @@ const TraktReport = React.createClass({
       }
     });
 
-    const renderGroup = group => group.map(({ show, showIds, posterUrl, titles }) => {
+    const renderGroup = group => group.map(({ show, report }) => {
       const title = (
-        <a href={`https://trakt.tv/shows/${showIds.slug}`} target="_blank">
-          {show}
+        <a href={`https://trakt.tv/shows/${show.imdb}`} target="_blank">
+          {show.title}
         </a>
       );
 
-      const body = (titles || []).join(', ');
+      let body = [];
+
+      const fn = (m, type) => {
+        if (report[type].length > 0) {
+          const groups = report[type];
+          body.push(`${m}: ${groups.map(g => g.title).join(', ')}`);
+        }
+      };
+
+      fn('Unwatched', 'aired');
+      fn('Unaired', 'unaired');
+
+      if (body.length === 0) {
+        return null;
+      }
 
       return (
         <ListItemShow
-          key={show}
-          posterUrl={posterUrl}
+          key={show.imdb}
+          posterUrl={show.posterUrl}
           title={title}
+          badge={show.status}
           body={body} />
       );
     });
@@ -51,7 +67,7 @@ const TraktReport = React.createClass({
     if (report != null && !isFetching) {
       return (
         <div>
-          { renderReport(report) }
+          { renderReport(groupShowsByAirDatesFlatten(report, show => show.episodes, ep => !!ep.watched)) }
         </div>
       );
     } else {
