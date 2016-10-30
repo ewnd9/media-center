@@ -1,7 +1,6 @@
 import t from 'tcomb-validation';
 
 import { schema as fileSchema } from '../../src/models/file';
-import { schema as episodeScrobbleSchema } from '../../src/models/episode-scrobble';
 import { schema as showSchema } from '../../src/models/show';
 
 export const fileScrobbleRequestSchema = t.struct({
@@ -89,13 +88,19 @@ export const traktReportGaps = t.struct({
   episodes: t.list(traktReport)
 });
 
+export const traktShow = showSchema.extend({
+  episodes: t.list(t.Object),
+  posterUrl: t.String
+});
+
 export const traktReportResponseSchema = t.struct({
   report: t.list(
-    showSchema.extend({
-      episodes: t.list(t.Object),
-      posterUrl: t.String
-    })
+    traktShow
   )
+});
+
+export const traktShowResponseSchema = t.struct({
+  show: traktShow
 });
 
 export const screenshotsResponseSchema = t.struct({ files: t.list(t.String) });
