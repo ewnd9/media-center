@@ -54,7 +54,7 @@ test.serial('GET /api/v1/trakt/sync/shows', async t => {
   // rejection on schema mismatch
 });
 
-test.serial.only('GET /api/v1/trakt/shows/:imdb', async t => {
+test.serial('GET /api/v1/trakt/shows/:imdb', async t => {
   const { body: { show: { syncedAt: syncedAt0 } } }  = await t.context.request.get('/api/v1/trakt/shows/tt2193021', {}, traktShowResponseSchema);
   // rejection on schema mismatch
 
