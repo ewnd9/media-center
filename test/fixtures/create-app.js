@@ -1,7 +1,8 @@
 import proxyquire from 'proxyquire';
 import mkdirp from 'mkdirp';
-import { generateTmpDir } from './create-db';
 import createTraktService from './create-trakt-service';
+
+const generateTmpDir = () => '/tmp/media-center-db-' + Math.random();
 
 const defaultTrackMock = {
   getReport: () => {},
