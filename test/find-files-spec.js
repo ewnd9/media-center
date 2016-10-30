@@ -4,7 +4,7 @@ import 'babel-core/register';
 import { validate } from 'tcomb-validation';
 
 import findFiles from './../src/find-files';
-import createDb from './fixtures/create-db';
+import createApp from './fixtures/create-app';
 
 /*
 
@@ -46,7 +46,7 @@ async function addMockFile(db) {
 }
 
 test('#findFiles add new file', async t => {
-  const db = await createDb();
+  const { db } = await createApp();
   await addMockFile(db);
 
   const data = await db.Prefix.db.allDocs({
@@ -58,7 +58,7 @@ test('#findFiles add new file', async t => {
 });
 
 test('#findFiles', async t => {
-  const db = await createDb();
+  const { db } = await createApp();
   await addMockFile(db);
 
   mockFs();
