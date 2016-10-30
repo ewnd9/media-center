@@ -1,16 +1,16 @@
-.marginBottom {
+.container {
   margin-bottom: 20px;
+  display: flex;
 }
 
 .imgWrapper {
   display: inline-block;
-  float: left;
   width: 40px;
   margin-right: 10px;
 }
 
 .contentWrapper {
-  float: left;
+  flex: 1;
 }
 
 .img {
