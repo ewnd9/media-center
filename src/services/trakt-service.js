@@ -50,8 +50,15 @@ function TraktService(trakt, filePath, tmdbApi, db) {
   mkdirp(this.filePath);
 
   this.search = this.trakt.search.bind(this.trakt);
-  this.addToHistory = this.trakt.addToHistory.bind(this.trakt);
 }
+
+TraktService.prototype.addToHistory = function() {
+  return this.trakt.addToHistory.apply(this.trakt, arguments)
+    .then(result => {
+      return this.syncShowsHistory()
+        .then(() => result);
+    });
+};
 
 TraktService.prototype.prefetch = function() {
   return this.getReport();

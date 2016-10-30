@@ -15,12 +15,14 @@ test.beforeEach(async t => {
   const getReport = sinon.stub().returns(Promise.resolve());
   const search = sinon.stub().returns(Promise.resolve());
   const startScrobble = sinon.stub().returns(Promise.resolve());
+  const request = sinon.stub().returns(Promise.resolve([]));
 
   const traktMock = {
     addToHistory,
     getReport,
     search,
-    startScrobble
+    startScrobble,
+    request
   };
 
   const { db, server, config } = await createApp({ traktMock });
