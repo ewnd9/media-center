@@ -15,7 +15,9 @@ const Show = {
 
     title: t.String,
     status: t.enums.of(['Ended', 'Returning Series']),
-    tmdbData: t.Object
+    tmdbData: t.Object,
+
+    syncedAt: t.String
   }),
   indexes: [
     {

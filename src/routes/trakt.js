@@ -33,5 +33,12 @@ export default ({ traktService }) => {
       .catch(err => next(err));
   });
 
+  router.get('/api/v1/trakt/shows/:imdb', (req, res, next) => {
+    traktService
+      .findShowByImdb(req.params.imdb)
+      .then(show => res.json({ show }))
+      .catch(err => next(err));
+  });
+
   return router;
 };
