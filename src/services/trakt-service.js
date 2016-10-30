@@ -13,13 +13,38 @@ import getPosterUrl from '../utils/poster-url';
 
 import { lastDateIndex } from '../models/episode-scrobble';
 import { imdbIndex } from '../models/show';
+import promiseLimit from 'promise-limit';
 
 export const REPORT_CACHE = 'REPORT_CACHE';
+
+function LimitedTmdb(source) {
+  const limit = promiseLimit(2);
+
+  const methods = [
+    'getShowPosterByImdb',
+    'getMoviePosterByImdb',
+    'getShow',
+    'getShowByImdb'
+  ];
+
+  return methods.reduce((total, methodName) => {
+    const method = source[methodName];
+    total[methodName] = function() {
+      return limit(() => {
+        const args = Array.prototype.slice.apply(arguments).map(x => JSON.stringify(x)).join(', ');
+        console.log('tmdb-api', methodName, args);
+
+        return method.apply(source, arguments);
+      });
+    };
+    return total;
+  }, {});
+}
 
 function TraktService(trakt, filePath, tmdbApi, db) {
   this.cache = new Cache();
   this.trakt = trakt;
-  this.tmdbApi = tmdbApi;
+  this.tmdbApi = LimitedTmdb(tmdbApi);
   this.filePath = filePath + '/posters';
   this.db = db;
   mkdirp(this.filePath);

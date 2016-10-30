@@ -82,6 +82,7 @@
     "pouchdb-model": "^0.2.0",
     "pouchdb-node": "^6.0.4",
     "pouchdb-replication-stream": "^1.2.6",
+    "promise-limit": "^2.3.0",
     "sanitize-html": "^1.11.4",
     "shortid": "^2.2.6",
     "show-episode-format": "^2.0.0",
