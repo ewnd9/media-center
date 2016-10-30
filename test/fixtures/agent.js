@@ -61,8 +61,12 @@ function validatePromise(request, responseSchema) {
 
 export function validateResponse(schema, response) {
   return new Promise((resolve, reject) => {
-    const responseValidation = validate(response.body, schema, { strict: true });
+    if (response.type !== 'application/json') {
+      reject(new Error(`response type is ${response.type}`));
+      return;
+    }
 
+    const responseValidation = validate(response.body, schema, { strict: true });
     if (!responseValidation.isValid()) {
       reject(errorMessage(response.body, responseValidation.errors));
     } else {
