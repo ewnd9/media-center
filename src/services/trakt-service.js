@@ -11,8 +11,12 @@ import uniq from 'lodash/uniq';
 import fsCache from '../utils/fs-cache';
 import getPosterUrl from '../utils/poster-url';
 
+import * as dvdReleasesApi from '../libs/dvdreleasedates-api/';
+
 import { lastDateIndex } from '../models/episode-scrobble';
-import { imdbIndex } from '../models/show';
+import { imdbIndex as showImdbIndex } from '../models/show';
+import { imdbIndex as movieImdbIndex, releaseDateIndex } from '../models/movie';
+
 import promiseLimit from 'promise-limit';
 
 export const REPORT_CACHE = 'REPORT_CACHE';
@@ -24,7 +28,9 @@ function LimitedTmdb(source) {
     'getShowPosterByImdb',
     'getMoviePosterByImdb',
     'getShow',
-    'getShowByImdb'
+    'getShowByImdb',
+    'getMovie',
+    'getMovieByImdb'
   ];
 
   return methods.reduce((total, methodName) => {
@@ -123,6 +129,56 @@ TraktService.prototype.syncShowsHistory = function() {
     });
 };
 
+TraktService.prototype.syncMoviesHistory = function() {
+  const { Movie, MovieScrobble } = this.db;
+
+  let items;
+  let imdb;
+
+  return this.trakt
+    .request('/sync/watched/movies')
+    .then(movies => {
+      items = movies.map(movie => {
+        const data = {
+          imdb: movie.movie.ids.imdb,
+          tmdb: movie.movie.ids.tmdb,
+          lastDate: new Date(movie.last_watched_at).toISOString(),
+          plays: movie.plays
+        };
+
+        data._id = MovieScrobble.createId(data);
+        return data;
+      });
+
+      imdb = items.map(item => item.imdb);
+
+      return MovieScrobble.db.allDocs({
+        include_docs: false,
+        keys: items.map(item => item._id)
+      });
+    })
+    .then(existed => {
+      const notFound = existed.rows
+        .filter(row => row.error === 'not_found')
+        .map(row => items.find(item => item._id === row.key));
+
+      return MovieScrobble.db.bulkDocs(notFound);
+    })
+    .then(() => {
+      return Movie.db.query(movieImdbIndex, { keys: imdb, include_docs: true });
+    })
+    .then(res => {
+      const data = res.rows.filter(row => !!!row.doc.isWatched).map(row => {
+        row.doc.isWatched = true;
+        return row.doc;
+      });
+
+      if (data.length > 0) {
+        return Movie.db.bulkDocs(data);
+      }
+    });
+};
+
 TraktService.prototype.getLastShowScrobbles = function() {
   const { EpisodeScrobble } = this.db;
   return EpisodeScrobble.findByIndex(lastDateIndex, { descending: true, limit: 20 });
@@ -134,7 +190,17 @@ TraktService.prototype._updateShow = function(tmdb, imdb, options) {
 
   return fn
     .then(show => {
-      return this._formatTmdbData(show.id, imdb, show);
+      return this._formatTmdbShowData(show.id, imdb, show);
+    });
+};
+
+TraktService.prototype._updateMovie = function(tmdb, imdb) {
+  const { tmdbApi } = this;
+  const fn = tmdb ? tmdbApi.getMovie(tmdb) : tmdbApi.getMovieByImdb(imdb);
+
+  return fn
+    .then(movie => {
+      return this._formatTmdbMovieData(movie.id, imdb, movie);
     });
 };
 
@@ -172,7 +238,7 @@ TraktService.prototype._fetchFullShow = function(show) {
         }
       });
 
-      return Show.update(this._formatTmdbData(tmdb, imdb, show));
+      return Show.update(this._formatTmdbShowData(tmdb, imdb, show));
     });
 };
 
@@ -187,7 +253,7 @@ TraktService.prototype._fetchShow = function(tmdb, imdb) {
       )
   ) : (
     Show.db
-      .query(imdbIndex, { key: imdb, include_docs: true })
+      .query(showImdbIndex, { key: imdb, include_docs: true })
       .then(res => {
         if (res.rows.length > 0) {
           return res.rows[0].doc;
@@ -209,13 +275,47 @@ TraktService.prototype._fetchShow = function(tmdb, imdb) {
     });
 };
 
-TraktService.prototype._formatTmdbData = function(tmdb, imdb, show) {
+TraktService.prototype._fetchMovie = function(tmdb, imdb) {
+  const { db: { Movie } } = this;
+
+  const fn = tmdb ? (
+    Movie
+      .findOneOrInit(
+        { tmdb },
+        () => this._updateMovie(tmdb, imdb).then(data => Movie.put(data))
+      )
+  ) : (
+    Movie.db
+      .query(movieImdbIndex, { key: imdb, include_docs: true })
+      .then(res => {
+        if (res.rows.length > 0) {
+          return res.rows[0].doc;
+        } else {
+          return this._updateMovie(tmdb, imdb).then(data => Movie.put(data));
+        }
+      })
+  );
+
+  return fn;
+};
+
+TraktService.prototype._formatTmdbShowData = function(tmdb, imdb, show) {
   return {
     imdb,
     tmdb: +tmdb,
     tmdbData: show,
     title: show.name,
     status: show.status,
+    syncedAt: new Date().toISOString()
+  };
+};
+
+TraktService.prototype._formatTmdbMovieData = function(tmdb, imdb, movie) {
+  return {
+    imdb,
+    tmdb: +tmdb,
+    tmdbData: movie,
+    title: movie.title,
     syncedAt: new Date().toISOString()
   };
 };
@@ -299,6 +399,45 @@ TraktService.prototype.findShowByImdb = function(imdb, host) {
       return this._mergeEpisodeScrobbles(show, docs.rows.map(row => row.doc));
     });
 };
+
+TraktService.prototype.findMovieByImdb = function(imdb, host) {
+  return this._fetchMovie(null, imdb)
+    .then(movie => movieWithPosterUrl(movie, host));
+};
+
+TraktService.prototype.searchDvdReleases = function(query) {
+  return dvdReleasesApi.search(query);
+};
+
+TraktService.prototype.updateMovieByReleaseDate = function(imdb, releaseDate, host) {
+  const { db: { Movie } } = this;
+
+  return this._fetchMovie(null, imdb)
+    .then(movie => {
+      if (movie.releaseDate !== releaseDate) {
+        movie.releaseDate = releaseDate;
+
+        return Movie.update(movie);
+      }
+
+      return movie;
+    })
+    .then(movie => movieWithPosterUrl(movie, host));
+};
+
+TraktService.prototype.findMoviesByReleaseDate = function(host) {
+  const { db: { Movie } } = this;
+  return Movie.db
+    .query(releaseDateIndex, { include_docs: true })
+    .then(res => {
+      return res.rows.map(row => movieWithPosterUrl(row.doc, host));
+    });
+};
+
+function movieWithPosterUrl(movie, host) {
+  movie.posterUrl = getPosterUrl('movie', movie.imdb, undefined, host);
+  return movie;
+}
 
 function groupToPartition(array, count) {
   return array.reduce((total, curr) => {

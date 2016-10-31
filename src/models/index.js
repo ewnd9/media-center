@@ -8,15 +8,21 @@ PouchDB.plugin(MigratePlugin);
 
 import File from './file';
 import Prefix from './prefix';
+
 import EpisodeScrobble from './episode-scrobble';
+import MovieScrobble from './movie-scrobble';
+
 import Show from './show';
+import Movie from './movie';
 
 export default (dbPath, dbOptions = {}) => {
   const initializers = {
     File,
     Prefix,
     EpisodeScrobble,
-    Show
+    MovieScrobble,
+    Show,
+    Movie
   };
 
   if (!('auto_compaction' in dbOptions)) {
