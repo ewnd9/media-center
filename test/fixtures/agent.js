@@ -32,6 +32,13 @@ export default server => {
       }
 
       return validatePromise(request.post(url).send(body), responseSchema);
+    },
+    postQuery: (url, query, responseSchema) => {
+      if (!responseSchema) {
+        return Promise.reject('responseSchema is missing');
+      }
+
+      return validatePromise(request.post(url).query(query), responseSchema);
     }
   };
 };

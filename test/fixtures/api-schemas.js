@@ -2,6 +2,7 @@ import t from 'tcomb-validation';
 
 import { schema as fileSchema } from '../../src/models/file';
 import { schema as showSchema } from '../../src/models/show';
+import { schema as movieSchema } from '../../src/models/movie';
 
 export const fileScrobbleRequestSchema = t.struct({
   filename: t.String,
@@ -53,6 +54,17 @@ export const markRequestSchema = t.struct({
 });
 
 export const traktSuggestionsResponseSchema = t.list(t.struct({ label: t.String, value: t.String }));
+export const dvdReleasesSuggestionsResponseSchema = t.struct({
+  suggestions: t.list(
+    t.struct({
+      title: t.String,
+      img: t.String,
+      url: t.String,
+      imdb: t.String,
+      releaseDate: t.maybe(t.String)
+    })
+  )
+});
 
 export const traktIds = t.struct({
   trakt: t.maybe(t.Number),
@@ -101,6 +113,18 @@ export const traktReportResponseSchema = t.struct({
 
 export const traktShowResponseSchema = t.struct({
   show: traktShow
+});
+
+export const traktMovie = movieSchema.extend({
+  posterUrl: t.String
+});
+
+export const traktMovieResponseSchema = t.struct({
+  movie: traktMovie
+});
+
+export const traktMoviesResponseSchema = t.struct({
+  movies: t.list(traktMovie)
 });
 
 export const screenshotsResponseSchema = t.struct({ files: t.list(t.String) });
