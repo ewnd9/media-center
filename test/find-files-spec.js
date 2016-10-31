@@ -6,6 +6,8 @@ import { validate } from 'tcomb-validation';
 import findFiles from './../src/find-files';
 import createApp from './fixtures/create-app';
 
+import mock from 'mock-fs';
+
 /*
 
 testing `findFiles` logic (map fs files with local db metadata)
@@ -13,9 +15,6 @@ testing `findFiles` logic (map fs files with local db metadata)
 */
 
 import {
-  mockFs,
-  unmockFs,
-
   testDir,
   showFolder,
 
@@ -24,12 +23,46 @@ import {
 
   showFile1,
   showFile2,
+  showFile3,
+  showFile4,
 
   movieFolder,
   movieFile,
 
-  movieTitle
+  movieTitle,
+
+  pastDate,
+  nearestDate
 } from './fixtures/create-fs';
+
+const f = birthtime => mock.file({ content: '', birthtime });
+
+function mockFs() {
+  mock({
+    [testDir]: {
+      [showFolder]: mock.directory({
+        birthtime: pastDate,
+        items: {
+          [showFile1]: f(pastDate),
+          [showFile2]: f(pastDate),
+          [showFile3]: f(pastDate),
+          [showFile4]: f(pastDate)
+        }
+      }),
+      [movieFolder]: mock.directory({
+        birthtime: nearestDate,
+        items: {
+          [movieFile]: f(nearestDate)
+        }
+      })
+    }
+  });
+}
+
+function unmockFs() {
+  mock.restore();
+}
+
 
 import { filesArrayResponseSchema } from './fixtures/api-schemas';
 

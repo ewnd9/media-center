@@ -1,5 +1,3 @@
-import mock from 'mock-fs';
-
 export const testDir = '/home/pi/video';
 
 export const showFolder = 'Master of None S01 Season 1 Complete 1080p WEB-DL [rartv]';
@@ -19,31 +17,3 @@ export const movieTitle = 'Minions';
 
 export const nearestDate = new Date(2);
 export const pastDate = new Date(1);
-
-const f = birthtime => mock.file({ content: '', birthtime });
-
-export function mockFs() {
-  mock({
-    [testDir]: {
-      [showFolder]: mock.directory({
-        birthtime: pastDate,
-        items: {
-          [showFile1]: f(pastDate),
-          [showFile2]: f(pastDate),
-          [showFile3]: f(pastDate),
-          [showFile4]: f(pastDate)
-        }
-      }),
-      [movieFolder]: mock.directory({
-        birthtime: nearestDate,
-        items: {
-          [movieFile]: f(nearestDate)
-        }
-      })
-    }
-  });
-}
-
-export function unmockFs() {
-  mock.restore();
-}

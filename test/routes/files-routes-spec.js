@@ -50,8 +50,6 @@ import {
   playbackInfoResponseSchema
 } from '../fixtures/api-schemas';
 
-// import { mockFs, unmockFs } from '../fixtures/create-fs';
-
 test('GET /api/v1/files', async t => {
   // const { body } = await t.context.request.get('/api/v1/files', {}, filesArrayResponseSchema);
   await t.context.request.get('/api/v1/files', {}, filesArrayResponseSchema);

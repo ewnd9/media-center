@@ -1,5 +1,4 @@
 import test from 'ava';
-import 'babel-core/register';
 
 import createApp from '../fixtures/create-app';
 import agent from '../fixtures/agent';
