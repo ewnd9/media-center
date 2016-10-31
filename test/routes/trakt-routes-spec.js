@@ -107,8 +107,7 @@ test.serial('GET /api/v1/dvdreleasesdates/suggestions', async t => {
   const { body } = await t.context.request.get('/api/v1/dvdreleasesdates/suggestions', { query: 'captain america' }, dvdReleasesSuggestionsResponseSchema);
   // rejection on schema mismatch
 
-  t.truthy(body.suggestions[0].title === 'Captain America: The Winter Soldier');
-  t.truthy(body.suggestions[1].title === 'Captain America 3 Civil War');
+  t.truthy(body.suggestions[0].title === 'Captain America 3 Civil War (2016)');
 });
 
 test.serial('POST /api/v1/trakt/movies/release-date', async t => {

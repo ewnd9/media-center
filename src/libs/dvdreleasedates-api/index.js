@@ -16,8 +16,24 @@ export function getMovie(movie) {
     .then(data => {
       const $ = cheerio.load(data.text);
 
-      const date = new Date($($('.past').get(0)).text());
-      movie.releaseDate = date.toISOString();
+      try {
+        let el = $('span.past');
+
+        if (el.length === 0) {
+          el = $('span.future');
+        }
+
+        const date = new Date($(el.get(0)).text());
+        movie.releaseDate = date.toISOString();
+      } catch (e) {
+        //
+      }
+
+      movie.img = `${baseUrl}${$('img[itemprop="image"]').get(0).attribs.src}`;
+
+
+      const imdbUrl = $('a[href^="http://www.imdb.com/title"]').get(0).attribs.href;
+      movie.imdb = /tt\d+/.exec(imdbUrl)[0];
 
       return movie;
     });
@@ -25,23 +41,17 @@ export function getMovie(movie) {
 
 export function _search(query) {
   return request
-    .post(`${baseUrl}/search.php`)
-    .send(`searchStr=${query}`)
+    .get(`${baseUrl}/livesearch.php?q=${encodeURIComponent(query)}`)
     .then(data => {
       const $ = cheerio.load(data.text);
 
-      return $('.dvdcell')
+      return $('a')
         .map((i, el) => {
           const $el = $(el);
-          const links = $el.find('a');
-          const imdbUrl = links.get(links.length - 1).attribs['href'];
-          const imdb = /tt\d+/.exec(imdbUrl)[0];
 
           return {
-            title: $(links.get(1)).text(),
-            img: $el.find('img').attr('src'),
-            url: `${baseUrl}${links.get(0).attribs['href']}`,
-            imdb
+            title: $el.text(),
+            url: `${baseUrl}${el.attribs['href']}`
           };
         })
         .get();
