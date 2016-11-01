@@ -8,6 +8,8 @@ import { MEDIA_LIST_UNWATCHED } from '../../../constants';
 import MediaListPoster from '../media-list-poster/media-list-poster';
 import MediaListItem from '../media-list-item/media-list-item';
 
+import { Link } from 'react-router';
+
 const transitionClasses = {
   enter: styles.exampleEnter,
   enterActive: styles.exampleEnterActive,
@@ -109,14 +111,26 @@ const MediaList = React.createClass({
   },
   renderLinks(list) {
     if (list[0] && list[0].db) {
+      const imdb = list[0].db.imdb;
+
+      const [url, title] = list[0].db.type === 'movie' ?
+        ([`/movies/${imdb}`, 'Movie Page']) :
+        ([`/shows/${imdb}`, 'Show Page']);
+
       return (
         <div className={styles.linksPanel}>
-          <a target="_blank" href={`http://www.imdb.com/title/${list[0].db.imdb}/`}>
+          <a target="_blank" href={`http://www.imdb.com/title/${imdb}/`}>
             <span
               className="glyphicon glyphicon-cd"
               aria-hidden="true"></span>
             {' IMDB'}
           </a>
+          <Link to={url}>
+            <span
+              className={`glyphicon glyphicon-cd ${styles.link}`}
+              aria-hidden="true"></span>
+            {' '}{title}
+          </Link>
         </div>
       );
     } else {

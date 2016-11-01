@@ -89,3 +89,11 @@
     display: block;
   }
 }
+
+.leftMargin {
+  margin-left: 10px;
+}
+
+.rightMargin {
+  margin-right: 10px;
+}

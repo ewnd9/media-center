@@ -1,73 +1,58 @@
 import React from 'react';
 import styles from './style.css';
 
+import t from 'tcomb';
+import { propTypes } from 'tcomb-react';
+
 import Tabs from '../ui/tabs/tabs';
-import Router from '../../routes';
-
-import ScreenshotsGallery from '../screenshots-gallery/screenshots-gallery';
-import TraktReport from '../trakt-report/trakt-report';
-import MediaList from '../media-list/media-list';
-import YoutubeInput from '../youtube/youtube';
-
 import { Link } from 'react-router';
 
 const RightPanel = React.createClass({
+  propTypes: propTypes({
+    isWideScreen: t.Boolean,
+    children: t.ReactNode
+  }),
   render: function() {
-    const { isFullWidth, mediaListProps } = this.props;
+    const { isWideScreen, children } = this.props;
 
     const MEDIA = 'Media';
-    const UPCOMING = 'Upcoming';
+    const TV = 'TV';
     const SCREENSHOTS = 'Screens';
+    const MOVIES = 'Movies';
     const YOUTUBE = 'Youtube';
 
-    const elements = [];
+    const menuLinks = [];
 
-    if (isFullWidth) {
-      // don't move this.props.files above, references issue
-
-      const render = () => (
-        <MediaList
-          mediaListProps={mediaListProps} />
-      );
-
-      elements.push(createRouterElement('/media', MEDIA, render));
+    if (!isWideScreen) {
+      const el = createRouterElement('/media', MEDIA);
+      menuLinks.push(el);
     }
 
-    elements.push(createRouterElement('/trakt', UPCOMING, TraktReport));
-    elements.push(createRouterElement('/screenshots', SCREENSHOTS, ScreenshotsGallery));
-    elements.push(createRouterElement('/youtube', YOUTUBE, YoutubeInput));
-
-    const defaultRoute = isFullWidth && '/media' || '/trakt';
+    menuLinks.push(createRouterElement('/shows', TV));
+    menuLinks.push(createRouterElement('/movies', MOVIES));
+    menuLinks.push(createRouterElement('/screenshots', SCREENSHOTS));
+    menuLinks.push(createRouterElement('/youtube', YOUTUBE));
 
     const Head = (<div className={styles.logo}></div>);
 
-    const Shell = ({ children }) => (
-      <Tabs elements={elements} initial={defaultRoute} head={Head}>
+    return (
+      <Tabs elements={menuLinks} initial={'/shows'} head={Head}>
         { children }
       </Tabs>
-    );
-
-    return (
-      <Router
-        shell={Shell}
-        routes={elements}
-        defaultRoute={defaultRoute}
-        notFoundComponent="/trakt" />
     );
   }
 });
 
 export default RightPanel;
 
-function createRouterElement(to, label, component, children) {
+function createRouterElement(to, label) {
   return {
     label,
-    type: 'router',
     link: ({ className, onClick }) => (
-      <Link activeClassName={styles.activeButton} to={to} className={className} onClick={onClick}>{label}</Link>
+      <Link activeClassName={styles.activeButton} to={to} className={className} onClick={onClick}>
+        {label}
+      </Link>
     ),
-    url: to,
-    component,
-    children
+    url: to
   };
 }

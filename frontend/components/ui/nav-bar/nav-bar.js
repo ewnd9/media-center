@@ -13,7 +13,7 @@ export default React.createClass({
   onClick() {
     this.setState({ isOpened: false });
   },
-  renderMenu(elements, active, className, setActive) {
+  renderMenu(elements, active, className, setActive, isStacked) {
     return elements
       .map(element => {
         const label = element.label;
@@ -26,7 +26,7 @@ export default React.createClass({
             <button type="button"
               onClick={() => setActive(label)}
               key={label}
-              className={`${className} ${active === label ? styles.activeButton : ''}`}>
+              className={`${className} ${isStacked ? styles.rightMargin : styles.leftMargin} ${active === label ? styles.activeButton : ''}`}>
               { label }
             </button>
           );
@@ -45,7 +45,7 @@ export default React.createClass({
         </div>
         <div className={styles.menuSpace}></div>
         <div className={`${styles.menu} ${isOpened ? styles.opened : ''}`}>
-          { this.renderMenu(elements, active, linkStyle, setActive) }
+          { this.renderMenu(elements, active, linkStyle, setActive, isStacked) }
         </div>
       </div>
     );

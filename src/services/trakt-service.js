@@ -184,9 +184,10 @@ TraktService.prototype.getLastShowScrobbles = function() {
   return EpisodeScrobble.findByIndex(lastDateIndex, { descending: true, limit: 20 });
 };
 
-TraktService.prototype._updateShow = function(tmdb, imdb, options) {
+TraktService.prototype._updateShow = function(tmdb, imdb) {
   const { tmdbApi } = this;
-  const fn = tmdb ? tmdbApi.getShow(tmdb, options) : tmdbApi.getShowByImdb(imdb, options);
+  const query = { append_to_response: 'credits' };
+  const fn = tmdb ? tmdbApi.getShow(tmdb, query) : tmdbApi.getShowByImdb(imdb, query);
 
   return fn
     .then(show => {
@@ -196,7 +197,8 @@ TraktService.prototype._updateShow = function(tmdb, imdb, options) {
 
 TraktService.prototype._updateMovie = function(tmdb, imdb) {
   const { tmdbApi } = this;
-  const fn = tmdb ? tmdbApi.getMovie(tmdb) : tmdbApi.getMovieByImdb(imdb);
+  const query = { append_to_response: 'credits' };
+  const fn = tmdb ? tmdbApi.getMovie(tmdb, query) : tmdbApi.getMovieByImdb(imdb, query);
 
   return fn
     .then(movie => {
@@ -211,13 +213,13 @@ TraktService.prototype._fetchFullShow = function(show) {
   const seasonsQuery = uniq(show.tmdbData.seasons
     .map(season => `season/${season.season_number}`));
 
-  const groups = groupToPartition(seasonsQuery, 20); // tmdb api limit
+  const groups = groupToPartition(seasonsQuery, 19); // tmdb api limit
 
   return Promise
     .all(
       groups.map(group => {
         const options = {
-          append_to_response: group.join(',')
+          append_to_response: 'credits,' + group.join(',')
         };
 
         return tmdbApi.getShow(tmdb, options);
@@ -428,7 +430,7 @@ TraktService.prototype.updateMovieByReleaseDate = function(imdb, releaseDate, ho
 TraktService.prototype.findMoviesByReleaseDate = function(host) {
   const { db: { Movie } } = this;
   return Movie.db
-    .query(releaseDateIndex, { include_docs: true })
+    .query(releaseDateIndex, { include_docs: true, descending: true })
     .then(res => {
       return res.rows.map(row => movieWithPosterUrl(row.doc, host));
     });

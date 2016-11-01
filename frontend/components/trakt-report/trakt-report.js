@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { fetchTraktReport } from '../../actions/trakt-report-actions';
 import ListItemShow from '../ui/list-item-show/list-item-show';
+import { Link } from 'react-router';
 
 import { groupShowsByAirDatesFlatten } from 'show-episode-format';
 
@@ -33,9 +34,9 @@ const TraktReport = React.createClass({
 
     const renderGroup = group => group.map(({ show, report }) => {
       const title = (
-        <a href={`https://trakt.tv/shows/${show.imdb}`} target="_blank">
+        <Link to={`/shows/${show.imdb}`}>
           {show.title}
-        </a>
+        </Link>
       );
 
       let body = [];

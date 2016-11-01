@@ -51,14 +51,15 @@ export const deleteRequest = (url, query = {}) => {
     });
 };
 
-export const post = (url, body) => {
+export const post = (url, body = {}, query) => {
   return fetch(baseUrl + url, {
     method: 'post',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
+    query
   })
   .catch(err => {
     notify.error(err.message);
@@ -134,41 +135,31 @@ export const getPosterPlaceholderUrl = () => {
   return `${baseUrl}/api/v1/posters/placeholder.jpg`;
 };
 
-export const getMarks = since => {
-  return get(`/api/v1/marks`, { since });
+export const getTmdbPosterUrl = url => {
+  return url ? `http://image.tmdb.org/t/p/w500/${url}` : getPosterPlaceholderUrl();
 };
 
-export const getMark = id => {
-  return get(`/api/v1/marks/${id}`);
+export const getMovies = () => {
+  return get('/api/v1/trakt/movies');
 };
 
-export const postMark = mark => {
-  return post('/api/v1/marks', { mark });
+export const getMovie = imdb => {
+  return get(`/api/v1/trakt/movies/${imdb}`);
 };
 
-export const postWord = (word, example) => {
-  return post('/api/v1/words', { word, example });
+export const getShow = imdb => {
+  return get(`/api/v1/trakt/shows/${imdb}`);
 };
 
-export const deleteWord = id => {
-  return deleteRequest(`/api/v1/words/${id}`);
+export const getDvdReleasesDates = query => {
+  return get('/api/v1/dvdreleasesdates/suggestions?query=' + encodeURIComponent(query));
 };
 
-export const getBook = id => {
-  return get(`/api/v1/books/${id}`);
-};
-
-export const uploadBook = (book, name) => {
-  const url = '/api/v1/books';
-  const req = superagent
-    .post(`${baseUrl}${url}`)
-    .attach('book-file', book, name);
-
-  return reqToPromise(req, { method: 'POST' }, url)
-    .catch(err => {
-      notify.error(err.message);
-      report(err, { url: window.location.href });
-    });
+export const updateMovieByReleaseDate = (imdb, releaseDate) => {
+  return post('/api/v1/trakt/movies/release-date', {}, {
+    imdb,
+    releaseDate
+  });
 };
 
 function reqToPromise(req, options = {}, url = '') {

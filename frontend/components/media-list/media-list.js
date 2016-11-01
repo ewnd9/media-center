@@ -11,14 +11,21 @@ import { MEDIA_LIST_ALL, MEDIA_LIST_UNWATCHED } from '../../constants';
 import { fetchFiles, playFile, addToHistory, setActiveKey, deleteFile } from '../../actions/files-actions';
 import { openModal } from '../../actions/modal-actions';
 
-const mapStateToProps = ({ files: { files, isFetching, activeKey, addToHistoryKeyInProgress, deleteFileKeyInProgress }}) => ({
-  files, isFetching, activeKey, addToHistoryKeyInProgress, deleteFileKeyInProgress
+const mapStateToProps = ({ files: { files, isFetching, activeKey, addToHistoryKeyInProgress, deleteFileKeyInProgress }, width: { isWideScreen } }) => ({
+  files, isFetching, activeKey, addToHistoryKeyInProgress, deleteFileKeyInProgress, isWideScreen
 });
 const mapDispatchToProps = { fetchFiles, playFile, openModal, addToHistory, setActiveKey, deleteFile };
 
 const MediaList = React.createClass({
   componentDidMount() {
     this.props.fetchFiles();
+  },
+  componentWillReceiveProps(nextProps) {
+    const { location: { pathname } } = this.props;
+
+    if (pathname === '/media' && nextProps.isWideScreen) {
+      this.context.router.push('/shows');
+    }
   },
   render: function() {
     const {
@@ -79,5 +86,9 @@ const MediaList = React.createClass({
     );
   }
 });
+
+MediaList.contextTypes = {
+  router: React.PropTypes.object.isRequired
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MediaList);
