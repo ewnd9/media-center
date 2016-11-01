@@ -1,52 +1,62 @@
 import React from 'react';
 import styles from './style.css';
 
+import { connect } from 'react-redux';
+
+import t from 'tcomb';
+import { propTypes } from 'tcomb-react';
+
 import MediaList from '../media-list/media-list';
 import Playback from '../playback/playback';
 import RightPanel from '../right-panel/right-panel';
 import MediaModal from '../media-modal/media-modal';
 
-function isWideScreen() {
-  return window.innerWidth > 1080; // large-viewport from theme.css
-}
+import { schema } from '../../reducers/width-reducer';
+import { reactRouterPropTypes } from '../../schema/react-router';
+
+const mapStateToProps = ({ width }) => ({ width });
 
 const Main = React.createClass({
-  getInitialState() {
-    return {
-      isWideScreen: isWideScreen()
-    };
-  },
-  componentDidMount() {
-    window.addEventListener('resize', this.handleResize);
-  },
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
-  },
-  handleResize() {
-    this.setState({ isWideScreen: isWideScreen() });
-  },
-  render: function() {
-    const { files } = this.props;
+  propTypes: propTypes({
+    ...reactRouterPropTypes,
+    children: t.ReactNode,
 
+    width: schema,
+    dispatch: t.Function
+  }),
+  renderContent() {
+    const { width: { isWideScreen }, location: { pathname }, children } = this.props;
+
+    const panel = (
+      <RightPanel
+        isWideScreen={isWideScreen}>
+        {children}
+      </RightPanel>
+    );
+
+    return isWideScreen ? (
+      <div className={styles.container}>
+        <MediaList
+          location={{ pathname }}
+          isLeftPanel={isWideScreen} />
+        {panel}
+      </div>
+    ) : (
+      panel
+    );
+  },
+  render() {
     return (
       <div>
-        { this.state.isWideScreen && (
-          <div className={styles.container}>
-            <MediaList
-              isLeftPanel={true} />
-            <RightPanel
-              files={files} />
-          </div>
-        ) || (
-          <RightPanel
-            isFullWidth={true} />
-        )}
+
+        {this.renderContent()}
 
         <Playback />
         <MediaModal />
+
       </div>
     );
   }
 });
 
-export default Main;
+export default connect(mapStateToProps)(Main);

@@ -1,0 +1,63 @@
+.container {
+  display: flex;
+}
+
+.titleContainer {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.title {
+  margin: 0 0 10px;
+}
+
+.poster {
+  /*float: left;*/
+  display: inline-block;
+  height: 200px;
+}
+
+.movieField {
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+.tagline {
+  composes: movieField;
+}
+
+.movieFields {
+  margin-top: 20px;
+}
+
+.externalIds {
+  margin-bottom: 10px;
+  font-size: 0.9em;
+}
+
+.castContainer {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 20px;
+  width: 50%;
+}
+
+.castPersonContainer {
+  display: flex;
+  margin: 10px 0;
+}
+
+.castPersonImgContainer {
+  width: 40px;
+  height: auto;
+}
+
+.castPersonImgContainer > img {
+  width: 100%;
+  max-height: 100px;
+}
+
+.castPersonName {
+  margin-left: 10px;
+  font-size: 0.9em;
+}

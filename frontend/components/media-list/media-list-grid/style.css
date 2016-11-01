@@ -41,3 +41,7 @@
   width: 100%;
   padding: 0 0 var(--padding);
 }
+
+.link {
+  margin-left: 20px;
+}

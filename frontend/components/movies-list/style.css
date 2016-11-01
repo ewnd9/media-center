@@ -1,0 +1,18 @@
+.list {
+  margin-top: 30px;
+}
+
+.textButton {
+  composes: textButton from '../theme-buttons.css';
+}
+
+.formWrapper {
+  position: relative;
+  /*width: 60%;*/
+}
+
+.closeButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}

@@ -1,4 +1,4 @@
-.button {
+.textButton {
   padding: 0;
   border: none;
   background: 0 0;
@@ -11,6 +11,14 @@
   border-color: transparent;
   background: none;
   box-shadow: none;
+}
+
+.textButton:focus {
+  outline: 0;
+}
+
+.button {
+  composes: textButton;
 
   text-transform: uppercase;
   font-size: 20px;

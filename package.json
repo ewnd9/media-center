@@ -163,6 +163,7 @@
     "redux": "^3.5.2",
     "redux-logger": "^2.6.1",
     "redux-side-effect": "^2.1.2",
+    "redux-tcomb": "^0.2.1",
     "redux-thunk": "^2.1.0",
     "script-loader": "^0.6.1",
     "show-episode-format": "^1.0.3",
