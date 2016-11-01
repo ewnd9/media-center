@@ -4,9 +4,13 @@ import styles from './style.css';
 import IconButton from '../../ui/icon-button/icon-button';
 import MediaDialogAutosuggest from '../media-dialog-autosuggest/media-dialog-autosuggest';
 
+import { propTypes } from 'tcomb-react';
+import { modalSchema } from '../schema';
+
 const MediaDialog = React.createClass({
+  propTypes: propTypes(modalSchema),
   componentDidMount() {
-    const { file: { recognition }, changeField } = this.props;
+    const { modal: { file: { recognition } }, changeField } = this.props;
 
     if (recognition) {
       changeField('type', recognition.type);
@@ -22,11 +26,13 @@ const MediaDialog = React.createClass({
   },
   getInfo() {
     const {
-      suggestionSelectedValue: imdb,
-      suggestionSelectedLabel: title,
-      type,
-      s,
-      ep
+      modal: {
+        suggestionSelectedValue: imdb,
+        suggestionSelectedLabel: title,
+        type,
+        s,
+        ep
+      }
     } = this.props;
 
     return {
@@ -34,25 +40,25 @@ const MediaDialog = React.createClass({
     };
   },
   handlePlaying: function(event, noScrobble) {
-    const { file, playFile, closeModal } = this.props;
+    const { modal: { file }, playFile, closeModal } = this.props;
 
     playFile(file.file, noScrobble ? {} : this.getInfo(), null, noScrobble)
       .then(() => closeModal());
   },
   handleSaveInfo: function() {
-    const { file, saveInfo, closeModal } = this.props;
+    const { modal: { file }, saveInfo, closeModal } = this.props;
 
     saveInfo(file.file, this.getInfo())
       .then(() => closeModal());
   },
   handleHide: function() {
-    const { file, setHidden, closeModal } = this.props;
+    const { modal: { file }, setHidden, closeModal } = this.props;
 
     setHidden(file.file, file.filename)
       .then(() => closeModal());
   },
   onSaveClick: function(fn, event) {
-    const { isValid } = this.props;
+    const { modal: { isValid } } = this.props;
 
     if (isValid) {
       fn(event);
@@ -62,22 +68,20 @@ const MediaDialog = React.createClass({
     const types = [{ value: 'show', label: 'Show'}, { value: 'movie', label: 'Movie' }];
 
     const {
-      file,
-      isFetching,
-      isValid,
-      type,
-      s,
-      ep,
-      suggestions,
-      suggestionSearchTitle,
-      suggestionIsValid,
-      suggestionSelectedValue,
-      suggestionSelectedLabel,
+      modal,
 
       closeModal,
       fetchSuggestions,
       selectSuggestion
     } = this.props;
+
+    const {
+      file,
+      isValid,
+      type,
+      s,
+      ep
+    } = modal;
 
     return (
       <div className={styles.container}>
@@ -112,12 +116,7 @@ const MediaDialog = React.createClass({
                 recognition={file.recognition}
                 type={type}
 
-                isFetching={isFetching}
-                suggestions={suggestions}
-                suggestionSearchTitle={suggestionSearchTitle}
-                suggestionIsValid={suggestionIsValid}
-                suggestionSelectedValue={suggestionSelectedValue}
-                suggestionSelectedLabel={suggestionSelectedLabel}
+                modal={modal}
 
                 fetchSuggestions={fetchSuggestions}
                 selectSuggestion={selectSuggestion} />

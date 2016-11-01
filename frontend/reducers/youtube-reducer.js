@@ -1,58 +1,32 @@
+import { createCheckedReducer } from './utils';
+import t from 'tcomb';
+
 import {
+  YOUTUBE_STATE_INIT,
+  YOUTUBE_STATE_SUCCESS,
+  YOUTUBE_STATE_ERROR,
+
   YOUTUBE_CHANGE_URL,
-  STATE_INIT,
-  STATE_SUCCESS,
-  STATE_ERROR
 } from '../actions/youtube-actions';
 
-import { playYoutubeLink } from '../api';
+export const schema = t.struct({
+  url: t.String,
+  status: t.enums.of([
+    YOUTUBE_STATE_INIT,
+    YOUTUBE_STATE_SUCCESS,
+    YOUTUBE_STATE_ERROR
+  ])
+});
 
-function youtube(state = {
+export default createCheckedReducer({
   url: '',
-  status: STATE_INIT
-}, action) {
-  switch (action.type) {
-    case YOUTUBE_CHANGE_URL:
-      return changeUrl(state, action);
-    default:
-      return state;
-  }
-}
-
-export default youtube;
-
-function changeUrl(state, action) {
-  let id;
-  const url = action.url;
-
-  const regexps = [
-    /youtu\.be\/([\w-]+)$/,
-    /youtube.com\/.*v=([\w-]+).*$/
-  ];
-
-  for (let regex of regexps) {
-    const match = regex.exec(url);
-
-    if (match) {
-      id = match[1];
-      break;
-    }
-  }
-
-  if (id) {
-    action.sideEffect(() => {
-      playYoutubeLink(`https://www.youtube.com/watch?v=${id}`);
-    });
-
+  status: YOUTUBE_STATE_INIT
+}, {
+  [YOUTUBE_CHANGE_URL](state, action) {
     return {
       ...state,
-      status: STATE_SUCCESS,
-      url
-    };
-  } else {
-    return {
-      status: STATE_ERROR,
-      url
+      url: action.url,
+      status: action.status
     };
   }
-}
+}, schema);

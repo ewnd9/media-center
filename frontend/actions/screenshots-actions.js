@@ -1,29 +1,16 @@
 import * as api from '../api';
 
-export const REQUEST_SCREENSHOTS = 'REQUEST_SCREENSHOTS';
-export const RECIEVE_SCREENSHOTS = 'RECIEVE_SCREENSHOTS';
-
-function requestScreenshots() {
-  return {
-    type: REQUEST_SCREENSHOTS
-  };
-}
-
-function recieveScreenshots(screenshots) {
-  return {
-    type: RECIEVE_SCREENSHOTS,
-    screenshots
-  };
-}
+export const FETCH_SCREENSHOTS_REQUEST = 'FETCH_SCREENSHOTS_REQUEST';
+export const FETCH_SCREENSHOTS_SUCCESS = 'FETCH_SCREENSHOTS_SUCCESS';
+export const FETCH_SCREENSHOTS_FAILURE = 'FETCH_SCREENSHOTS_FAILURE';
 
 export function fetchScreenshots() {
-  return dispatch => {
-    dispatch(requestScreenshots());
-
-    return api
-      .getScreenshots()
-      .then(({ files }) => {
-        return dispatch(recieveScreenshots(files));
-      });
+  return {
+    types: [
+      FETCH_SCREENSHOTS_REQUEST,
+      FETCH_SCREENSHOTS_SUCCESS,
+      FETCH_SCREENSHOTS_FAILURE
+    ],
+    callAPI: () => api.getScreenshots()
   };
 }

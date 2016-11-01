@@ -1,9 +1,4 @@
-import {
-  getMovie,
-  getMovies,
-  getDvdReleasesDates,
-  updateMovieByReleaseDate
-} from '../api';
+import * as api from '../api';
 
 export const FETCH_MOVIE_REQUEST = 'FETCH_MOVIE_REQUEST';
 export const FETCH_MOVIE_SUCCESS = 'FETCH_MOVIE_SUCCESS';
@@ -27,7 +22,7 @@ export const SHOW_FORM = 'SHOW_FORM';
 export function fetchMovie(imdb) {
   return {
     types: [FETCH_MOVIE_REQUEST, FETCH_MOVIE_SUCCESS, FETCH_MOVIE_FAILURE],
-    callAPI: () => getMovie(imdb),
+    callAPI: () => api.getMovie(imdb),
     payload: { imdb }
   };
 }
@@ -35,14 +30,14 @@ export function fetchMovie(imdb) {
 export function fetchMovies() {
   return {
     types: [FETCH_MOVIES_REQUEST, FETCH_MOVIES_SUCCESS, FETCH_MOVIES_FAILURE],
-    callAPI: () => getMovies()
+    callAPI: () => api.getMovies()
   };
 }
 
 export function fetchSuggestions(query) {
   return {
     types: [FETCH_DVD_SUGGESTIONS_REQUEST, FETCH_DVD_SUGGESTIONS_SUCCESS, FETCH_DVD_SUGGESTIONS_FAILURE],
-    callAPI: () => getDvdReleasesDates(query),
+    callAPI: () => api.getDvdReleasesDates(query),
     payload: { query }
   };
 }
@@ -51,7 +46,7 @@ export function updateMovie(imdb, releaseDate) {
   return dispatch => {
     const action = {
       types: [UPDATE_MOVIE_BY_RELEASE_DATE_REQUEST, UPDATE_MOVIE_BY_RELEASE_DATE_SUCCESS, UPDATE_MOVIE_BY_RELEASE_DATE_FAILURE],
-      callAPI: () => updateMovieByReleaseDate(imdb, releaseDate),
+      callAPI: () => api.updateMovieByReleaseDate(imdb, releaseDate),
       payload: { imdb, releaseDate }
     };
 

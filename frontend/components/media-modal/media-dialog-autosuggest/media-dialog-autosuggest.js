@@ -4,6 +4,7 @@ import styles from './style.css';
 import Autosuggest from 'react-autosuggest';
 import { debounce } from 'lodash';
 import { t, propTypes } from 'tcomb-react';
+import { schema } from '../schema';
 
 function getSuggestionValue(suggestion) {
   return suggestion.label;
@@ -23,21 +24,17 @@ function renderSuggestion(suggestion) {
 
 const MediaDialogAutosuggest = React.createClass({
   propTypes: propTypes({
-    type: t.String,
-    isFetching: t.Boolean,
-    suggestions: t.Array,
-    suggestionSearchTitle: t.String,
-    suggestionIsValid: t.Boolean,
-    suggestionSelectedValue: t.maybe(t.String),
-    suggestionSelectedLabel: t.maybe(t.String),
-    selectSuggestion: t.Function,
-    fetchSuggestions: t.Function,
     recognition: t.struct({
       imdb: t.maybe(t.String),
       type: t.String,
       s: t.maybe(t.Number),
       ep: t.maybe(t.Number)
-    })
+    }),
+    type: t.String,
+    modal: schema,
+
+    selectSuggestion: t.Function,
+    fetchSuggestions: t.Function,
   }),
   componentDidMount: function() {
     const {
@@ -72,9 +69,11 @@ const MediaDialogAutosuggest = React.createClass({
   },
   render() {
     const {
-      suggestions,
-      suggestionSearchTitle,
-      suggestionIsValid
+      modal: {
+        suggestions,
+        suggestionSearchTitle,
+        suggestionIsValid
+      }
     } = this.props;
 
     const inputProps = {

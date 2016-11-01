@@ -3,26 +3,23 @@ import React from 'react';
 import t from 'tcomb';
 import { propTypes } from 'tcomb-react';
 
-import {
-  STATE_INIT,
-  STATE_SUCCESS,
-  STATE_ERROR,
-  changeUrl
-} from '../../actions/youtube-actions';
-
 import { connect } from 'react-redux';
+
+import { changeUrl } from '../../actions/youtube-actions';
+import { reactRouterPropTypes } from '../../schema/react-router';
+import { schema } from '../../reducers/youtube-reducer';
 
 const mapStateToProps = state => ({ youtube: state.youtube });
 const mapDispatchToProps = { onChangeUrl: changeUrl };
 
 const YoutubeInput = React.createClass({
   propTypes: propTypes({
-    youtube: t.struct({
-      status: t.enums.of([STATE_INIT, STATE_SUCCESS, STATE_ERROR], 'State'),
-      url: t.maybe(t.String)
-    }),
+    ...reactRouterPropTypes,
+    children: t.Nil,
+
+    youtube: schema,
     onChangeUrl: t.Function
-  }, { strict: false } ),
+  }),
   render() {
     const { youtube: { status, url }, onChangeUrl } = this.props;
 
