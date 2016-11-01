@@ -9,13 +9,7 @@ export const setBaseUrl = url => { // for react-native
 };
 export const getBaseUrl = () => baseUrl;
 
-const fetch = (url, options = {}) => {
-  let req = (
-    options.method === 'post' ?
-      superagent.post(url).send(options.body) :
-      (options.method === 'delete' ? superagent.delete(url) : superagent.get(url))
-  );
-
+const fetch = (req, url, options = {}) => {
   if (options.query) {
     req = req.query(options.query);
   }
@@ -24,46 +18,37 @@ const fetch = (url, options = {}) => {
     req = req.set(options.headers);
   }
 
-  return reqToPromise(req, options, url);
-  // return req
-  //   .then(({ body }) => {
-  //     return body;
-  //   })
-  //   .catch((err, a) => {
-  //     throw err; // @TODO figure out where is body in catch function
-  //                         https://github.com/visionmedia/superagent/pull/925
-  //   })
-};
-
-export const get = (url, query = {}) => {
-  return fetch(baseUrl + url, { query })
+  return reqToPromise(req, options, url)
     .catch(err => {
       notify.error(err.message);
       report(err, { url: window.location.href });
     });
 };
 
-export const deleteRequest = (url, query = {}) => {
-  return fetch(baseUrl + url, { method: 'delete', query })
-    .catch(err => {
-      notify.error(err.message);
-      report(err, { url: window.location.href });
-    });
+export const get = (_url, query = {}) => {
+  const url = baseUrl + _url;
+  const req = superagent.get(url);
+
+  return fetch(req, url, { query });
 };
 
-export const post = (url, body = {}, query) => {
-  return fetch(baseUrl + url, {
-    method: 'post',
+export const deleteRequest = (_url, query = {}) => {
+  const url = baseUrl + _url;
+  const req = superagent.delete(url);
+
+  return fetch(req, url, { query });
+};
+
+export const post = (_url, body = {}, query) => {
+  const url = baseUrl + _url;
+  const req = superagent.post(url).send(JSON.stringify(body));
+
+  return fetch(req, url, {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(body),
     query
-  })
-  .catch(err => {
-    notify.error(err.message);
-    report(err, { url: window.location.href });
   });
 };
 
@@ -119,7 +104,10 @@ export const getScreenshots = () => {
 };
 
 export const getMediaSuggestion = (type, title) => {
-  return get('/api/v1/suggestions?title=' + encodeURIComponent(title) + '&type=' + type);
+  return get('/api/v1/suggestions', {
+    title,
+    type
+  });
 };
 
 export const getReport = () => {
@@ -152,7 +140,9 @@ export const getShow = imdb => {
 };
 
 export const getDvdReleasesDates = query => {
-  return get('/api/v1/dvdreleasesdates/suggestions?query=' + encodeURIComponent(query));
+  return get('/api/v1/dvdreleasesdates/suggestions', {
+    query
+  });
 };
 
 export const updateMovieByReleaseDate = (imdb, releaseDate) => {

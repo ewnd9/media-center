@@ -1,27 +1,38 @@
+import { createCheckedReducer } from './utils';
+import t from 'tcomb';
+
 import {
-  REQUEST_SCREENSHOTS,
-  RECIEVE_SCREENSHOTS,
+  FETCH_SCREENSHOTS_REQUEST,
+  FETCH_SCREENSHOTS_SUCCESS,
+  FETCH_SCREENSHOTS_FAILURE
 } from '../actions/screenshots-actions';
 
-function screenshots(state = {
+export const schema = t.struct({
+  isFetching: t.Boolean,
+  screenshots: t.list(t.String)
+});
+
+export default createCheckedReducer({
   isFetching: false,
   screenshots: []
-}, action) {
-  switch (action.type) {
-    case REQUEST_SCREENSHOTS:
-      return {
-        ...state,
-        isFetching: true
-      };
-    case RECIEVE_SCREENSHOTS:
-      return {
-        ...state,
-        isFetching: false,
-        screenshots: action.screenshots
-      };
-    default:
-      return state;
+}, {
+  [FETCH_SCREENSHOTS_REQUEST](state) {
+    return {
+      ...state,
+      isFetching: true
+    };
+  },
+  [FETCH_SCREENSHOTS_SUCCESS](state, action) {
+    return {
+      ...state,
+      isFetching: false,
+      screenshots: action.response.files
+    };
+  },
+  [FETCH_SCREENSHOTS_FAILURE](state) {
+    return {
+      ...state,
+      isFetching: false
+    };
   }
-}
-
-export default screenshots;
+}, schema);
