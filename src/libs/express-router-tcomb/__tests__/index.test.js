@@ -4,7 +4,7 @@ import t from 'tcomb-validation';
 import express from 'express';
 import Router from '../';
 
-import Agent, { findRoute } from '../agent';
+import Agent from '../agent';
 
 test('test', async tt => {
   const app = express();
@@ -19,7 +19,7 @@ test('test', async tt => {
         id: t.String
       })
     },
-    handler: (req, res, next) => {
+    handler: (req, res) => {
       res.json({ status: 'ok', id: req.params.id });
     }
   });
@@ -30,5 +30,6 @@ test('test', async tt => {
   const agent = Agent(app, server);
 
   const id = 'test';
-  await agent.get('/api/v1/items/:id', { params: { id } });
+  const { body } = await agent.get('/api/v1/items/:id', { params: { id } });
+  tt.truthy(body);
 });
