@@ -1,13 +1,58 @@
-import t from 'tcomb-validation';
+import t from 'tcomb';
 
-import { schema as fileSchema } from '../../src/models/file';
-import { schema as showSchema } from '../../src/models/show';
-import { schema as movieSchema } from '../../src/models/movie';
+import { schema as fileSchema } from '../models/file';
+import { schema as showSchema } from '../models/show';
+import { schema as movieSchema } from '../models/movie';
+
+export const CastableNumber = t.refinement(t.String, n => !isNaN(n), 'CastableNumber');
+
+export const paginationSchema = t.struct({
+  limit: t.maybe(CastableNumber),
+  since: t.maybe(t.String),
+  page: t.maybe(CastableNumber)
+});
+
+export const statusStringResponse = t.struct({
+  status: t.String
+});
 
 export const fileScrobbleRequestSchema = t.struct({
   filename: t.String,
   media: fileSchema
 });
+
+export const filesArrayResponseSchema = t.list(t.struct({
+  key: t.String,
+  media: t.list(
+    t.struct({
+      file: t.String,
+      dir: t.String,
+      fileName: t.String,
+      dirName: t.String,
+      recognition: t.struct({
+        title: t.String,
+        s: t.maybe(t.Number),
+        ep: t.maybe(t.Number),
+        year: t.maybe(t.Number),
+        type: t.String
+      }),
+      db: t.maybe(fileSchema),
+      watched: t.maybe(t.Boolean),
+      hidden: t.maybe(t.Boolean)
+    })
+  ),
+  dir: t.String,
+  watched: t.Boolean,
+  hidden: t.Boolean,
+  imdb: t.maybe(t.String),
+  s: t.maybe(t.Number),
+  type: t.maybe(t.String),
+  title: t.maybe(t.String),
+  unwatchedCount: t.maybe(t.Number),
+  summary: t.String,
+  posterUrl: t.String
+}));
+
 
 export const filePositionRequestSchema = t.struct({
   filename: t.String,
@@ -37,20 +82,6 @@ export const playbackInfoResponseSchema = t.struct({
 
 export const fileResponseSchema = t.struct({
   file: fileSchema
-});
-
-export const statusStringResponse = t.struct({
-  status: t.String
-});
-
-export const markRequestSchema = t.struct({
-  mark: t.struct({
-    media: fileSchema,
-    position: t.Number,
-    duration: t.Number,
-    progress: t.Number,
-    file: t.String
-  })
 });
 
 export const traktSuggestionsResponseSchema = t.list(t.struct({ label: t.String, value: t.String }));
@@ -130,35 +161,3 @@ export const traktMoviesResponseSchema = t.struct({
 export const screenshotsResponseSchema = t.struct({ files: t.list(t.String) });
 
 export const youtubeRequestSchema = t.struct({ query: t.String });
-
-export const filesArrayResponseSchema = t.list(t.struct({
-  key: t.String,
-  media: t.list(
-    t.struct({
-      file: t.String,
-      dir: t.String,
-      fileName: t.String,
-      dirName: t.String,
-      recognition: t.struct({
-        title: t.String,
-        s: t.maybe(t.Number),
-        ep: t.maybe(t.Number),
-        year: t.maybe(t.Number),
-        type: t.String
-      }),
-      db: t.maybe(fileSchema),
-      watched: t.maybe(t.Boolean),
-      hidden: t.maybe(t.Boolean)
-    })
-  ),
-  dir: t.String,
-  watched: t.Boolean,
-  hidden: t.Boolean,
-  imdb: t.maybe(t.String),
-  s: t.maybe(t.Number),
-  type: t.maybe(t.String),
-  title: t.maybe(t.String),
-  unwatchedCount: t.maybe(t.Number),
-  summary: t.String,
-  posterUrl: t.String
-}));

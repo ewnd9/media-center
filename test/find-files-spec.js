@@ -64,7 +64,7 @@ function unmockFs() {
 }
 
 
-import { filesArrayResponseSchema } from './fixtures/api-schemas';
+import { filesArrayResponseSchema } from '../src/routes/schema';
 
 async function addMockFile(db) {
   const res = await db.File.add([showFolder, showFile1].join('/'), {
