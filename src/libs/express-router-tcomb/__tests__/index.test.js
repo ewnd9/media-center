@@ -10,17 +10,15 @@ test('test', async tt => {
   const app = express();
   const router = Router();
 
-  const routeSchema = {
-    response: t.struct({
-      status: t.String,
-      id: t.String
-    })
-  };
-
   router.route({
     method: 'GET',
     path: '/api/v1/items/:id',
-    schema: routeSchema,
+    schema: {
+      response: t.struct({
+        status: t.String,
+        id: t.String
+      })
+    },
     handler: (req, res, next) => {
       res.json({ status: 'ok', id: req.params.id });
     }
@@ -32,5 +30,5 @@ test('test', async tt => {
   const agent = Agent(app, server);
 
   const id = 'test';
-  await agent.check('get', '/api/v1/items/:id', { params: { id } });
+  await agent.get('/api/v1/items/:id', { params: { id } });
 });
