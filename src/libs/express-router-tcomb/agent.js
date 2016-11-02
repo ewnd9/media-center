@@ -22,7 +22,7 @@ methods.forEach(method => {
     const schema = route.schema;
 
     if (!schema.response) {
-      throw new Error(`No Response Schema in ${method} ${path}`)
+      throw new Error(`No Response Schema in ${method} ${path}`);
     }
 
     const url = Object.keys(params).reduce(
@@ -60,7 +60,7 @@ methods.forEach(method => {
             resolve(response);
           }
         });
-      })
+      });
     }
   };
 });

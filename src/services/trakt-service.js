@@ -61,7 +61,11 @@ function TraktService(trakt, filePath, tmdbApi, db) {
 TraktService.prototype.addToHistory = function() {
   return this.trakt.addToHistory.apply(this.trakt, arguments)
     .then(result => {
-      return this.syncShowsHistory()
+      return Promise
+        .all([
+          this.syncShowsHistory(),
+          this.syncMoviesHistory(),
+        ])
         .then(() => result);
     });
 };
