@@ -1,7 +1,6 @@
 import globby from 'globby';
 import fs from 'fs';
 import _ from 'lodash';
-import Promise from 'bluebird';
 import split from 'split-torrent-release';
 import path from 'path';
 import getPosterUrl from './utils/poster-url';

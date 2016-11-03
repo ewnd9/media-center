@@ -9,7 +9,6 @@ import {
   OMX_KEYS
 } from './constants';
 
-import Promise from 'bluebird';
 import x11 from 'x11';
 import _ from 'lodash';
 

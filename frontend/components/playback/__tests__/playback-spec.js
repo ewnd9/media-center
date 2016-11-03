@@ -1,5 +1,4 @@
 import test from 'ava';
-import 'babel-core/register';
 
 import React from 'react';
 import sinon from 'sinon';

@@ -1,5 +1,4 @@
 import test from 'ava';
-import 'babel-core/register';
 import sinon from 'sinon';
 
 import createApp from '../fixtures/create-app';

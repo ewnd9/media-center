@@ -1,5 +1,4 @@
 import test from 'ava';
-import 'babel-core/register';
 
 import PouchDB from 'pouchdb-node';
 PouchDB.plugin(require('pouchdb-adapter-memory'));

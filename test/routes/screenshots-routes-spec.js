@@ -1,5 +1,4 @@
 import test from 'ava';
-import 'babel-core/register';
 
 import createApp from '../fixtures/create-app';
 import Agent from '../../src/libs/express-router-tcomb/agent';

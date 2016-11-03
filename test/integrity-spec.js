@@ -1,5 +1,4 @@
 import test from 'ava';
-import 'babel-core/register';
 
 import checkApiEndpoints from './helpers/express-routes-check';
 import createApp from './fixtures/create-app';
