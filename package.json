@@ -5,10 +5,8 @@
   "main": "lib/index.js",
   "bin": "cli.js",
   "scripts": {
-    "start": "npm-run-all --parallel start:frontend start:backend",
-    "start:frontend": "webpack-dev-server --config webpack.config.js",
-    "start:backend": "npm-run-all --parallel build:backend:watch start:nodemon",
-    "start:nodemon": "nodemon --watch lib app.js",
+    "start": "NODE_ENV=development babel-watch src/index.js",
+    "build": "npm-run-all --parallel build:backend build:frontend",
     "build:backend": "babel -s -d lib src",
     "build:backend:watch": "babel --watch -s -d lib src",
     "build:frontend": "rm -f public/* && NODE_ENV=production webpack --config webpack.config.prod.js",
@@ -139,7 +137,6 @@
     "moment": "^2.11.0",
     "nock": "^8.0.0",
     "node-notifier": "^4.4.0",
-    "nodemon": "^1.8.1",
     "npm-run-all": "^1.4.0",
     "nyc": "^6.6.1",
     "postcss-cssnext": "^2.4.0",
@@ -176,6 +173,8 @@
     "timekeeper": "^0.1.1",
     "url-loader": "^0.5.6",
     "webpack": "^1.12.13",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-middleware": "^1.8.4",
+    "webpack-dev-server": "^1.14.1",
+    "webpack-hot-middleware": "^2.13.1"
   }
 }
