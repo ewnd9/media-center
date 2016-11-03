@@ -54,6 +54,13 @@ $ ./deploy.sh
 
 You could exchange a pin code from https://trakt.tv/pin/6495 for it via [scripts/trakt-token.js](scripts/trakt-token.js). Then you need to copy token to `ecosystem.json` as `TRAKT_TOKEN`
 
+## Development
+
+```sh
+$ npm start
+$ open "http://localhost:3000/"
+```
+
 ## Credits
 
 Mockup image by [placeit](https://placeit.net/stages/flat-screen-and-ipad-mini-mockup-at-home-a4667?f_devices=tv)
