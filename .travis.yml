@@ -9,7 +9,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-script: npm run test:cov
+script: npm run lint && npm run test:cov
 after_success:
   - 'npm i coveralls'
   - 'cat coverage/lcov.info | ./node_modules/.bin/coveralls'

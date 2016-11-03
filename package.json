@@ -12,11 +12,7 @@
     "build:frontend": "rm -f public/* && NODE_ENV=production webpack --config webpack.config.prod.js",
     "stats:frontend": "rm -f public/* && NODE_ENV=production webpack --config webpack.config.prod.js --json | node scripts/webpack-bundle-size > stats.txt",
     "lint": "eslint 'src/**/*.js' 'frontend/**/*.js' 'test/**/*.js' 'app.js'",
-    "test": "npm run lint && npm run test:main && npm run test:libs && npm run test:frontend",
-    "test:main": "NODE_DISABLE_X11_SUPPORT=true ava test/",
-    "test:libs": "NODE_DISABLE_X11_SUPPORT=true ava src/**/__tests__",
-    "test:frontend": "NODE_DISABLE_X11_SUPPORT=true CONFIG=$(pwd)/webpack.config.ava.js BABEL_DISABLE_CACHE=1 NODE_ENV=test ava src/**/__tests__",
-    "test:single": "NODE_DISABLE_X11_SUPPORT=true ava",
+    "test": "NODE_DISABLE_X11_SUPPORT=true ava",
     "test:cov": "nyc --reporter=lcov --reporter=text npm test",
     "test:watch": "npm run test -- --watch",
     "precommit": "npm test"
@@ -31,7 +27,9 @@
   ],
   "ava": {
     "require": [
-      "babel-register"
+      "source-map-support/register",
+      "babel-register",
+      "css-modules-require-hook/preset"
     ],
     "babel": "inherit"
   },
@@ -41,7 +39,8 @@
       "frontend/**/*.js"
     ],
     "require": [
-      "babel-register"
+      "babel-register",
+      "css-modules-require-hook/preset"
     ]
   },
   "author": "ewnd9 <ewndnine@gmail.com>",
@@ -49,7 +48,6 @@
   "dependencies": {
     "@ewnd9/registry": "^1.0.1",
     "adm-zip": "^0.4.7",
-    "bluebird": "^2.10.2",
     "body-parser": "^1.14.2",
     "busboy": "^0.2.13",
     "cheerio": "^0.20.0",
@@ -108,7 +106,6 @@
     "babel-eslint": "^6.0.0",
     "babel-loader": "^6.2.2",
     "babel-plugin-transform-runtime": "^6.4.0",
-    "babel-plugin-webpack-loaders": "^0.7.0",
     "babel-polyfill": "^6.5.0",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
@@ -119,6 +116,7 @@
     "chai": "^3.2.0",
     "classnames": "^2.2.3",
     "css-loader": "^0.15.4",
+    "css-modules-require-hook": "^4.0.5",
     "enzyme": "^2.3.0",
     "eslint": "^2.7.0",
     "eslint-plugin-react": "^4.3.0",
