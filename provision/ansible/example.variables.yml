@@ -1,0 +1,18 @@
+ip: "192.168.0.3"
+username: "pi"
+
+trakt_token: "<use node scripts/trakt-token>"
+
+host: "{{ host }}@{{ ip }}"
+
+dest_dir: "/home/pi/mc"
+app_dir: "{{ dest_dir }}/app"
+db_dir: "{{ dest_dir }}/mc-db"
+cache_dir: "{{ dest_dir }}/mc-cache"
+data_dir: "{{ dest_dir }}/media"
+
+start_script: "start-docker-compose-production.sh"
+
+error_board_url: "http://{{ ip }}:5000/api/v1"
+
+backup_script: "backup.sh"

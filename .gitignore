@@ -17,3 +17,7 @@ stats.json
 deps.json
 .nyc_output
 coverage
+
+/provision/backup.sh
+/provision/start-docker-compose-production.sh
+/provision/ansible/variables.yml

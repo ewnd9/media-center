@@ -1,0 +1,55 @@
+- hosts: all
+  remote_user: pi
+  vars_files:
+    - 'variables.yml'
+  tasks:
+    - name: ensure dir
+      file: path={{ app_dir }} state=directory
+
+    - name: create deploy bash script
+      environment:
+        START_SCRIPT: "{{ start_script }}"
+        DATA_DIR: "{{ data_dir }}"
+        DB_DIR: "{{ db_dir }}"
+        CACHE_DIR: "{{ cache_dir }}"
+        TRAKT_TOKEN: "{{ trakt_token }}"
+        ERROR_BOARD_URL: "{{ error_board_url }}"
+      local_action: shell bash provision/create-deploy.sh
+
+    - name: build project
+      local_action: shell npm run build
+
+    - name: create a separate dependency file
+      local_action: shell bash provision/create-deps.sh
+
+    - name: copy start script
+      copy: src=../{{ start_script }} dest={{ app_dir }}/
+
+    - name: copy app.js
+      copy: src=../../app.js dest={{ app_dir }}/
+
+    - name: copy deps.json
+      copy: src=../../deps.json dest={{ app_dir }}/
+
+    - name: copy docker-compose.yml
+      copy: src=../docker-compose.yml dest={{ app_dir }}/
+
+    - name: copy rpi-media-center/Dockerfile
+      copy: src=../docker/rpi-media-center/Dockerfile dest={{ app_dir }}/
+
+    - name: copy docker-compose.yml
+      copy: src=../docker/rpi-media-center/Dockerfile dest={{ app_dir }}/
+
+    - name: copy lib/
+      synchronize: src=lib/ dest={{ app_dir }}/lib/
+
+    - name: copy public/
+      synchronize: src=public/ dest={{ app_dir }}/public/
+
+    - name: copy provision/
+      synchronize: src=provision/ dest={{ app_dir }}/provision/
+
+    - name: run docker-compose
+      shell: bash "{{ start_script }}"
+      args:
+        chdir: "{{ app_dir }}"

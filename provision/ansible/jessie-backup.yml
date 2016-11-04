@@ -1,0 +1,16 @@
+- hosts: all
+  remote_user: pi
+  vars_files:
+    - 'variables.yml'
+  tasks:
+    - name: create backup bash script
+      environment:
+        DB_DIR: "{{ db_dir }}"
+        BACKUP_SCRIPT: "{{ backup_script }}"
+      local_action: shell bash provision/create-backup.sh
+
+    - name: move backup
+      copy: src=../{{ backup_script }} dest={{ dest_dir }} mode=0500
+
+    - name: setup cron
+      cron: name="backup media-center" minute="0" hour="20" job="bash {{ dest_dir }}/{{ backup_script }}"

@@ -33,21 +33,23 @@ $ git clone https://github.com/ewnd9/media-center.git
 $ cd media-center
 ```
 
-### Provision Raspberry Pi (one time)
+### Provision
 
 Tested with `2016-05-27-raspbian-jessie-lite.img`
 
 ```sh
+$ cp provision/ansible/example.variables.yml provision/ansible/variables.yml
+
 $ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-update-sshd.yml --ask-pass # default password in rasbpian is "raspberry"
-$ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-docker-arm-playbook.yml --ask-become-pass
-$ cp example.deploy.sh deploy.sh
-# insert your env variables in `deploy.sh`
+$ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-docker-arm.yml --ask-become-pass
+$ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-deploy-arm.yml
+$ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-backup.yml
 ```
 
 ### Deploy
 
-```
-$ ./deploy.sh
+```sh
+$ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-deploy-arm.yml
 ```
 
 ### Trakt auth token
