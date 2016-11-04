@@ -7,6 +7,7 @@ const mkdirp = pify(_mkdirp);
 
 import groupBy from 'lodash/groupBy';
 import uniq from 'lodash/uniq';
+import uniqBy from 'lodash/uniqBy';
 
 import fsCache from '../utils/fs-cache';
 import getPosterUrl from '../utils/poster-url';
@@ -16,8 +17,11 @@ import * as dvdReleasesApi from '../libs/dvdreleasedates-api/';
 import { lastDateIndex } from '../models/episode-scrobble';
 import { imdbIndex as showImdbIndex } from '../models/show';
 import { imdbIndex as movieImdbIndex, releaseDateIndex } from '../models/movie';
+import { imdbIndex as personImdbIndex } from '../models/person';
 
 import promiseLimit from 'promise-limit';
+import level from 'level';
+import levelgraph from 'levelgraph';
 
 export const REPORT_CACHE = 'REPORT_CACHE';
 
@@ -30,7 +34,9 @@ function LimitedTmdb(source) {
     'getShow',
     'getShowByImdb',
     'getMovie',
-    'getMovieByImdb'
+    'getMovieByImdb',
+    'getPerson',
+    'getPersonByImdb'
   ];
 
   return methods.reduce((total, methodName) => {
@@ -52,6 +58,13 @@ function TraktService(trakt, filePath, tmdbApi, db) {
   this.trakt = trakt;
   this.tmdbApi = LimitedTmdb(tmdbApi);
   this.filePath = filePath + '/posters';
+
+  this.graphPath = filePath + '/recommendations-graph';
+  this.graphLevel = level(this.graphPath);
+  this.graph = levelgraph(this.graphLevel);
+  this.graphPut = pify(this.graph.put.bind(this.graph));
+  this.graphSearch = pify(this.graph.search.bind(this.graph));
+
   this.db = db;
   mkdirp(this.filePath);
 
@@ -190,7 +203,7 @@ TraktService.prototype.getLastShowScrobbles = function() {
 
 TraktService.prototype._updateShow = function(tmdb, imdb) {
   const { tmdbApi } = this;
-  const query = { append_to_response: 'credits' };
+  const query = { append_to_response: 'external_ids,credits' };
   const fn = tmdb ? tmdbApi.getShow(tmdb, query) : tmdbApi.getShowByImdb(imdb, query);
 
   return fn
@@ -206,7 +219,7 @@ TraktService.prototype._updateMovie = function(tmdb, imdb) {
 
   return fn
     .then(movie => {
-      return this._formatTmdbMovieData(movie.id, imdb, movie);
+      return this._formatTmdbMovieData(movie.id, movie.imdb_id, movie);
     });
 };
 
@@ -217,7 +230,7 @@ TraktService.prototype._fetchFullShow = function(show) {
   const seasonsQuery = uniq(show.tmdbData.seasons
     .map(season => `season/${season.season_number}`));
 
-  const groups = groupToPartition(seasonsQuery, 19); // tmdb api limit
+  const groups = groupToPartition(seasonsQuery, 18); // tmdb api limit
 
   return Promise
     .all(
@@ -278,7 +291,8 @@ TraktService.prototype._fetchShow = function(tmdb, imdb) {
       }
 
       return show;
-    });
+    })
+    .then(show => this._mergePersons(show));
 };
 
 TraktService.prototype._fetchMovie = function(tmdb, imdb) {
@@ -302,13 +316,13 @@ TraktService.prototype._fetchMovie = function(tmdb, imdb) {
       })
   );
 
-  return fn;
+  return fn.then(movie => this._mergePersons(movie));
 };
 
 TraktService.prototype._formatTmdbShowData = function(tmdb, imdb, show) {
   return {
-    imdb,
-    tmdb: +tmdb,
+    tmdb: show.id,
+    imdb: imdb || (show.external_ids && show.external_ids.imdb_id),
     tmdbData: show,
     title: show.name,
     status: show.status,
@@ -352,6 +366,37 @@ TraktService.prototype._mergeEpisodeScrobbles = function(show, docs) {
   return show;
 };
 
+TraktService.prototype._mergePersons = function(media) {
+  if (!media.tmdbData) {
+    return media;
+  }
+
+  const { db: { Person } } = this;
+  const { credits } = media.tmdbData;
+
+  const keys = credits.cast.map(_ => _.id)
+    .concat(credits.crew.map(_ => _.id))
+    .map(tmdb => Person.createId({ tmdb }));
+
+  return Person.db.allDocs({ include_docs: true, keys })
+    .then(persons => {
+      const fn = person => {
+        const dbPerson = persons.rows.find(p => {
+          return p.doc && p.doc.tmdb === person.id;
+        });
+
+        if (dbPerson) {
+          person.isFavorite = dbPerson.doc.isFavorite;
+        }
+      };
+
+      credits.cast.forEach(fn);
+      credits.crew.forEach(fn);
+
+      return media;
+    });
+};
+
 TraktService.prototype.getShowReport = function() {
   const { db: { EpisodeScrobble } } = this;
   const that = this;
@@ -390,10 +435,10 @@ TraktService.prototype.getShowReportWithPosterUrls = function(host) {
     });
 };
 
-TraktService.prototype.findShowByImdb = function(imdb, host) {
+TraktService.prototype._findShow = function(tmdb, imdb, host) {
   return Promise
     .all([
-      this._fetchShow(null, imdb),
+      this._fetchShow(tmdb, imdb),
       this.db.EpisodeScrobble.db.allDocs({
         startkey: `episode-scrobble:${imdb}`,
         endkey: `episode-scrobble:${imdb}\uffff`,
@@ -404,6 +449,19 @@ TraktService.prototype.findShowByImdb = function(imdb, host) {
       show.posterUrl = getPosterUrl('show', show.imdb, undefined, host);
       return this._mergeEpisodeScrobbles(show, docs.rows.map(row => row.doc));
     });
+};
+
+TraktService.prototype.findShow = function(tmdb, host) {
+  return this._findShow(tmdb, null, host);
+};
+
+TraktService.prototype.findShowByImdb = function(imdb, host) {
+  return this._findShow(null, imdb, host);
+};
+
+TraktService.prototype.findMovie = function(tmdb, host) {
+  return this._fetchMovie(tmdb, null)
+    .then(movie => movieWithPosterUrl(movie, host));
 };
 
 TraktService.prototype.findMovieByImdb = function(imdb, host) {
@@ -437,6 +495,118 @@ TraktService.prototype.findMoviesByReleaseDate = function(host) {
     .query(releaseDateIndex, { include_docs: true, descending: true })
     .then(res => {
       return res.rows.map(row => movieWithPosterUrl(row.doc, host));
+    });
+};
+
+TraktService.prototype._formatTmdbPersonData = function(person) {
+  const data = {
+    tmdb: person.id,
+    imdb: person.imdb_id,
+    name: person.name,
+    isFavorite: true,
+    tmdbData: person,
+    syncedAt: new Date().toISOString()
+  };
+
+  return data;
+};
+
+TraktService.prototype._updatePerson = function(tmdb, imdb) {
+  const { tmdbApi } = this;
+  const fn = tmdb ? tmdbApi.getPerson(tmdb) : tmdbApi.getPersonByImdb(imdb);
+
+  return fn.then(person => this._formatTmdbPersonData(person));
+};
+
+TraktService.prototype._fetchPerson = function(tmdb, imdb) {
+  const { db: { Person } } = this;
+
+  const fn = tmdb ? (
+    Person
+      .findOneOrInit(
+        { tmdb },
+        () => this._updatePerson(tmdb, imdb).then(data => Person.put(data))
+      )
+  ) : (
+    Person.db
+      .query(personImdbIndex, { key: imdb, include_docs: true })
+      .then(res => {
+        if (res.rows.length > 0) {
+          return res.rows[0].doc;
+        } else {
+          return this._updatePerson(tmdb, imdb).then(data => Person.put(data));
+        }
+      })
+  );
+
+  return fn;
+};
+
+TraktService.prototype.findPerson = function(tmdb) {
+  return this._fetchPerson(tmdb, null);
+};
+
+TraktService.prototype.findPersonByImdb = function(imdb) {
+  return this._fetchPerson(null, imdb);
+};
+
+TraktService.prototype.addPerson = function(tmdb) {
+  const { db: { MovieScrobble } } = this;
+
+  let person;
+
+  return this._fetchPerson(tmdb, null)
+    .then(_person => {
+      person = _person;
+      return MovieScrobble.findAll();
+    })
+    .then(movies => {
+      const unseen = person.tmdbData.movie_credits.cast
+        .filter(movie => {
+          return !movies.find(seenMovie => seenMovie.tmdb === movie.id);
+        });
+
+      const promises = unseen.map(movie => {
+        return this.graphPut({
+          subject: person._id,
+          predicate: 'in',
+          object: movie.id // external movie, id is tmdb
+        });
+      });
+
+      return Promise.all(promises);
+    })
+    .then(() => person);
+};
+
+TraktService.prototype.findMoviesRecommendations = function(host) {
+  const x = this.graph.v('x');
+  const y = this.graph.v('y');
+
+  const movieVertex = this.graph.v('movie');
+
+  return this
+    .graphSearch([
+      { subject: x, predicate: 'in', object: movieVertex },
+      { subject: y, predicate: 'in', object: movieVertex }
+    ], {
+      filter: (solution, callback) => {
+        if (solution.x !== solution.y) {
+          callback(null, solution);
+        } else {
+          callback(null);
+        }
+      }
+    })
+    .then(solutions => {
+      const promises = solutions.map(solution => {
+        return this.findMovie(solution.movie, host);
+      });
+
+      return Promise.all(promises);
+    })
+    .then(movies => {
+      return uniqBy(movies, '_id');
     });
 };
 

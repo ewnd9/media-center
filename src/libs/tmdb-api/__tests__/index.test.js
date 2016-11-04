@@ -28,3 +28,11 @@ test.serial('fetch a show poster', async t => {
   const posterUrl = await t.context.api.getShowPosterByImdb('tt0411008');
   t.truthy(posterUrl === 'http://image.tmdb.org/t/p/w500//jyGspygDXJMydTOJj7iWNx9Elyd.jpg');
 });
+
+test.serial('fetch a person', async t => {
+  const result = await t.context.api.getPersonByImdb('nm0002071');
+
+  t.truthy(result.id === 23659);
+  t.truthy(result.imdb_id === 'nm0002071');
+  t.truthy(result.name === 'Will Ferrell');
+});

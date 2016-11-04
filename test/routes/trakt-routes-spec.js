@@ -6,6 +6,7 @@ import Agent from '../../src/libs/express-router-tcomb/agent';
 import createTrakt from '../fixtures/create-trakt';
 import { showTitle } from '../fixtures/create-fs';
 import { nockBefore } from '../helpers/nock';
+import delay from 'delay';
 
 import tk from 'timekeeper';
 
@@ -88,9 +89,25 @@ test.serial('GET /api/v1/trakt/shows/:imdb', async t => {
   tk.reset();
 });
 
+test.serial('GET /api/v1/trakt/shows/tmdb/:tmdb', async t => {
+  const route = '/api/v1/trakt/shows/tmdb/:tmdb';
+  const options = { params: { tmdb: '1412' } };
+
+  const { body: { show } } = await t.context.request.get(route, options);
+  t.truthy(show.title === 'Arrow');
+});
+
 test.serial('GET /api/v1/trakt/movies/:imdb', async t => {
   const route = '/api/v1/trakt/movies/:imdb';
   const options = { params: { imdb: 'tt1392190' } };
+
+  const { body: { movie } }  = await t.context.request.get(route, options);
+  t.truthy(movie.title === 'Mad Max: Fury Road');
+});
+
+test.serial('GET /api/v1/trakt/movies/tmdb/:tmdb', async t => {
+  const route = '/api/v1/trakt/movies/tmdb/:tmdb';
+  const options = { params: { tmdb: '76341' } };
 
   const { body: { movie } }  = await t.context.request.get(route, options);
   t.truthy(movie.title === 'Mad Max: Fury Road');
@@ -165,4 +182,36 @@ test.serial('Movie.releaseDateIndex complex', async t => {
 
   await t.context.request.get('/api/v1/trakt/sync/movies');
   t.truthy((await fn()) === 0);
+});
+
+test.serial('GET /api/v1/trakt/persons/tmdb/:tmdb', async t => {
+  const { body: { person } } = await t.context.request.get('/api/v1/trakt/persons/tmdb/:tmdb', { params: { tmdb: 23659 } });
+  t.truthy(person.name === 'Will Ferrell');
+});
+
+test.serial('GET /api/v1/trakt/persons/:imdb', async t => {
+  const { body: { person } } = await t.context.request.get('/api/v1/trakt/persons/:imdb', { params: { imdb: 'nm0002071' } });
+  t.truthy(person.name === 'Will Ferrell');
+});
+
+test.serial('PUT /api/v1/trakt/persons/:id', async t => {
+  const { body: { person } } = await t.context.request.put('/api/v1/trakt/persons/:id', { params: { id: '23659' } });
+  t.truthy(person.name === 'Will Ferrell');
+});
+
+test.serial('GET /api/v1/trakt/movies/recommendations', async t => {
+  await t.context.request.get('/api/v1/trakt/sync/movies');
+
+  await t.context.request.put('/api/v1/trakt/persons/:id', { params: { id: '23659' } });
+  await t.context.request.put('/api/v1/trakt/persons/:id', { params: { id: '7399' } });
+
+  await delay(1000);
+
+  const res = await t.context.request.get('/api/v1/trakt/movies/recommendations');
+  const { body: { movies } } = res;
+
+  t.deepEqual(movies.map(_ => _.title), [
+    'Megamind',
+    'Anchorman: The Legend of Ron Burgundy'
+  ]);
 });

@@ -17,7 +17,8 @@ import {
 
   traktShowResponseSchema,
   traktMovieResponseSchema,
-  traktMoviesResponseSchema
+  traktMoviesResponseSchema,
+  traktPersonResponse
 } from './schema';
 
 export default ({ traktService }) => {
@@ -98,6 +99,19 @@ export default ({ traktService }) => {
   });
 
   router.get({
+    path: '/api/v1/trakt/shows/tmdb/:tmdb',
+    schema: {
+      response: traktShowResponseSchema
+    },
+    handler: (req, res, next) => {
+      traktService
+        .findShow(req.params.tmdb, req.headers.host)
+        .then(show => res.json({ show }))
+        .catch(err => next(err));
+    }
+  });
+
+  router.get({
     path: '/api/v1/trakt/shows/:imdb',
     schema: {
       response: traktShowResponseSchema
@@ -106,19 +120,6 @@ export default ({ traktService }) => {
       traktService
         .findShowByImdb(req.params.imdb, req.headers.host)
         .then(show => res.json({ show }))
-        .catch(err => next(err));
-    }
-  });
-
-  router.get({
-    path: '/api/v1/trakt/movies/:imdb',
-    schema: {
-      response: traktMovieResponseSchema
-    },
-    handler: (req, res, next) => {
-      traktService
-        .findMovieByImdb(req.params.imdb, req.headers.host)
-        .then(movie => res.json({ movie }))
         .catch(err => next(err));
     }
   });
@@ -136,6 +137,45 @@ export default ({ traktService }) => {
     }
   });
 
+  router.get({
+    path: '/api/v1/trakt/movies/recommendations',
+    schema: {
+      response: traktMoviesResponseSchema
+    },
+    handler: (req, res, next) => {
+      traktService
+        .findMoviesRecommendations(req.headers.host)
+        .then(movies => res.json({ movies }))
+        .catch(err => next(err));
+    }
+  });
+
+  router.get({
+    path: '/api/v1/trakt/movies/tmdb/:tmdb',
+    schema: {
+      response: traktMovieResponseSchema
+    },
+    handler: (req, res, next) => {
+      traktService
+        .findMovie(req.params.tmdb, req.headers.host)
+        .then(movie => res.json({ movie }))
+        .catch(err => next(err));
+    }
+  });
+
+  router.get({
+    path: '/api/v1/trakt/movies/:imdb',
+    schema: {
+      response: traktMovieResponseSchema
+    },
+    handler: (req, res, next) => {
+      traktService
+        .findMovieByImdb(req.params.imdb, req.headers.host)
+        .then(movie => res.json({ movie }))
+        .catch(err => next(err));
+    }
+  });
+
   router.post({
     path: '/api/v1/trakt/movies/release-date',
     schema: {
@@ -149,6 +189,45 @@ export default ({ traktService }) => {
       traktService
         .updateMovieByReleaseDate(req.query.imdb, req.query.releaseDate, req.headers.host)
         .then(movie => res.json({ movie }))
+        .catch(err => next(err));
+    }
+  });
+
+  router.get({
+    path: '/api/v1/trakt/persons/tmdb/:tmdb',
+    schema: {
+      response: traktPersonResponse
+    },
+    handler: (req, res, next) => {
+      traktService
+        .findPerson(req.params.tmdb)
+        .then(person => res.json({ person }))
+        .catch(err => next(err));
+    }
+  });
+
+  router.get({
+    path: '/api/v1/trakt/persons/:imdb',
+    schema: {
+      response: traktPersonResponse
+    },
+    handler: (req, res, next) => {
+      traktService
+        .findPersonByImdb(req.params.imdb)
+        .then(person => res.json({ person }))
+        .catch(err => next(err));
+    }
+  });
+
+  router.put({
+    path: '/api/v1/trakt/persons/:id',
+    schema: {
+      response: traktPersonResponse
+    },
+    handler: (req, res, next) => {
+      traktService
+        .addPerson(req.params.id)
+        .then(person => res.json({ person }))
         .catch(err => next(err));
     }
   });
