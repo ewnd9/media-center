@@ -23,9 +23,21 @@ const Movie = React.createClass({
     movies: schema,
     fetchMovie: t.Function
   }),
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
   componentDidMount() {
-    const { routeParams: { imdb }, fetchMovie } = this.props;
-    fetchMovie(imdb);
+    const { routeParams: { tmdb, imdb }, fetchMovie } = this.props;
+    fetchMovie(tmdb, imdb);
+  },
+  componentWillReceiveProps(nextProps) {
+    const { routeParams, fetchMovie } = this.props;
+
+    if (routeParams.tmdb && nextProps.movies.movie) {
+      this.context.router.push(`/movies/${nextProps.movies.movie.imdb}`);
+    } else if (nextProps.routeParams.imdb && routeParams.imdb !== nextProps.routeParams.imdb) {
+      fetchMovie(null, nextProps.routeParams.imdb);
+    }
   },
   render() {
     const { movies: { movie } } = this.props;

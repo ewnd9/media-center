@@ -27,9 +27,21 @@ const Show = React.createClass({
     traktReport: schema,
     fetchShow: t.Function
   }),
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
   componentDidMount() {
-    const { fetchShow, routeParams: { imdb } } = this.props;
-    fetchShow(imdb);
+    const { fetchShow, routeParams: { tmdb, imdb } } = this.props;
+    fetchShow(tmdb, imdb);
+  },
+  componentWillReceiveProps(nextProps) {
+    const { routeParams, fetchShow } = this.props;
+
+    if (routeParams.tmdb && nextProps.traktReport.show) {
+      this.context.router.push(`/shows/${nextProps.traktReport.show.imdb}`);
+    } else if (nextProps.routeParams.imdb && routeParams.imdb !== nextProps.routeParams.imdb) {
+      fetchShow(null, nextProps.routeParams.imdb);
+    }
   },
   render() {
     const { traktReport: { show } } = this.props;

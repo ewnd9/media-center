@@ -8,6 +8,7 @@ const style = {
 };
 
 const spinnerStyle = {
+  width: 'inherit',
   height: 'inherit'
 };
 

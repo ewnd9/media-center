@@ -35,16 +35,15 @@
   font-size: 0.9em;
 }
 
+.castTitle {
+  margin-bottom: 10px;
+}
+
 .castContainer {
   display: inline-block;
   vertical-align: top;
   margin-top: 20px;
   width: 50%;
-}
-
-.castPersonContainer {
-  display: flex;
-  margin: 10px 0;
 }
 
 .castPersonImgContainer {
@@ -60,4 +59,36 @@
 .castPersonName {
   margin-left: 10px;
   font-size: 0.9em;
+}
+
+.castActionWrapper {
+  height: 20px;
+  display: table;
+}
+
+.castAction {
+  display: table-cell;
+  vertical-align: middle;
+
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.castOnHover {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.05s linear;
+}
+
+.castPersonContainer:hover .castOnHover {
+  visibility: visible;
+  opacity: 1;
+}
+
+.mediaListItem {
+  margin-bottom: 10px;
+}
+
+.mediaListItemDate {
+  font-size: 0.8em;
 }

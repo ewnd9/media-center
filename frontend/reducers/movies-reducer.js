@@ -38,6 +38,7 @@ export default createCheckedReducer({
   [FETCH_MOVIE_REQUEST](state) {
     return {
       ...state,
+      movie: null
     };
   },
   [FETCH_MOVIE_SUCCESS](state, action) {
