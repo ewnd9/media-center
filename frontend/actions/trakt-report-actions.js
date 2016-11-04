@@ -15,10 +15,10 @@ export function fetchTraktReport() {
   };
 }
 
-export function fetchShow(imdb) {
+export function fetchShow(tmdb, imdb) {
   return {
     types: [FETCH_SHOW_REQUEST, FETCH_SHOW_SUCCESS, FETCH_SHOW_FAILURE],
-    callAPI: () => api.getShow(imdb),
-    payload: { imdb }
+    callAPI: () => tmdb ? api.getShowByTmdb(tmdb) : api.getShow(imdb),
+    payload: { tmdb, imdb }
   };
 }

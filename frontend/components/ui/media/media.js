@@ -1,16 +1,31 @@
 import React from 'react';
 import styles from './style.css';
 
+import { connect } from 'react-redux';
+
 import t from 'tcomb';
 import { propTypes } from 'tcomb-react';
 
-import { getTmdbPosterUrl } from '../../../api';
+import * as api from '../../../api';
 
 import groupBy from 'lodash/groupBy';
 import pluralize from 'pluralize';
 
+import { updateFavoriteStatus } from '../../../actions/persons-actions';
+import { schema } from '../../../reducers/persons-reducer';
+
+import Spinner from '../inline-spinner/inline-spinner';
+import { Link } from 'react-router';
+
+import orderBy from 'lodash/orderBy';
+import ListItem from '../list-item-show/list-item-show';
+
+const mapStateToProps = ({ persons }) => ({ persons });
+const mapDispatchToProps = { updateFavoriteStatus };
+
 const Media = React.createClass({
   propTypes: propTypes({
+    persons: schema,
     posterUrl: t.String,
     title: t.String,
     tagline: t.String,
@@ -29,24 +44,44 @@ const Media = React.createClass({
       })
     ),
     content: t.maybe(t.ReactNode),
-    credits: t.maybe(t.Object)
+    credits: t.maybe(t.Object),
+    movies: t.maybe(t.Object),
+    tv: t.maybe(t.Object),
+    updateFavoriteStatus: t.Function
   }),
   renderPersons(title, cast) {
+    const { persons: { changingStatusKey, persons }, updateFavoriteStatus } = this.props;
+
     return (
       <div key={title}>
-        <div>{title}:</div>
+        <div className={styles.castTitle}>
+          {title}:
+        </div>
         {
-          cast.map(person => (
-            <div className={styles.castPersonContainer} key={person.cast_id || person.credit_id}>
-              <div className={styles.castPersonImgContainer}>
-                <img src={getTmdbPosterUrl(person.profile_path)} />
-              </div>
+          cast.map(person => {
+            const isFavorite = persons[person.id].isFavorite;
 
-              <div className={styles.castPersonName}>
-                {person.name}
+            const body = (
+              <div className={`${styles.castActionWrapper} ${!isFavorite ? styles.castOnHover : ''}`}>
+                <div onClick={() => updateFavoriteStatus(person.id)} className={styles.castAction}>
+                  {
+                    person.id === changingStatusKey ? <Spinner /> :
+                      (isFavorite ? '[Added]' : '[Add]')
+                  }
+                </div>
               </div>
-            </div>
-          ))
+            );
+
+            return (
+              <div className={styles.castPersonContainer}>
+                <ListItem
+                  key={person.cast_id || person.credit_id}
+                  posterUrl={api.getTmdbPosterUrl(person.profile_path)}
+                  title={<Link to={`/persons/tmdb/${person.id}`}>{person.name}</Link>}
+                  body={body} />
+              </div>
+            );
+          })
         }
       </div>
     );
@@ -59,6 +94,24 @@ const Media = React.createClass({
       this.renderPersons(pluralize(job, groups[job].length), groups[job])
     ));
   },
+  renderMovieList(media) {
+    return orderBy(media.cast, 'release_date', 'desc').map((media, index) => (
+      <ListItem
+        key={index}
+        posterUrl={api.getTmdbPosterUrl(media.poster_path)}
+        title={<Link to={`/movies/tmdb/${media.id}`}>{media.title}</Link>}
+        body={media.release_date} />
+    ));
+  },
+  renderTvList(media) {
+    return orderBy(media.cast, 'first_air_date', 'desc').map((media, index) => (
+      <ListItem
+        key={index}
+        posterUrl={api.getTmdbPosterUrl(media.poster_path)}
+        title={<Link to={`/shows/tmdb/${media.id}`}>{media.name}</Link>}
+        body={media.first_air_date} />
+    ));
+  },
   render() {
     const {
       posterUrl,
@@ -67,7 +120,9 @@ const Media = React.createClass({
       fields,
       externalIds,
       content,
-      credits
+      credits,
+      movies,
+      tv
     } = this.props;
 
     return (
@@ -114,9 +169,22 @@ const Media = React.createClass({
             </div>
           ) || null
         }
+
+        {
+          movies && tv && (
+            <div>
+              <div className={styles.castContainer}>
+                {this.renderMovieList(movies)}
+              </div>
+              <div className={styles.castContainer}>
+                {this.renderTvList(tv)}
+              </div>
+            </div>
+          ) || null
+        }
       </div>
     );
   }
 });
 
-export default Media;
+export default connect(mapStateToProps, mapDispatchToProps)(Media);

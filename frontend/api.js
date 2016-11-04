@@ -52,6 +52,19 @@ export const post = (_url, body = {}, query) => {
   });
 };
 
+export const put = (_url, body = {}, query) => {
+  const url = baseUrl + _url;
+  const req = superagent.put(url).send(JSON.stringify(body));
+
+  return fetch(req, url, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    query
+  });
+};
+
 export const playFile = (filename, media, position, noScrobble) => {
   return post('/api/v1/playback/start', {
     filename,
@@ -135,8 +148,24 @@ export const getMovie = imdb => {
   return get(`/api/v1/trakt/movies/${imdb}`);
 };
 
+export const getMovieByTmdb = tmdb => {
+  return get(`/api/v1/trakt/movies/tmdb/${tmdb}`);
+};
+
 export const getShow = imdb => {
   return get(`/api/v1/trakt/shows/${imdb}`);
+};
+
+export const getShowByTmdb = tmdb => {
+  return get(`/api/v1/trakt/shows/tmdb/${tmdb}`);
+};
+
+export const getPerson = imdb => {
+  return get(`/api/v1/trakt/persons/${imdb}`);
+};
+
+export const getPersonByTmdb = tmdb => {
+  return get(`/api/v1/trakt/persons/tmdb/${tmdb}`);
 };
 
 export const getDvdReleasesDates = query => {
@@ -150,6 +179,10 @@ export const updateMovieByReleaseDate = (imdb, releaseDate) => {
     imdb,
     releaseDate
   });
+};
+
+export const putPersonFavoriteStatus = id => {
+  return put(`/api/v1/trakt/persons/${id}`);
 };
 
 function reqToPromise(req, options = {}, url = '') {

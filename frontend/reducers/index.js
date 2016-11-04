@@ -6,6 +6,7 @@ import traktReport from './trakt-report-reducer';
 import files from './files-reducer';
 import modal from './modal-reducer';
 import movies from './movies-reducer';
+import persons from './persons-reducer';
 import width from './width-reducer';
 
 import createPlaybackReducer from './playback-reducer';
@@ -17,6 +18,7 @@ export default socket => {
     youtube,
     files,
     movies,
+    persons,
     width,
     modal,
     playback: createPlaybackReducer(socket)

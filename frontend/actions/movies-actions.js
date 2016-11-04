@@ -19,11 +19,11 @@ export const UPDATE_MOVIE_BY_RELEASE_DATE_FAILURE = 'UPDATE_MOVIE_BY_RELEASE_DAT
 export const UPDATE_SUGGESTION_QUERY = 'UPDATE_SUGGESTION_QUERY';
 export const SHOW_FORM = 'SHOW_FORM';
 
-export function fetchMovie(imdb) {
+export function fetchMovie(tmdb, imdb) {
   return {
     types: [FETCH_MOVIE_REQUEST, FETCH_MOVIE_SUCCESS, FETCH_MOVIE_FAILURE],
-    callAPI: () => api.getMovie(imdb),
-    payload: { imdb }
+    callAPI: () => tmdb ? api.getMovieByTmdb(tmdb) : api.getMovie(imdb),
+    payload: { tmdb, imdb }
   };
 }
 
