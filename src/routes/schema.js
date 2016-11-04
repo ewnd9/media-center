@@ -3,6 +3,7 @@ import t from 'tcomb';
 import { schema as fileSchema } from '../models/file';
 import { schema as showSchema } from '../models/show';
 import { schema as movieSchema } from '../models/movie';
+import { schema as personSchema } from '../models/person';
 
 export const CastableNumber = t.refinement(t.String, n => !isNaN(n), 'CastableNumber');
 
@@ -161,3 +162,7 @@ export const traktMoviesResponseSchema = t.struct({
 export const screenshotsResponseSchema = t.struct({ files: t.list(t.String) });
 
 export const youtubeRequestSchema = t.struct({ query: t.String });
+
+export const traktPersonResponse = t.struct({
+  person: personSchema
+});

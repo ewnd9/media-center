@@ -60,3 +60,18 @@ TmdbApi.prototype.getShowPosterByImdb = function(imdb) {
   return this.getShowByImdb(imdb)
     .then(show => `http://image.tmdb.org/t/p/w500/${show.poster_path}`);
 };
+
+TmdbApi.prototype.getPersonIdByImdb = function(imdb) {
+  return this.searchByImdb(imdb)
+    .then(res => res.person_results[0].id);
+};
+
+TmdbApi.prototype.getPerson = function(id) {
+  const options = { append_to_response: 'movie_credits,tv_credits' };
+  return this.getRequest(`/3/person/${id}`, options);
+};
+
+TmdbApi.prototype.getPersonByImdb = function(imdb) {
+  return this.getPersonIdByImdb(imdb)
+    .then(id => this.getPerson(id));
+};

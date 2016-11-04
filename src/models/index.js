@@ -14,6 +14,7 @@ import MovieScrobble from './movie-scrobble';
 
 import Show from './show';
 import Movie from './movie';
+import Person from './person';
 
 export default (dbPath, dbOptions = {}) => {
   const initializers = {
@@ -22,7 +23,8 @@ export default (dbPath, dbOptions = {}) => {
     EpisodeScrobble,
     MovieScrobble,
     Show,
-    Movie
+    Movie,
+    Person
   };
 
   if (!('auto_compaction' in dbOptions)) {
