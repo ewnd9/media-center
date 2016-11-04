@@ -81,7 +81,7 @@ TraktService.prototype.getPosterStream = function(type, imdbId) {
 
 TraktService.prototype.getPlaceholderPosterStream = function() {
   const filePath = `${this.filePath}/placeholder.jpg`;
-  return fsCache(filePath, () => Promise.resolve('https://unsplash.it/g/200/300'));
+  return fsCache(filePath, () => Promise.resolve('https://placeholdit.imgix.net/~text?txtsize=19&txt=200%C3%97300&w=200&h=300'));
 };
 
 TraktService.prototype.getPosterStreamFromTrakt = function(type, imdbId) {
