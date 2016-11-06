@@ -84,7 +84,7 @@
     "promise-limit": "^2.3.0",
     "sanitize-html": "^1.11.4",
     "shortid": "^2.2.6",
-    "show-episode-format": "^2.0.0",
+    "show-episode-format": "^2.4.0",
     "socket.io": "^1.4.2",
     "source-map-support": "^0.4.0",
     "split-torrent-release": "^1.1.0",

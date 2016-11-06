@@ -8,6 +8,7 @@ import ListItemShow from '../ui/list-item-show/list-item-show';
 import { Link } from 'react-router';
 
 import { groupShowsByAirDatesFlatten } from 'show-episode-format';
+import moment from 'moment';
 
 const mapStateToProps = ({ traktReport: { isFetching, report } }) => ({ isFetching, report });
 const mapDispatchToProps = { fetchTraktReport };
@@ -68,7 +69,17 @@ const TraktReport = React.createClass({
     if (report != null && !isFetching) {
       return (
         <div>
-          { renderReport(groupShowsByAirDatesFlatten(report, show => show.episodes, ep => !!ep.watched)) }
+          {
+            renderReport(
+              groupShowsByAirDatesFlatten(
+                report,
+                episodesSelector,
+                isWatchedSelector,
+                hasFileSelector,
+                formatInterval
+              )
+            )
+          }
         </div>
       );
     } else {
@@ -78,3 +89,20 @@ const TraktReport = React.createClass({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TraktReport);
+
+function episodesSelector(show) {
+  return show.episodes;
+}
+
+function isWatchedSelector(ep) {
+  return !!ep.watched;
+}
+
+function hasFileSelector() {
+  return false;
+}
+
+function formatInterval(date) {
+  const m = moment(date);
+  return `${m.fromNow()} (${m.format('ddd')})`;
+}

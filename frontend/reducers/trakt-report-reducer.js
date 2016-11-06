@@ -1,5 +1,6 @@
 import { createCheckedReducer } from './utils';
 import t from 'tcomb';
+import moment from 'moment';
 
 import {
   TRAKT_REPORT_REQUEST,
@@ -29,10 +30,19 @@ export default createCheckedReducer({
     };
   },
   [TRAKT_REPORT_SUCCESS](state, action) {
+    const { report } = action.response;
+
+    report.forEach(report => {
+      report.episodes.forEach(ep => {
+        // average american show air time
+        ep.air_date = moment(`${ep.air_date} 22:00 -05:00`, 'YYYY-MM-DD HH:mm Z').toISOString();
+      });
+    });
+
     return {
       ...state,
       isFetching: false,
-      report: action.response.report
+      report
     };
   },
   [TRAKT_REPORT_FAILURE](state) {
