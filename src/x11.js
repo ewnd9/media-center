@@ -106,7 +106,7 @@ export const registerKeys = () => {
 };
 
 
-if (process.env.NODE_ENV === 'production' && !process.env.NODE_DISABLE_X11_SUPPORT) {
+if (process.env.NODE_ENV === 'production' && process.env.MC_X11_SUPPORT) {
   registerEvents(globalEvents);
 }
 

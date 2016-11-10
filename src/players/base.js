@@ -18,7 +18,7 @@ Player.prototype.play = function({ uri, media, position, traktScrobble }) {
   this.traktScrobble = !!traktScrobble;
 
   this.status = PLAYING;
-  if (!process.env.NODE_DISABLE_X11_SUPPORT) {
+  if (process.env.MC_X11_SUPPORT) {
     registerKeys();
   }
 
@@ -69,7 +69,7 @@ Player.prototype.stop = function() {
   this.emitUpdate();
   storage.emit(STOP_PLAYBACK);
 
-  if (!process.env.NODE_DISABLE_X11_SUPPORT) {
+  if (process.env.MC_X11_SUPPORT) {
     unregisterKeys();
   }
 };

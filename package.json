@@ -12,7 +12,7 @@
     "build:frontend": "rm -f public/* && NODE_ENV=production webpack --config webpack.config.prod.js",
     "stats:frontend": "rm -f public/* && NODE_ENV=production webpack --config webpack.config.prod.js --json | node scripts/webpack-bundle-size > stats.txt",
     "lint": "eslint 'src/**/*.js' 'frontend/**/*.js' 'test/**/*.js' 'app.js'",
-    "test": "NODE_DISABLE_X11_SUPPORT=true ava",
+    "test": "ava",
     "test:cov": "nyc --reporter=lcov --reporter=text npm test",
     "test:watch": "npm run test -- --watch",
     "precommit": "npm run lint"
