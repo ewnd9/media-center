@@ -46,7 +46,7 @@ methods.forEach(method => {
         const error = getError(res.body, schema.response, { strict: true });
 
         if (error) {
-          return Promise.reject(`Response Body Validation Error (${method.toUpperCase()} ${url}):\n${error}`);
+          return Promise.reject(new Error(`Response Body Validation Error (${method.toUpperCase()} ${url}):\n${error}`));
         }
 
         return res;
