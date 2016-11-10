@@ -15,7 +15,7 @@
     "test": "NODE_DISABLE_X11_SUPPORT=true ava",
     "test:cov": "nyc --reporter=lcov --reporter=text npm test",
     "test:watch": "npm run test -- --watch",
-    "precommit": "npm test"
+    "precommit": "npm run lint"
   },
   "repository": {
     "type": "git",
