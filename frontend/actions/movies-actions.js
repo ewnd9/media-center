@@ -27,10 +27,11 @@ export function fetchMovie(tmdb, imdb) {
   };
 }
 
-export function fetchMovies() {
+export function fetchMovies(type) {
   return {
     types: [FETCH_MOVIES_REQUEST, FETCH_MOVIES_SUCCESS, FETCH_MOVIES_FAILURE],
-    callAPI: () => api.getMovies()
+    callAPI: () => api.getMovies(type),
+    payload: { type }
   };
 }
 

@@ -3,6 +3,7 @@ import { Router, Route, IndexRedirect, IndexRoute, Redirect, browserHistory } fr
 
 import Movie from './components/movie/movie';
 import MoviesList from './components/movies-list/movies-list';
+import MoviesListContainer from './components/movies-list-container/movies-list-container';
 
 import TraktReport from './components/trakt-report/trakt-report';
 import Show from './components/show/show';
@@ -26,8 +27,12 @@ export default ({ shell }) => (
       <IndexRedirect to="/shows" />
       <Route path="/media" component={MediaList} />
 
-      <Route path="/movies">
-        <IndexRoute component={MoviesList} />
+      <Route path="/movies" component={MoviesListContainer}>
+        <IndexRedirect to="/movies/upcoming" />
+
+        <Route path="/movies/upcoming" component={MoviesList} />
+        <Route path="/movies/recommendations" component={MoviesList} />
+
         <Route path="/movies/tmdb/:tmdb" component={Movie} />
         <Route path="/movies/:imdb" component={Movie} />
       </Route>

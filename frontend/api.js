@@ -140,8 +140,9 @@ export const getTmdbPosterUrl = url => {
   return url ? `http://image.tmdb.org/t/p/w500/${url}` : getPosterPlaceholderUrl();
 };
 
-export const getMovies = () => {
-  return get('/api/v1/trakt/movies');
+export const getMovies = type => {
+  const postfix = type === 'upcoming' ? '' : type;
+  return get(`/api/v1/trakt/movies/${postfix}`);
 };
 
 export const getMovie = imdb => {

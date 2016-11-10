@@ -6,9 +6,6 @@ import moment from 'moment';
 
 import t from 'tcomb';
 import { propTypes } from 'tcomb-react';
-import { reactRouterPropTypes } from '../../schema/react-router';
-
-import { Link } from 'react-router';
 
 import {
   fetchMovies,
@@ -19,7 +16,10 @@ import {
 } from '../../actions/movies-actions';
 
 import { schema } from '../../reducers/movies-reducer';
+
+import { Link } from 'react-router';
 import Form from './form/form';
+import Spinner from '../ui/spinner/spinner';
 
 const mapStateToProps = ({ movies }) => ({ movies });
 const mapDispatchToProps = {
@@ -34,9 +34,10 @@ import ListItem from '../ui/list-item-show/list-item-show';
 
 const MoviesList = React.createClass({
   propTypes: propTypes({
-    ...reactRouterPropTypes,
     children: t.Nil,
     movies: schema,
+
+    type: t.enums.of(['upcoming', 'recommendations']),
 
     fetchMovies: t.Function,
     fetchSuggestions: t.Function,
@@ -45,8 +46,15 @@ const MoviesList = React.createClass({
     toggleShowForm: t.Function
   }),
   componentDidMount() {
-    const { fetchMovies } = this.props;
-    fetchMovies();
+    const { fetchMovies, type } = this.props;
+    fetchMovies(type);
+  },
+  componentWillReceiveProps(nextProps) {
+    const { fetchMovies, type } = this.props;
+
+    if (type !== nextProps.type) {
+      fetchMovies(nextProps.type);
+    }
   },
   componentWillUnmount() {
     const { toggleShowForm, movies: { showForm } } = this.props;
@@ -61,36 +69,44 @@ const MoviesList = React.createClass({
       updateSuggestionQuery,
       updateMovie,
       toggleShowForm,
+      type,
       movies: {
         movies,
+        isFetching,
         showForm,
         suggestions,
         suggestionSearchTitle
       }
     } = this.props;
 
+    if (isFetching) {
+      return (<Spinner />);
+    }
+
     return (
       <div>
         <div>
           {
-            showForm && (
-              <div className={styles.formWrapper}>
-                <button className={`${styles.textButton} ${styles.closeButton}`} onClick={toggleShowForm.bind(null, !showForm)}>
-                  ×
-                </button>
+            type === 'upcoming' && (
+              showForm && (
+                <div className={styles.formWrapper}>
+                  <button className={`${styles.textButton} ${styles.closeButton}`} onClick={toggleShowForm.bind(null, !showForm)}>
+                    ×
+                  </button>
 
-                <Form
-                  fetchSuggestions={fetchSuggestions}
-                  updateSuggestionQuery={updateSuggestionQuery}
-                  suggestions={suggestions}
-                  suggestionSearchTitle={suggestionSearchTitle}
-                  updateMovie={updateMovie} />
-              </div>
-            ) || (
-              <button className={styles.textButton} onClick={toggleShowForm.bind(null, !showForm)}>
-                Add New Movie
-              </button>
-            )
+                  <Form
+                    fetchSuggestions={fetchSuggestions}
+                    updateSuggestionQuery={updateSuggestionQuery}
+                    suggestions={suggestions}
+                    suggestionSearchTitle={suggestionSearchTitle}
+                    updateMovie={updateMovie} />
+                </div>
+              ) || (
+                <button className={styles.textButton} onClick={toggleShowForm.bind(null, !showForm)}>
+                  Add New Movie
+                </button>
+              )
+            ) || null
           }
         </div>
         <div className={styles.list}>
