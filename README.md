@@ -31,6 +31,7 @@ Frontend:
 ```sh
 $ git clone https://github.com/ewnd9/media-center.git
 $ cd media-center
+$ yarn install
 ```
 
 ### Provision

@@ -35,6 +35,7 @@ services:
     volumes:
       - ${DATA}:/data
       - ${DB}:/db
+      - ${HOME}/.yarn-cache:/root/.yarn-cache
     links:
       - minidlna
     environment:
