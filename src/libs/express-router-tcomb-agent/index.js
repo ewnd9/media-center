@@ -1,5 +1,6 @@
 import { agent } from 'supertest';
-import { validate } from 'tcomb-validation';
+import { getError } from 'tcomb-pretty-match';
+
 import methods from 'methods';
 
 export default function Agent(app, server) {
@@ -16,13 +17,13 @@ methods.forEach(method => {
     const route = findRoute(this.app, method, path);
 
     if (!route) {
-      throw new Error(`Can't find route ${method} ${path}`);
+      throw new Error(`Can't find route (${method.toUpperCase()} ${path})`);
     }
 
     const schema = route.schema;
 
     if (!schema.response) {
-      throw new Error(`No Response Schema in ${method} ${path}`);
+      return Promise.reject(new Error(`No Response Schema (${method.toUpperCase()} ${path})`));
     }
 
     const url = Object.keys(params).reduce(
@@ -42,10 +43,10 @@ methods.forEach(method => {
 
     return promisify(req)
       .then(res => {
-        const result = validate(res.body, schema.response, { strict: true });
+        const error = getError(res.body, schema.response, { strict: true });
 
-        if (!result.isValid()) {
-          throw new Error(`${method} ${url} Response Validation Error\n${JSON.stringify(result.errors, null, 2)}`);
+        if (error) {
+          return Promise.reject(`Response Body Validation Error (${method.toUpperCase()} ${url}):\n${error}`);
         }
 
         return res;

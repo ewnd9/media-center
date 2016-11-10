@@ -2,7 +2,7 @@ import test from 'ava';
 import sinon from 'sinon';
 
 import createApp from '../fixtures/create-app';
-import Agent from '../../src/libs/express-router-tcomb/agent';
+import Agent from '../../src/libs/express-router-tcomb-agent';
 
 test.beforeEach(async t => {
   const stub = sinon.stub().returns(Promise.resolve());

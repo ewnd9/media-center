@@ -1,7 +1,7 @@
 import test from 'ava';
 
 import createApp from '../fixtures/create-app';
-import Agent from '../../src/libs/express-router-tcomb/agent';
+import Agent from '../../src/libs/express-router-tcomb-agent';
 
 import createTrakt from '../fixtures/create-trakt';
 import { showTitle } from '../fixtures/create-fs';

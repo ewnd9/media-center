@@ -168,6 +168,7 @@
     "socket.io-client": "^1.4.2",
     "style-loader": "^0.12.3",
     "supertest": "^1.2.0",
+    "tcomb-pretty-match": "^1.0.0",
     "tcomb-react": "^0.9.1",
     "test-listen": "^1.0.0",
     "timekeeper": "^0.1.1",
