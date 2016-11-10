@@ -1,16 +1,15 @@
 import test from 'ava';
 
-import { nockBefore } from '../../../../test/helpers/nock';
+import nockHook from 'nock-hook/ava';
 import TmdbApi from '../';
 
 test.beforeEach(async t => {
-  const nock = nockBefore(__filename, t, __dirname + '/fixtures');
-  t.context.nockEnd = nock.afterFn;
+  t.context.closeNock = nockHook(t, __filename, { dirname: __dirname + '/fixtures/index' });
   t.context.api = new TmdbApi('d3350c6d641ee4f16f94a6c0b3b809d1');
 });
 
 test.afterEach(t => {
-  t.context.nockEnd();
+  t.context.closeNock();
 });
 
 test.serial('fetch a movie poster', async t => {

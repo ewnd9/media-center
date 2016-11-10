@@ -1,15 +1,14 @@
 import test from 'ava';
+import nockHook from 'nock-hook/ava';
 
-import { nockBefore } from '../../../../test/helpers/nock';
 import * as api from '../';
 
 test.beforeEach(async t => {
-  const nock = nockBefore(__filename, t, __dirname + '/fixtures');
-  t.context.nockEnd = nock.afterFn;
+  t.context.closeNock = nockHook(t, __filename, { dirname: __dirname + '/fixtures/index' });
 });
 
-test.afterEach(t => {
-  t.context.nockEnd();
+test.afterEach.always(t => {
+  t.context.closeNock();
 });
 
 test('search a movie', async t => {
