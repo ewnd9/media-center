@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const StatsWriterPlugin = require('./src/libs/webpack-perfomance-budget/plugin');
 
 if (typeof process.env.NODE_ENV === 'undefined') {
   process.env.NODE_ENV = 'production';
@@ -28,6 +29,9 @@ const prodPlugins = config.plugins.reduce((total, curr) => {
     compressor: {
       warnings: false
     }
+  }),
+  new StatsWriterPlugin({
+    filename: 'stats.json'
   })
 ]);
 
