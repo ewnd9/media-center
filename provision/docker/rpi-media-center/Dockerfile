@@ -7,8 +7,10 @@ RUN mkdir app
 WORKDIR /app
 CMD node /app/app.js
 
+RUN npm install -g yarn
+
 COPY deps.json /app/package.json
-RUN npm install --production
+RUN yarn install --production
 
 COPY app.js /app/app.js
 COPY lib /app/lib
