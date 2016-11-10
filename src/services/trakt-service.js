@@ -10,7 +10,6 @@ import uniq from 'lodash/uniq';
 import uniqBy from 'lodash/uniqBy';
 
 import fsCache from '../utils/fs-cache';
-import getPosterUrl from '../utils/poster-url';
 
 import * as dvdReleasesApi from '../libs/dvdreleasedates-api/';
 
@@ -422,20 +421,7 @@ TraktService.prototype.getShowReport = function() {
   }
 };
 
-TraktService.prototype.getShowReportWithPosterUrls = function(host) {
-  return this
-    .getShowReport()
-    .then(reports => {
-      reports
-        .forEach(show => {
-          show.posterUrl = getPosterUrl('show', show.imdb, undefined, host);
-        });
-
-      return reports;
-    });
-};
-
-TraktService.prototype._findShow = function(tmdb, imdb, host) {
+TraktService.prototype._findShow = function(tmdb, imdb) {
   return Promise
     .all([
       this._fetchShow(tmdb, imdb),
@@ -446,56 +432,49 @@ TraktService.prototype._findShow = function(tmdb, imdb, host) {
       })
     ])
     .then(([show, docs]) => {
-      show.posterUrl = getPosterUrl('show', show.imdb, undefined, host);
       return this._mergeEpisodeScrobbles(show, docs.rows.map(row => row.doc));
     });
 };
 
-TraktService.prototype.findShow = function(tmdb, host) {
-  return this._findShow(tmdb, null, host);
+TraktService.prototype.findShow = function(tmdb) {
+  return this._findShow(tmdb, null);
 };
 
-TraktService.prototype.findShowByImdb = function(imdb, host) {
-  return this._findShow(null, imdb, host);
+TraktService.prototype.findShowByImdb = function(imdb) {
+  return this._findShow(null, imdb);
 };
 
-TraktService.prototype.findMovie = function(tmdb, host) {
-  return this._fetchMovie(tmdb, null)
-    .then(movie => movieWithPosterUrl(movie, host));
+TraktService.prototype.findMovie = function(tmdb) {
+  return this._fetchMovie(tmdb, null);
 };
 
-TraktService.prototype.findMovieByImdb = function(imdb, host) {
-  return this._fetchMovie(null, imdb)
-    .then(movie => movieWithPosterUrl(movie, host));
+TraktService.prototype.findMovieByImdb = function(imdb) {
+  return this._fetchMovie(null, imdb);
 };
 
 TraktService.prototype.searchDvdReleases = function(query) {
   return dvdReleasesApi.search(query);
 };
 
-TraktService.prototype.updateMovieByReleaseDate = function(imdb, releaseDate, host) {
+TraktService.prototype.updateMovieByReleaseDate = function(imdb, releaseDate) {
   const { db: { Movie } } = this;
 
   return this._fetchMovie(null, imdb)
     .then(movie => {
       if (movie.releaseDate !== releaseDate) {
         movie.releaseDate = releaseDate;
-
         return Movie.update(movie);
       }
 
       return movie;
-    })
-    .then(movie => movieWithPosterUrl(movie, host));
+    });
 };
 
-TraktService.prototype.findMoviesByReleaseDate = function(host) {
+TraktService.prototype.findMoviesByReleaseDate = function() {
   const { db: { Movie } } = this;
   return Movie.db
     .query(releaseDateIndex, { include_docs: true, descending: true })
-    .then(res => {
-      return res.rows.map(row => movieWithPosterUrl(row.doc, host));
-    });
+    .then(res => res.rows.map(row => row.doc));
 };
 
 TraktService.prototype._formatTmdbPersonData = function(person) {
@@ -579,7 +558,7 @@ TraktService.prototype.addPerson = function(tmdb) {
     .then(() => person);
 };
 
-TraktService.prototype.findMoviesRecommendations = function(host) {
+TraktService.prototype.findMoviesRecommendations = function() {
   const x = this.graph.v('x');
   const y = this.graph.v('y');
 
@@ -600,7 +579,7 @@ TraktService.prototype.findMoviesRecommendations = function(host) {
     })
     .then(solutions => {
       const promises = solutions.map(solution => {
-        return this.findMovie(solution.movie, host);
+        return this.findMovie(solution.movie);
       });
 
       return Promise.all(promises);
@@ -609,11 +588,6 @@ TraktService.prototype.findMoviesRecommendations = function(host) {
       return uniqBy(movies, '_id');
     });
 };
-
-function movieWithPosterUrl(movie, host) {
-  movie.posterUrl = getPosterUrl('movie', movie.imdb, undefined, host);
-  return movie;
-}
 
 function groupToPartition(array, count) {
   return array.reduce((total, curr) => {

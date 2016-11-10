@@ -1,13 +1,6 @@
 import Router from '../libs/express-router-tcomb';
 import t from 'tcomb';
 
-const formatSuggestion = media => {
-  return {
-    value: media.ids.imdb,
-    label: `${media.title} (${media.year})`
-  };
-};
-
 import {
   traktReportResponseSchema,
   statusStringResponse,
@@ -20,6 +13,8 @@ import {
   traktMoviesResponseSchema,
   traktPersonResponse
 } from './schema';
+
+import getPosterUrl from '../utils/poster-url';
 
 export default ({ traktService }) => {
   const router = Router();
@@ -66,7 +61,8 @@ export default ({ traktService }) => {
     },
     handler: (req, res, next) => {
       traktService
-        .getShowReportWithPosterUrls(req.headers.host)
+        .getShowReport()
+        .then(report => replaceItemsPosterUrl(report, 'show', req.headers.host))
         .then(report => res.json({ report }))
         .catch(err => next(err));
     }
@@ -105,7 +101,8 @@ export default ({ traktService }) => {
     },
     handler: (req, res, next) => {
       traktService
-        .findShow(req.params.tmdb, req.headers.host)
+        .findShow(req.params.tmdb)
+        .then(show => replaceOneItemPosterUrl(show, 'show', req.headers.host))
         .then(show => res.json({ show }))
         .catch(err => next(err));
     }
@@ -118,7 +115,8 @@ export default ({ traktService }) => {
     },
     handler: (req, res, next) => {
       traktService
-        .findShowByImdb(req.params.imdb, req.headers.host)
+        .findShowByImdb(req.params.imdb)
+        .then(show => replaceOneItemPosterUrl(show, 'show', req.headers.host))
         .then(show => res.json({ show }))
         .catch(err => next(err));
     }
@@ -131,7 +129,8 @@ export default ({ traktService }) => {
     },
     handler: (req, res, next) => {
       traktService
-        .findMoviesByReleaseDate(req.headers.host)
+        .findMoviesByReleaseDate()
+        .then(movies => replaceItemsPosterUrl(movies, 'movie', req.headers.host))
         .then(movies => res.json({ movies }))
         .catch(err => next(err));
     }
@@ -144,7 +143,8 @@ export default ({ traktService }) => {
     },
     handler: (req, res, next) => {
       traktService
-        .findMoviesRecommendations(req.headers.host)
+        .findMoviesRecommendations()
+        .then(movies => replaceItemsPosterUrl(movies, 'movie', req.headers.host))
         .then(movies => res.json({ movies }))
         .catch(err => next(err));
     }
@@ -157,7 +157,8 @@ export default ({ traktService }) => {
     },
     handler: (req, res, next) => {
       traktService
-        .findMovie(req.params.tmdb, req.headers.host)
+        .findMovie(req.params.tmdb)
+        .then(movie => replaceOneItemPosterUrl(movie, 'movie', req.headers.host))
         .then(movie => res.json({ movie }))
         .catch(err => next(err));
     }
@@ -170,7 +171,8 @@ export default ({ traktService }) => {
     },
     handler: (req, res, next) => {
       traktService
-        .findMovieByImdb(req.params.imdb, req.headers.host)
+        .findMovieByImdb(req.params.imdb)
+        .then(movie => replaceOneItemPosterUrl(movie, 'movie', req.headers.host))
         .then(movie => res.json({ movie }))
         .catch(err => next(err));
     }
@@ -187,7 +189,8 @@ export default ({ traktService }) => {
     },
     handler: (req, res, next) => {
       traktService
-        .updateMovieByReleaseDate(req.query.imdb, req.query.releaseDate, req.headers.host)
+        .updateMovieByReleaseDate(req.query.imdb, req.query.releaseDate)
+        .then(movie => replaceOneItemPosterUrl(movie, 'movie', req.headers.host))
         .then(movie => res.json({ movie }))
         .catch(err => next(err));
     }
@@ -234,3 +237,19 @@ export default ({ traktService }) => {
 
   return router.getRouter();
 };
+
+function replaceItemsPosterUrl(items, type, host) {
+  return items.map(item => replaceOneItemPosterUrl(item, type, host));
+}
+
+function replaceOneItemPosterUrl(item, type, host) {
+  item.posterUrl = getPosterUrl(type, item.imdb, undefined, host);
+  return item;
+}
+
+function formatSuggestion(media) {
+  return {
+    value: media.ids.imdb,
+    label: `${media.title} (${media.year})`
+  };
+}
