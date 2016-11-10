@@ -135,7 +135,7 @@
     "mocha": "^2.2.5",
     "mock-fs": "^3.6.0",
     "moment": "^2.11.0",
-    "nock": "^8.0.0",
+    "nock-hook": "^1.0.1",
     "node-notifier": "^4.4.0",
     "npm-run-all": "^1.4.0",
     "nyc": "^6.6.1",

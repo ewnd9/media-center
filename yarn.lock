@@ -5591,9 +5591,15 @@ nlp_compromise@^6.4.1:
   version "6.5.3"
   resolved "https://registry.yarnpkg.com/nlp_compromise/-/nlp_compromise-6.5.3.tgz#7720b67daab7b486509057ef1d5eff9a3db091bb"
 
-nock@^8.0.0:
-  version "8.2.1"
-  resolved "https://registry.yarnpkg.com/nock/-/nock-8.2.1.tgz#64cc65e1bdd3893f58cba7e1abfdc38f40f0364a"
+nock-hook:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/nock-hook/-/nock-hook-1.0.1.tgz#a063707a17f00458a6f10d1eac8ecd4f23a6cd6f"
+  dependencies:
+    nock "^9.0.2"
+
+nock@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/nock/-/nock-9.0.2.tgz#f6a5f4a8d560d61f48b5ad428ccff8dc9b62701e"
   dependencies:
     chai ">=1.9.2 <4.0.0"
     debug "^2.2.0"

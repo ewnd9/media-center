@@ -5,22 +5,21 @@ import Agent from '../../src/libs/express-router-tcomb/agent';
 
 import createTrakt from '../fixtures/create-trakt';
 import { showTitle } from '../fixtures/create-fs';
-import { nockBefore } from '../helpers/nock';
 import delay from 'delay';
 
 import tk from 'timekeeper';
+import nockHook from 'nock-hook/ava';
 
 test.beforeEach(async t => {
   t.context.app = await createApp({ traktMock: createTrakt(process.env.TRAKT_TOKEN) });
   t.context.request = Agent(t.context.app.app, t.context.app.server);
 
-  const nock = nockBefore(__filename, t);
-  t.context.nockEnd = nock.afterFn;
+  t.context.closeNock = nockHook(t, __filename, { dirname: __dirname + '/../fixtures/trakt-routes-spec' });
 });
 
 test.afterEach(t => {
   t.context.app.server.close();
-  t.context.nockEnd();
+  t.context.closeNock();
 });
 
 test.serial('GET /api/v1/trakt/report', async t => {
