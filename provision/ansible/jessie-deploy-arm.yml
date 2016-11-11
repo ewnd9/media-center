@@ -31,8 +31,8 @@
     - name: copy deps.json
       copy: src=../../deps.json dest={{ app_dir }}/
 
-    - name: copy docker-compose.yml
-      copy: src=../docker-compose.yml dest={{ app_dir }}/
+    - name: copy docker-compose-base-arm.yml
+      copy: src=../docker-compose-base-arm.yml dest={{ app_dir }}/docker-compose.yml
 
     - name: copy rpi-media-center/Dockerfile
       copy: src=../docker/rpi-media-center/Dockerfile dest={{ app_dir }}/

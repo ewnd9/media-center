@@ -60,7 +60,9 @@ You could exchange a pin code from https://trakt.tv/pin/6495 for it via [scripts
 ## Development
 
 ```sh
-$ npm start
+$ cp start-dev.example.sh start-dev.sh
+$ ./start-dev.sh run yarn # install deps
+$ ./start-dev.sh --build # start server
 $ open "http://localhost:3000/"
 ```
 

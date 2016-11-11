@@ -48,4 +48,3 @@ services:
     devices:
       - "/dev/vchiq:/dev/vchiq"
       - "/dev/fb0:/dev/fb0"
-    command: node /app/app.js

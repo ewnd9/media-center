@@ -15,3 +15,5 @@ RUN yarn install --production
 COPY app.js /app/app.js
 COPY lib /app/lib
 COPY public /app/public
+
+CMD node /app/app

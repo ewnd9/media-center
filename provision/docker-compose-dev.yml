@@ -1,0 +1,32 @@
+version: '2'
+services:
+  minidlna:
+    image: busybox:glibc
+    restart: never
+  transmission:
+    image: busybox:glibc
+    restart: never
+  error-board:
+    build:
+      context: .
+      dockerfile: ./docker/rpi-error-board-dev/Dockerfile
+    restart: never
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/rpi-media-center-dev/Dockerfile
+    restart: never
+    ports:
+      - "3000:3000"
+    links: []
+    environment:
+      - NODE_ENV=production
+      - MC_X11_SUPPORT=false
+      - MEDIA_PATH=/data
+      - DATA_PATH=/db
+      - TRAKT_TOKEN=${TRAKT_TOKEN}
+    volumes:
+      - ${PWD}:/app
+    devices:
+      - "/dev/null:/dev/vchiq"
+      - "/dev/null:/dev/fb0"
