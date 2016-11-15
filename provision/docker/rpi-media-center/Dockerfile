@@ -7,7 +7,7 @@ RUN mkdir app
 WORKDIR /app
 CMD node /app/app.js
 
-RUN npm install -g yarn
+RUN npm install -g yarn@0.16
 
 COPY deps.json /app/package.json
 RUN yarn install --production

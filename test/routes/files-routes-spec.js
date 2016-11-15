@@ -3,7 +3,7 @@ import test from 'ava';
 import sinon from 'sinon';
 
 import createApp from '../fixtures/create-app';
-import Agent from '../../src/libs/express-router-tcomb-agent';
+import Agent from 'express-router-tcomb-test';
 
 import { generateMedia } from '../fixtures/mocks-media';
 import { createFile, isFileExists } from '../fixtures/create-fs-files';

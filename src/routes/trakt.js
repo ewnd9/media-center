@@ -1,4 +1,4 @@
-import Router from '../libs/express-router-tcomb';
+import Router from 'express-router-tcomb';
 import t from 'tcomb';
 
 import {
@@ -235,7 +235,7 @@ export default ({ traktService }) => {
     }
   });
 
-  return router.getRouter();
+  return router.getRoutes();
 };
 
 function replaceItemsPosterUrl(items, type, host) {

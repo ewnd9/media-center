@@ -2,7 +2,7 @@ import fs from 'fs';
 import pify from 'pify';
 
 import t from 'tcomb';
-import Router from '../libs/express-router-tcomb/';
+import Router from 'express-router-tcomb';
 import { paginationSchema } from './schema';
 
 const readdir = pify(fs.readdir);
@@ -31,5 +31,5 @@ export default screenshotsPath => {
     }
   });
 
-  return router.getRouter();
+  return router.getRoutes();
 };
