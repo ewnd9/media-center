@@ -12,8 +12,15 @@ const moveFile = pify(fs.rename);
 const mkdir = pify(mkdirp);
 
 export const FIND_FILES = 'FIND_FILES';
+export default FilesService;
 
-function FilesService(models, rootDir, trashDir) {
+function FilesService(config, models) {
+  if (!(this instanceof FilesService)) {
+    return new FilesService(config, models);
+  }
+
+  const { mediaPath: rootDir, mediaTrashPath: trashDir } = config;
+
   this.cache = new Cache();
 
   this.models = models;
@@ -137,10 +144,6 @@ FilesService.prototype.deleteFile = function(filename) {
   return mkdir(destDir)
     .then(() => moveFile(srcFile, destFile));
 };
-
-export default function(db, mediaPath, mediaTrashPath) {
-  return new FilesService(db, mediaPath, mediaTrashPath);
-}
 
 function safePathJoin(base, file) {
   // https://security.stackexchange.com/questions/123720/how-to-prevent-directory-traversal-when-joining-paths-in-node-js

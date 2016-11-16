@@ -1,8 +1,7 @@
 import Registry from '@ewnd9/registry';
 
-import createFilesService from './files-service';
-import createPlayerService from './player-service';
-
+import FilesService from './files-service';
+import PlayerService from './player-service';
 import TraktService from './trakt-service';
 import TmdbService from './tmdb-service';
 import PersonsService from './persons-service';
@@ -12,8 +11,8 @@ function init(db, storage, config) {
   const registry = new Registry('services');
   registry.define('configService', config);
 
-  registry.define('filesService', createFilesService(db, config.mediaPath, config.mediaTrashPath));
-  registry.define('playerService', createPlayerService(config.trakt));
+  registry.define('filesService', new FilesService(config, db));
+  registry.define('playerService', new PlayerService(config));
   registry.define('traktService', new TraktService(config, db));
   registry.define('tmdbService', new TmdbService(config, db));
   registry.define('personsService', new PersonsService(config, db));

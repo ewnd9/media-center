@@ -8,7 +8,7 @@ function getPlayer() {
   }
 }
 
-export default function(trakt) {
+export default function({ trakt }) {
   const PlayerService = getPlayer();
   return new PlayerService(trakt);
 }
