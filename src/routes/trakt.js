@@ -1,5 +1,6 @@
 import Router from 'express-router-tcomb';
 import t from 'tcomb';
+import Cache from '../utils/cache';
 
 import {
   traktReportResponseSchema,
@@ -18,6 +19,7 @@ import getPosterUrl from '../utils/poster-url';
 
 export default ({ traktService, personsService, tmdbService, recommendationsService }) => {
   const router = Router();
+  const cache = new Cache();
 
   router.get({
     path: '/api/v1/suggestions',
@@ -202,8 +204,11 @@ export default ({ traktService, personsService, tmdbService, recommendationsServ
       response: traktPersonResponse
     },
     handler: (req, res, next) => {
-      personsService
-        .findPerson(req.params.tmdb)
+      const { tmdb } = req.params;
+      const cacheKey = getPersonCacheKey({ tmdb });
+
+      cache
+        .getOrInit(cacheKey, () => personsService.findPerson({ tmdb }))
         .then(person => res.json({ person }))
         .catch(err => next(err));
     }
@@ -215,8 +220,11 @@ export default ({ traktService, personsService, tmdbService, recommendationsServ
       response: traktPersonResponse
     },
     handler: (req, res, next) => {
-      personsService
-        .findPersonByImdb(req.params.imdb)
+      const { imdb } = req.params;
+      const cacheKey = getPersonCacheKey({ imdb });
+
+      cache
+        .getOrInit(cacheKey, () => personsService.findPerson({ imdb }))
         .then(person => res.json({ person }))
         .catch(err => next(err));
     }
@@ -228,8 +236,15 @@ export default ({ traktService, personsService, tmdbService, recommendationsServ
       response: traktPersonResponse
     },
     handler: (req, res, next) => {
+      const { id } = req.params;
+      const cacheKey = getPersonCacheKey({ tmdb: id });
+
       personsService
-        .addPerson(req.params.id)
+        .addPerson(id)
+        .then(person => {
+          cache.set(cacheKey, person);
+          return person;
+        })
         .then(person => res.json({ person }))
         .catch(err => next(err));
     }
@@ -252,4 +267,8 @@ function formatSuggestion(media) {
     value: media.ids.imdb,
     label: `${media.title} (${media.year})`
   };
+}
+
+function getPersonCacheKey({ imdb, tmdb }) {
+  return imdb ? `imdb:${imdb}` : `tmdb:${tmdb}`;
 }

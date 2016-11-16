@@ -209,6 +209,7 @@ test.serial('GET /api/v1/trakt/movies/recommendations', async t => {
   const res = await t.context.request.get('/api/v1/trakt/movies/recommendations');
   const { body: { movies } } = res;
 
+  t.truthy(movies.length === 2);
   t.deepEqual(movies.map(_ => _.title), [
     'Megamind',
     'Anchorman: The Legend of Ron Burgundy'

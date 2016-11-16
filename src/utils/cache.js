@@ -21,7 +21,6 @@ export default () => {
   };
 
   const renew = function renew(key, promiseFn) {
-    cache.del(key);
     return update(key, promiseFn);
   };
 

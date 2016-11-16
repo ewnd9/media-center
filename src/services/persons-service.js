@@ -1,5 +1,4 @@
 import { imdbIndex as personImdbIndex } from '../models/person';
-
 export default PersonsService;
 
 function PersonsService(config, db) {
@@ -24,53 +23,41 @@ PersonsService.prototype._formatTmdbPersonData = function(person) {
   return data;
 };
 
-PersonsService.prototype._updatePerson = function(tmdb, imdb) {
+PersonsService.prototype.syncPersonTmdb = function({ tmdb, imdb }) {
   const { services: { tmdbService } } = this;
   const tmdbApi = tmdbService.getTmdbApi();
-
   const fn = tmdb ? tmdbApi.getPerson(tmdb) : tmdbApi.getPersonByImdb(imdb);
 
   return fn.then(person => this._formatTmdbPersonData(person));
 };
 
-PersonsService.prototype._fetchPerson = function(tmdb, imdb) {
+PersonsService.prototype.findPerson = function({ tmdb, imdb }) {
   const { db: { Person } } = this;
 
-  const fn = tmdb ? (
-    Person
+  if (tmdb) {
+    return Person
       .findOneOrInit(
         { tmdb },
-        () => this._updatePerson(tmdb, imdb).then(data => Person.put(data))
-      )
-  ) : (
-    Person.db
+        () => this.syncPersonTmdb({ tmdb, imdb }).then(data => Person.put(data))
+      );
+  } else {
+    return Person.db
       .query(personImdbIndex, { key: imdb, include_docs: true })
       .then(res => {
         if (res.rows.length > 0) {
           return res.rows[0].doc;
         } else {
-          return this._updatePerson(tmdb, imdb).then(data => Person.put(data));
+          return this.syncPersonTmdb({ tmdb, imdb }).then(data => Person.put(data));
         }
-      })
-  );
-
-  return fn;
-};
-
-PersonsService.prototype.findPerson = function(tmdb) {
-  return this._fetchPerson(tmdb, null);
-};
-
-PersonsService.prototype.findPersonByImdb = function(imdb) {
-  return this._fetchPerson(null, imdb);
+      });
+  }
 };
 
 PersonsService.prototype.addPerson = function(tmdb) {
   const { db: { MovieScrobble }, services: { recommendationsService } } = this;
-
   let person;
 
-  return this._fetchPerson(tmdb, null)
+  return this.findPerson({ tmdb })
     .then(_person => {
       person = _person;
       return MovieScrobble.findAll();
