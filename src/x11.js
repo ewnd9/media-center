@@ -105,7 +105,6 @@ export const registerKeys = () => {
   registerEvents(keyPressEvents);
 };
 
-
 if (process.env.NODE_ENV === 'production' && process.env.MC_X11_SUPPORT) {
   registerEvents(globalEvents);
 }

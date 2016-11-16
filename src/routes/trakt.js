@@ -16,7 +16,7 @@ import {
 
 import getPosterUrl from '../utils/poster-url';
 
-export default ({ traktService }) => {
+export default ({ traktService, personsService, tmdbService, recommendationsService }) => {
   const router = Router();
 
   router.get({
@@ -100,7 +100,7 @@ export default ({ traktService }) => {
       response: traktShowResponseSchema
     },
     handler: (req, res, next) => {
-      traktService
+      tmdbService
         .findShow(req.params.tmdb)
         .then(show => replaceOneItemPosterUrl(show, 'show', req.headers.host))
         .then(show => res.json({ show }))
@@ -114,7 +114,7 @@ export default ({ traktService }) => {
       response: traktShowResponseSchema
     },
     handler: (req, res, next) => {
-      traktService
+      tmdbService
         .findShowByImdb(req.params.imdb)
         .then(show => replaceOneItemPosterUrl(show, 'show', req.headers.host))
         .then(show => res.json({ show }))
@@ -142,7 +142,7 @@ export default ({ traktService }) => {
       response: traktMoviesResponseSchema
     },
     handler: (req, res, next) => {
-      traktService
+      recommendationsService
         .findMoviesRecommendations()
         .then(movies => replaceItemsPosterUrl(movies, 'movie', req.headers.host))
         .then(movies => res.json({ movies }))
@@ -156,7 +156,7 @@ export default ({ traktService }) => {
       response: traktMovieResponseSchema
     },
     handler: (req, res, next) => {
-      traktService
+      tmdbService
         .findMovie(req.params.tmdb)
         .then(movie => replaceOneItemPosterUrl(movie, 'movie', req.headers.host))
         .then(movie => res.json({ movie }))
@@ -170,7 +170,7 @@ export default ({ traktService }) => {
       response: traktMovieResponseSchema
     },
     handler: (req, res, next) => {
-      traktService
+      tmdbService
         .findMovieByImdb(req.params.imdb)
         .then(movie => replaceOneItemPosterUrl(movie, 'movie', req.headers.host))
         .then(movie => res.json({ movie }))
@@ -202,7 +202,7 @@ export default ({ traktService }) => {
       response: traktPersonResponse
     },
     handler: (req, res, next) => {
-      traktService
+      personsService
         .findPerson(req.params.tmdb)
         .then(person => res.json({ person }))
         .catch(err => next(err));
@@ -215,7 +215,7 @@ export default ({ traktService }) => {
       response: traktPersonResponse
     },
     handler: (req, res, next) => {
-      traktService
+      personsService
         .findPersonByImdb(req.params.imdb)
         .then(person => res.json({ person }))
         .catch(err => next(err));
@@ -228,7 +228,7 @@ export default ({ traktService }) => {
       response: traktPersonResponse
     },
     handler: (req, res, next) => {
-      traktService
+      personsService
         .addPerson(req.params.id)
         .then(person => res.json({ person }))
         .catch(err => next(err));
