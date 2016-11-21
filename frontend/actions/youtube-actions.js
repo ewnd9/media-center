@@ -1,5 +1,3 @@
-import * as api from '../api';
-
 export const YOUTUBE_CHANGE_URL = 'YOUTUBE_CHANGE_URL';
 
 export const YOUTUBE_STATE_INIT = '';
@@ -55,7 +53,7 @@ export function playYoutube(url) {
       PLAY_YOUTUBE_SUCCESS,
       PLAY_YOUTUBE_FAILURE
     ],
-    callAPI: () => api.playYoutubeLink(url),
+    callAPI: ({ api }) => api.playYoutubeLink(url),
     payload: { url }
   };
 }

@@ -5,7 +5,7 @@ import './style.css';
 import '!!file?name=[name].[ext]!./assets/chrome-manifest.json';
 require.context('!!file?name=[name].[ext]!./assets/', false, /^\.\/.*\.png$/);
 
-import io from 'socket.io-client/socket.io.js';
+import io from 'socket.io-client/socket.io';
 import notify from './notify';
 import report from './agent';
 
@@ -37,6 +37,7 @@ import * as api from './api';
 import { fetchFiles } from './actions/files-actions';
 import { recievePlayback } from './actions/playback-actions';
 import { changeWidth } from './actions/width-actions';
+import { browserHistory } from 'react-router';
 import Router from './routes';
 
 import {
@@ -45,12 +46,13 @@ import {
 } from './constants';
 
 const socket = io(api.getBaseUrl());
-const store = configureStore(socket);
+const store = configureStore({ socket, api });
 
 const app = (
   <Provider store={store}>
     <Router
       shell={Main}
+      history={browserHistory}
       defaultRoute={'/tv'} />
   </Provider>
 );

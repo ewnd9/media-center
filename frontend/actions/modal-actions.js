@@ -1,4 +1,3 @@
-import * as api from '../api';
 import { fetchFiles } from './files-actions';
 
 export const OPEN_MODAL = 'OPEN_MODAL';
@@ -32,7 +31,7 @@ export function fetchSuggestions(mediaType, suggestionSearchTitle) {
       FETCH_MODAL_SUGGESTIONS_SUCCESS,
       FETCH_MODAL_SUGGESTIONS_FAILURE
     ],
-    callAPI: () => api.getMediaSuggestion(mediaType, suggestionSearchTitle),
+    callAPI: ({ api }) => api.getMediaSuggestion(mediaType, suggestionSearchTitle),
     payload: { mediaType, suggestionSearchTitle }
   };
 }

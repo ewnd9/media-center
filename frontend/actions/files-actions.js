@@ -1,5 +1,3 @@
-import * as api from '../api';
-
 export const FETCH_FILES_REQUEST = 'FETCH_FILES_REQUEST';
 export const FETCH_FILES_SUCCESS = 'FETCH_FILES_SUCCESS';
 export const FETCH_FILES_FAILURE = 'FETCH_FILES_FAILURE';
@@ -29,14 +27,14 @@ export const FILES_SET_ACTIVE_KEY = 'FILES_SET_ACTIVE_KEY';
 export function fetchFiles() {
   return {
     types: [FETCH_FILES_REQUEST, FETCH_FILES_SUCCESS, FETCH_FILES_FAILURE],
-    callAPI: () => api.findFiles()
+    callAPI: ({ api }) => api.findFiles()
   };
 }
 
 export function playFile(file, db, position, noScrobble) {
   return {
     types: [PLAY_FILE_REQUEST, PLAY_FILE_SUCCESS, PLAY_FILE_FAILURE],
-    callAPI: () => api.playFile(file, db, position, noScrobble),
+    callAPI: ({ api }) => api.playFile(file, db, position, noScrobble),
     payload: { file, db, position, noScrobble }
   };
 }
@@ -44,7 +42,7 @@ export function playFile(file, db, position, noScrobble) {
 export function saveInfo(file, db) {
   return {
     types: [SAVE_INFO_REQUEST, SAVE_INFO_SUCCESS, SAVE_INFO_FAILURE],
-    callAPI: () => api.saveInfo(file, db),
+    callAPI: ({ api }) => api.saveInfo(file, db),
     payload: { file, db }
   };
 }
@@ -52,7 +50,7 @@ export function saveInfo(file, db) {
 export function setHidden(file, filename) {
   return {
     types: [SET_HIDDEN_REQUEST, SET_HIDDEN_SUCCESS, SET_HIDDEN_FAILURE],
-    callAPI: () => api.setHidden(file, filename),
+    callAPI: ({ api }) => api.setHidden(file, filename),
     payload: { file, filename }
   };
 }
@@ -61,7 +59,7 @@ export function addToHistory({ file, db }) {
   return dispatch => {
     const action = {
       types: [ADD_TO_HISTORY_REQUEST, ADD_TO_HISTORY_SUCCESS, ADD_TO_HISTORY_FAILURE],
-      callAPI: () => api.addToHistory(file, db),
+      callAPI: ({ api }) => api.addToHistory(file, db),
       payload: { file, db }
     };
 
@@ -74,7 +72,7 @@ export function deleteFile({ file }) {
   return dispatch => {
     const action = {
       types: [DELETE_FILE_REQUEST, DELETE_FILE_SUCCESS, DELETE_FILE_FAILURE],
-      callAPI: () => api.deleteFile(file),
+      callAPI: ({ api }) => api.deleteFile(file),
       payload: { file }
     };
 

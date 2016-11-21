@@ -1,5 +1,3 @@
-import * as api from '../api';
-
 export const UPDATE_FAVORITE_STATUS_REQUEST = 'UPDATE_FAVORITE_STATUS_REQUEST';
 export const UPDATE_FAVORITE_STATUS_SUCCESS = 'UPDATE_FAVORITE_STATUS_SUCCESS';
 export const UPDATE_FAVORITE_STATUS_FAILURE = 'UPDATE_FAVORITE_STATUS_FAILURE';
@@ -15,7 +13,7 @@ export function updateFavoriteStatus(id) {
       UPDATE_FAVORITE_STATUS_SUCCESS,
       UPDATE_FAVORITE_STATUS_FAILURE
     ],
-    callAPI: () => api.putPersonFavoriteStatus(id),
+    callAPI: ({ api }) => api.putPersonFavoriteStatus(id),
     payload: { id }
   };
 }
@@ -27,7 +25,7 @@ export function fetchPerson(tmdb, imdb) {
       FETCH_PERSON_SUCCESS,
       FETCH_PERSON_FAILURE
     ],
-    callAPI: () => tmdb ? api.getPersonByTmdb(tmdb) : api.getPerson(imdb),
+    callAPI: ({ api }) => tmdb ? api.getPersonByTmdb(tmdb) : api.getPerson(imdb),
     payload: { tmdb, imdb }
   };
 }

@@ -1,5 +1,3 @@
-import * as api from '../api';
-
 export const TRAKT_REPORT_REQUEST = 'TRAKT_REPORT_REQUEST';
 export const TRAKT_REPORT_SUCCESS = 'TRAKT_REPORT_SUCCESS';
 export const TRAKT_REPORT_FAILURE = 'TRAKT_REPORT_FAILURE';
@@ -11,14 +9,14 @@ export const FETCH_SHOW_FAILURE = 'FETCH_SHOW_FAILURE';
 export function fetchTraktReport() {
   return {
     types: [TRAKT_REPORT_REQUEST, TRAKT_REPORT_SUCCESS, TRAKT_REPORT_FAILURE],
-    callAPI: () => api.getReport()
+    callAPI: ({ api }) => api.getReport()
   };
 }
 
 export function fetchShow(tmdb, imdb) {
   return {
     types: [FETCH_SHOW_REQUEST, FETCH_SHOW_SUCCESS, FETCH_SHOW_FAILURE],
-    callAPI: () => tmdb ? api.getShowByTmdb(tmdb) : api.getShow(imdb),
+    callAPI: ({ api }) => tmdb ? api.getShowByTmdb(tmdb) : api.getShow(imdb),
     payload: { tmdb, imdb }
   };
 }
