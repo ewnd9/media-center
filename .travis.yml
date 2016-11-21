@@ -10,9 +10,15 @@ addons:
     packages:
       - g++-4.8
 install:
-  - npm install -g yarn@0.16
+  - npm install -g yarn
   - yarn install
-script: npm run lint && npm run test:cov
+script: npm run lint && npm run test:cov && npm run build:demo
 after_success:
   - 'npm i coveralls'
   - 'cat coverage/lcov.info | ./node_modules/.bin/coveralls'
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: demo/deploy.sh
+  on:
+    branch: master
