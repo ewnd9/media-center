@@ -1,6 +1,8 @@
 import React from 'react';
 import styles from './style.css';
 
+import ImgGrow from '../img-grow/img-grow';
+
 export default React.createClass({
   render() {
     const { posterUrl, title, body, badge } = this.props;
@@ -8,9 +10,7 @@ export default React.createClass({
     return (
       <div className={`${styles.container}`}>
         <div className={styles.imgWrapper}>
-          <img
-            src={posterUrl}
-            className={styles.img} />
+          <ImgGrow src={posterUrl} className={styles.img} />
         </div>
 
         <div className={styles.contentWrapper}>

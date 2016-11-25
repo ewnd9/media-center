@@ -60,3 +60,17 @@ label {
 .alertify-logs {
   z-index: 100;
 }
+
+.grow { /* tachyons.grow */
+  /*backface-visibility: hidden;*/
+  transform: translateZ(0);
+  transition: transform .25s ease-out;
+}
+
+.grow:hover, .grow:focus {
+  transform: scale( 1.05 );
+}
+
+.grow:active {
+  transform: scale( .90 );
+}

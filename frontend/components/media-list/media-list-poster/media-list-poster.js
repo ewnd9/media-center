@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './style.css';
 
 import { getPosterPlaceholderUrl } from '../../../api';
+import ImgGrow from '../../ui/img-grow/img-grow';
 
 export default React.createClass({
   render() {
@@ -13,8 +14,8 @@ export default React.createClass({
         className={`${styles.poster}`}>
 
         <div className={styles.imgWrapper}>
-          <img src={getPosterPlaceholderUrl()} className={styles.placeholderImg} />
-          <img src={posterUrl} className={styles.img} />
+          <ImgGrow src={getPosterPlaceholderUrl()} className={styles.placeholderImg} />
+          <ImgGrow src={posterUrl} className={styles.img} />
         </div>
 
         <div className={styles.summary}>{(type === 'show' ? `S${s > 10 ? s : '0' + s}` : '') + ' ' + title}</div>

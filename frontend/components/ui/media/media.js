@@ -128,7 +128,7 @@ const Media = React.createClass({
     return (
       <div>
         <div className={styles.container}>
-          <img src={posterUrl} className={styles.poster} />
+          <img src={posterUrl} className={`${styles.poster} grow`} />
           <div className={styles.titleContainer}>
             <h1 className={styles.title}>{title}</h1>
             <div className={styles.tagline}>{tagline}</div>
