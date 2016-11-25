@@ -112,8 +112,14 @@ const MoviesList = React.createClass({
         <div className={styles.list}>
           {
             movies.map(movie => {
-              const date = moment(movie.releaseDate);
-              const body = `${date.format('MM.DD.YYYY')} (${date.fromNow()})`;
+              let body;
+
+              if (movie.releaseDate === 'true') {
+                body = 'TBA';
+              } else {
+                const date = moment(movie.releaseDate);
+                body = `${date.format('MM.DD.YYYY')} (${date.fromNow()})`;
+              }
 
               return (
                 <ListItem

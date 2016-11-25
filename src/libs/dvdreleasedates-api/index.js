@@ -26,7 +26,7 @@ export function getMovie(movie) {
         const date = new Date($(el.get(0)).text());
         movie.releaseDate = date.toISOString();
       } catch (e) {
-        //
+        movie.releaseDate = 'true';
       }
 
       movie.img = `${baseUrl}${$('img[itemprop="image"]').get(0).attribs.src}`;
