@@ -12,6 +12,7 @@ function TmdbService(config, db) {
   }
 
   const { tmdbApi } = config;
+
   this.tmdbApi = LimitedTmdb(tmdbApi);
   this.db = db;
 }

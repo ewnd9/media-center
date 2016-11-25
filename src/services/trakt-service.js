@@ -1,13 +1,6 @@
 import Cache from '../utils/cache';
-
-import pify from 'pify';
-
-import _mkdirp from 'mkdirp';
-const mkdirp = pify(_mkdirp);
-
 import groupBy from 'lodash/groupBy';
 
-import fsCache from '../utils/fs-cache';
 import * as dvdReleasesApi from '../libs/dvdreleasedates-api/';
 
 import { lastDateIndex } from '../models/episode-scrobble';
@@ -21,14 +14,11 @@ function TraktService(config, db) {
     return new TraktService(config, db);
   }
 
-  const { trakt, dbPath } = config;
+  const { trakt } = config;
 
   this.cache = new Cache();
   this.trakt = trakt;
-  this.filePath = dbPath + '/posters';
-
   this.db = db;
-  mkdirp(this.filePath);
 
   this.search = this.trakt.search.bind(this.trakt);
 }
@@ -47,24 +37,6 @@ TraktService.prototype.addToHistory = function() {
 
 TraktService.prototype.prefetch = function() {
   return this.getShowReport();
-};
-
-TraktService.prototype.getPosterStream = function(type, imdbId) {
-  const filePath = `${this.filePath}/${type}-${imdbId}.jpg`;
-  return fsCache(filePath, () => this.getPosterStreamFromTrakt(type, imdbId));
-};
-
-TraktService.prototype.getPlaceholderPosterStream = function() {
-  const filePath = `${this.filePath}/placeholder.jpg`;
-  return fsCache(filePath, () => Promise.resolve('https://placeholdit.imgix.net/~text?txtsize=19&txt=200%C3%97300&w=200&h=300'));
-};
-
-TraktService.prototype.getPosterStreamFromTrakt = function(type, imdbId) {
-  if (type === 'show') {
-    return this.tmdbApi.getShowPosterByImdb(imdbId);
-  } else {
-    return this.tmdbApi.getMoviePosterByImdb(imdbId);
-  }
 };
 
 TraktService.prototype.syncShowsHistory = function() {

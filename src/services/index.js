@@ -6,6 +6,7 @@ import TraktService from './trakt-service';
 import TmdbService from './tmdb-service';
 import PersonsService from './persons-service';
 import RecommendationsService from './recommendations-service';
+import PostersService from './posters-service';
 
 function init(db, storage, config) {
   const registry = new Registry('services');
@@ -17,6 +18,7 @@ function init(db, storage, config) {
   registry.define('tmdbService', new TmdbService(config, db));
   registry.define('personsService', new PersonsService(config, db));
   registry.define('recommendationsService', new RecommendationsService(config, db));
+  registry.define('postersService', new PostersService(config, db));
 
   return registry.services;
 }
