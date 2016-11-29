@@ -31,6 +31,9 @@
     - name: copy deps.json
       copy: src=../../deps.json dest={{ app_dir }}/
 
+    - name: copy yarn.lock
+      copy: src=../../yarn.lock dest={{ app_dir }}/
+
     - name: copy docker-compose-base-arm.yml
       copy: src=../docker-compose-base-arm.yml dest={{ app_dir }}/docker-compose.yml
 

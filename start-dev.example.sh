@@ -15,10 +15,10 @@ FILES="-f provision/docker-compose-base-arm.yml -f provision/docker-compose-dev.
 
 if [ "$1" == "run" ]; then
   shift
-  docker-compose $FILES run app $@
+  docker-compose $FILES --no-deps run app $@
 elif [ "$1" == "exec" ]; then
   shift
-  docker-compose $FILES exec app $@
+  docker-compose $FILES --no-deps exec app $@
 else
   docker-compose $FILES up $@
 fi

@@ -10,6 +10,7 @@ CMD node /app/app.js
 RUN npm install -g yarn@0.16
 
 COPY deps.json /app/package.json
+COPY yarn.lock /app/yarn.lock
 RUN yarn install --production
 
 COPY app.js /app/app.js
