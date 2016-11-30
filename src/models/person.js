@@ -1,6 +1,7 @@
 import t from 'tcomb-validation';
 
 export const imdbIndex = 'imdbIndex';
+export const isFavoriteIndex = 'isFavoriteIndex';
 
 const Person = {
   createId: ({ tmdb }) => `person:${tmdb}`,
@@ -24,6 +25,14 @@ const Person = {
       name: imdbIndex,
       fn: `function(doc) {
         emit(doc.imdb);
+      }`
+    },
+    {
+      name: isFavoriteIndex,
+      fn: `function(doc) {
+        if (doc.isFavorite) {
+          emit(doc._id);
+        }
       }`
     }
   ]

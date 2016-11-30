@@ -152,6 +152,19 @@ export default ({ traktService, personsService, tmdbService, recommendationsServ
     }
   });
 
+  router.post({
+    path: '/api/v1/trakt/movies/recommendations/rescan',
+    schema: {
+      response: statusStringResponse
+    },
+    handler: (req, res, next) => {
+      recommendationsService
+        .rescanMovieRecommendations()
+        .then(() => res.json({ status: 'ok' }))
+        .catch(err => next(err));
+    }
+  });
+
   router.get({
     path: '/api/v1/trakt/movies/tmdb/:tmdb',
     schema: {

@@ -215,3 +215,27 @@ test.serial('GET /api/v1/trakt/movies/recommendations', async t => {
     'Anchorman: The Legend of Ron Burgundy'
   ]);
 });
+
+test.serial('POST /api/v1/trakt/movies/recommendations/rescan', async t => {
+  await t.context.request.get('/api/v1/trakt/sync/movies');
+
+  await t.context.request.put('/api/v1/trakt/persons/:id', { params: { id: '23659' } });
+  await t.context.request.put('/api/v1/trakt/persons/:id', { params: { id: '7399' } });
+
+  await delay(1000);
+
+  const res0 = await t.context.request.get('/api/v1/trakt/movies/recommendations');
+  const { body: { movies: movies0 } } = res0;
+
+  t.truthy(movies0.length === 2);
+  t.deepEqual(movies0.map(_ => _.title), [
+    'Megamind',
+    'Anchorman: The Legend of Ron Burgundy'
+  ]);
+
+  await t.context.request.post('/api/v1/trakt/movies/recommendations/rescan');
+  const res1 = await t.context.request.get('/api/v1/trakt/movies/recommendations');
+
+  const { body: { movies: movies1 } } = res1;
+  t.deepEqual(movies0.map(_ => _.title), movies1.map(_ => _.title));
+});

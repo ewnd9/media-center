@@ -1,4 +1,4 @@
-import { imdbIndex as personImdbIndex } from '../models/person';
+import { imdbIndex as personImdbIndex, isFavoriteIndex } from '../models/person';
 export default PersonsService;
 
 function PersonsService(config, db) {
@@ -53,30 +53,21 @@ PersonsService.prototype.findPerson = function({ tmdb, imdb }) {
   }
 };
 
+PersonsService.prototype.findFavoritePersons = function() {
+  const { db: { Person } } = this;
+
+  return Person
+    .findByIndex(isFavoriteIndex);
+};
+
 PersonsService.prototype.addPerson = function(tmdb) {
-  const { db: { MovieScrobble }, services: { recommendationsService } } = this;
+  const { services: { recommendationsService } } = this;
   let person;
 
   return this.findPerson({ tmdb })
     .then(_person => {
       person = _person;
-      return MovieScrobble.findAll();
-    })
-    .then(movies => {
-      const unseen = person.tmdbData.movie_credits.cast
-        .filter(movie => {
-          return !movies.find(seenMovie => seenMovie.tmdb === movie.id);
-        });
-
-      const promises = unseen.map(movie => {
-        return recommendationsService.graphPut({
-          subject: person._id,
-          predicate: 'in',
-          object: movie.id // external movie, id is tmdb
-        });
-      });
-
-      return Promise.all(promises);
+      return recommendationsService.addMoviesByPerson(person);
     })
     .then(() => person);
 };
