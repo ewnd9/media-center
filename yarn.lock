@@ -3100,6 +3100,10 @@ expand-tilde@^1.2.0, expand-tilde@^1.2.1, expand-tilde@^1.2.2:
   dependencies:
     os-homedir "^1.0.1"
 
+explain-error:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/explain-error/-/explain-error-1.0.3.tgz#f4e2b21152120d94db36d93bef03a5c42bfedce9"
+
 express-ls-routes@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/express-ls-routes/-/express-ls-routes-1.0.2.tgz#16ca61d7ef5aa77dd6f534958f2f2d5b48848585"

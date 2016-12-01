@@ -59,6 +59,7 @@
     "dot-file-config": "^0.5.0",
     "execa": "^0.4.0",
     "exit-hook": "^1.1.1",
+    "explain-error": "^1.0.3",
     "express": "^4.13.3",
     "express-router-tcomb": "^0.1.0",
     "fkill": "^3.1.0",

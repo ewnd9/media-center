@@ -1,9 +1,12 @@
 import level from 'level';
 import levelgraph from 'levelgraph';
 import leveldown from 'leveldown';
+import explainError from 'explain-error';
 
 import uniqBy from 'lodash/uniqBy';
 import pify from 'pify';
+
+import report from '../agent';
 
 export default RecommendationsService;
 
@@ -60,13 +63,20 @@ RecommendationsService.prototype.findMoviesRecommendations = function() {
     })
     .then(solutions => {
       const promises = solutions.map(solution => {
-        return tmdbService.findMovie(solution.movie);
+        return tmdbService
+          .findMovie(solution.movie)
+          .then(
+            null,
+            err => {
+              report(explainError(err, `Can't load movie #${solution.movie.id}`));
+            }
+          );
       });
 
       return Promise.all(promises);
     })
     .then(movies => {
-      return uniqBy(movies, '_id');
+      return uniqBy(movies.filter(_ => !!_), '_id');
     });
 };
 
@@ -95,7 +105,7 @@ RecommendationsService.prototype.addMoviesByPerson = function(person) {
 
       return Promise.all(promises);
     });
-}
+};
 
 RecommendationsService.prototype.rescanMovieRecommendations = function() {
   const { services: { personsService } } = this;
