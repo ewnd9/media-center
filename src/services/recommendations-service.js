@@ -71,14 +71,18 @@ RecommendationsService.prototype.findMoviesRecommendations = function() {
 };
 
 RecommendationsService.prototype.addMoviesByPerson = function(person) {
-  const { db: { MovieScrobble } } = this;
+  const { db: { MovieScrobble }, services: { traktService } } = this;
 
-  return MovieScrobble
-    .findAll()
-    .then(movies => {
+  return Promise
+    .all([
+      MovieScrobble.findAll(),
+      traktService.findMoviesByReleaseDate()
+    ])
+    .then(([ seenMovies, releaseDateMovies ]) => {
       const unseen = person.tmdbData.movie_credits.cast
         .filter(movie => {
-          return !movies.find(seenMovie => seenMovie.tmdb === movie.id);
+          return !seenMovies.find(seenMovie => seenMovie.tmdb === movie.id) &&
+                 !releaseDateMovies.find(rdMovie => rdMovie.tmdb === movie.id);
         });
 
       const promises = unseen.map(movie => {
