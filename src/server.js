@@ -30,7 +30,7 @@ function createServer({ db, services, config }) {
 
   app.use(compression());
 
-  app.use('/screenshots', express.static(screenshotPath));
+  app.use('/screenshots', express.static(screenshotPath,  { maxage: '1y' }));
   app.use('/', PaginationMiddleware);
 
   app.use('/', FilesRouter(services));
@@ -43,7 +43,7 @@ function createServer({ db, services, config }) {
   const io = socketIO(httpServer);
 
   if (process.env.NODE_ENV !== 'development') {
-    app.use(express.static('public'));
+    app.use(express.static('public', { maxage: '1y' }));
     app.get('*', (req, res) => {
       res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
     });

@@ -10,6 +10,7 @@ export default ({ postersService }) => {
     postersService
       .getPosterStream(type, imdb)
       .then(stream => {
+        res.set('Cache-Control', 'max-age=31536000'); // 1 year
         stream.pipe(res);
       })
       .catch(err => next(err));
@@ -19,6 +20,7 @@ export default ({ postersService }) => {
     postersService
       .getPlaceholderPosterStream()
       .then(stream => {
+        res.set('Cache-Control', 'max-age=31536000'); // 1 year
         stream.pipe(res);
       })
       .catch(err => next(err));
