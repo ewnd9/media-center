@@ -6,20 +6,36 @@ import path from 'path';
 import getPosterUrl from './utils/poster-url';
 
 const exts = '(mkv|mp4|avi)';
+const sampleFilesRegex = /(?:\.|\/)(?:sample|rarbg\.com|etrg)\./i;
 
 export default (db, rootDir) => {
-  return globby([`**/*.+${exts}`], { cwd: rootDir, realpath: true })
-    .then(parseVideoFiles.bind(null, db, rootDir))
-    .then(flattenVideos.bind(null, rootDir));
+  return findFiles(rootDir)
+    .then(mergeFiles.bind(null, db));
 };
 
-function parseVideoFiles(db, rootDir, allVideos) {
-  const media = allVideos
-    .filter(item => !((/(?:\.|\/)(?:sample|rarbg\.com|etrg)\./i).test(item)))
-    .map(canonicalPath => {
-      const video = canonicalPath
-        .replace(new RegExp('^' + rootDir + '/'), '');
+export function findFiles(rootDir) {
+  return globby([`**/*.+${exts}`], { cwd: rootDir, realpath: true })
+    .then(allVideos => {
+      return allVideos
+        .filter(item => !sampleFilesRegex.test(item))
+        .map(canonicalPath => {
+          const video = canonicalPath.replace(new RegExp('^' + rootDir + '/'), '');
+          return {
+            canonicalPath,
+            video
+          };
+        });
+    });
+}
 
+export function mergeFiles(db, videoFiles) {
+  return parseVideoFiles(db, videoFiles)
+    .then(flattenVideos);
+}
+
+function parseVideoFiles(db, videoFiles) {
+  const media = videoFiles
+    .map(({ canonicalPath, video }) => {
       const data = video.split('/');
 
       const media = {
@@ -73,7 +89,7 @@ function setupDb(db, media, [dbFiles, dbPrefixes]) {
 
 const UNRECOGNIZED = 'Unrecognized';
 
-function flattenVideos(rootDir, result) {
+function flattenVideos(result) {
   const groupedByImdbObj = _.groupBy(result, item => {
     return item.db && `${item.db.imdb}-${item.db.s}` || UNRECOGNIZED;
   });

@@ -21,7 +21,7 @@ export default ({ filesService, playerService }) => {
     },
     handler: (req, res, next) => {
       filesService
-        .findAllFilesWithStreamUrls(req.headers.host)
+        .findFilesWithStreamUrls(req.headers.host)
         .then(_ => res.json(_))
         .catch(err => next(err));
     }

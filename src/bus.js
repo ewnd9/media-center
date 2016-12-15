@@ -2,6 +2,7 @@ import chokidar from 'chokidar';
 import { exec } from 'child_process';
 
 import storage from './storage';
+import report from './agent';
 
 import {
   USER_CLOSE,
@@ -64,8 +65,11 @@ function Bus(services, io) {
       ignoreInitial: true
     })
     .on('all', () => {
-      process.nextTick(() => services.filesService.renewFindAllFiles());
-      io.emit(RELOAD_FILES);
+      services
+        .filesService
+        .renewFindFiles()
+        .then(() => io.emit(RELOAD_FILES))
+        .catch(err => report(err));
     });
 
   return storage;

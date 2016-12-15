@@ -1,17 +1,18 @@
-import findFiles from '../find-files';
+import { findFiles, mergeFiles } from '../find-files';
 import Cache from '../utils/cache';
-import proxy from '../utils/proxy';
 import dlnaQuery from '../libs/dlna-query';
 import replaceHostname from '../libs/replace-link-hostname';
 import fs from 'fs';
 import pify from 'pify';
 import path from 'path';
 import mkdirp from 'mkdirp';
+import report from '../agent';
 
 const moveFile = pify(fs.rename);
 const mkdir = pify(mkdirp);
 
 export const FIND_FILES = 'FIND_FILES';
+export const FIND_FS_FILES = 'FIND_FS_FILES';
 export default FilesService;
 
 function FilesService(config, models) {
@@ -27,18 +28,29 @@ function FilesService(config, models) {
   this.rootDir = rootDir;
   this.trashDir = trashDir;
 
-  this._addFile = proxy(models.File, models.File.add);
-  this._updateFile = proxy(models.File, models.File.update);
-  this._putFile = proxy(models.File, models.File.put);
-
-  this.renewFindAllFiles = this.renewFindAllFiles.bind(this);
+  this.renewFindFiles = this.renewFindFiles.bind(this);
   this.findFiles = this.findFiles.bind(this);
+
+  this._findFiles = this._findFiles.bind(this);
+  this._findFSFiles = this._findFSFiles.bind(this);
 }
 
+FilesService.prototype.prefetch = function() {
+  return this.findFiles();
+};
+
+FilesService.prototype.renewFindFiles = function() {
+  return this.cache.renew(FIND_FILES, this.findFiles);
+};
+
 FilesService.prototype.findFiles = function() {
+  return this.cache.getOrInit(FIND_FILES, this._findFiles);
+};
+
+FilesService.prototype._findFiles = function() {
   return Promise
     .all([
-      findFiles(this.models, this.rootDir),
+      this.findFSFiles().then(files => mergeFiles(this.models, files)),
       this.findDlnaFiles()
     ])
     .then(([ files, dlna ]) => {
@@ -61,26 +73,29 @@ FilesService.prototype.findFiles = function() {
     });
 };
 
+FilesService.prototype.findFSFiles = function() {
+  return this.cache.getOrInit(FIND_FS_FILES, this._findFSFiles);
+};
+
+FilesService.prototype._findFSFiles = function() {
+  return findFiles(this.rootDir);
+};
+
 FilesService.prototype.findDlnaFiles = function() {
-  return process.env.NODE_ENV === 'production' ?
-    dlnaQuery().then(null, err => {
-      console.error(err);
-      return Promise.resolve([]);
-    }) :
-    Promise.resolve([]);
+  if (process.env.NODE_ENV === 'production') {
+    return dlnaQuery()
+      .then(null, err => {
+        report(err);
+        return Promise.resolve([]);
+      });
+  } else {
+    return Promise.resolve([]);
+  }
 };
 
-FilesService.prototype.prefetch = function() {
-  return this.findAllFiles();
-};
-
-FilesService.prototype.findAllFiles = function() {
-  return this.cache.getOrInit(FIND_FILES, this.findFiles);
-};
-
-FilesService.prototype.findAllFilesWithStreamUrls = function(host) {
+FilesService.prototype.findFilesWithStreamUrls = function(host) {
   return this
-    .findAllFiles()
+    .findFiles()
     .then(files => {
 
       // @TODO think maybe external ip should be set via environment variable?
@@ -98,17 +113,22 @@ FilesService.prototype.findAllFilesWithStreamUrls = function(host) {
     });
 };
 
-FilesService.prototype.renewFindAllFiles = function(result) {
-  this.cache.renew(FIND_FILES, this.findFiles);
-  return result;
-};
-
 FilesService.prototype.addFile = function() {
-  return this._addFile(arguments).then(this.renewFindAllFiles);
+  return this.models.File
+    .add(...arguments)
+    .then(res => {
+      this.renewFindFiles();
+      return res;
+    });
 };
 
 FilesService.prototype.updateFile = function() {
-  return this._updateFile(arguments).then(this.renewFindAllFiles);
+  return this.models.File
+    .update(...arguments)
+    .then(res => {
+      this.renewFindFiles();
+      return res;
+    });
 };
 
 FilesService.prototype.updatePosition = function(uri, media, position, duration) {
