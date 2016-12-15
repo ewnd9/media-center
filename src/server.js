@@ -47,38 +47,6 @@ function createServer({ db, services, config }) {
     app.get('*', (req, res) => {
       res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
     });
-  } else {
-    const webpack = require('webpack');
-    const webpackMiddleware = require('webpack-dev-middleware');
-    const webpackHotMiddleware = require('webpack-hot-middleware');
-
-    const wconfig = require('../webpack.config');
-    wconfig.entry.app = [
-      'webpack-hot-middleware/client?reload=true',
-      wconfig.entry.app
-    ];
-
-    const compiler = webpack(wconfig);
-    const middleware = webpackMiddleware(compiler, {
-      ...wconfig.devServer,
-      contentBase: __dirname
-    });
-
-    app.use(middleware);
-    app.use(webpackHotMiddleware(compiler));
-
-    app.get('*', (req, res, next) => {
-      const filename = path.join(compiler.outputPath, 'index.html');
-
-      compiler.outputFileSystem.readFile(filename, (err, result) => {
-        if (err) {
-          return next(err);
-        }
-
-        res.set('content-type','text/html');
-        res.end(result);
-      });
-    });
   }
 
   app.use((err, req, res, next) => {

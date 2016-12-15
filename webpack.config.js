@@ -109,7 +109,16 @@ const config = {
     noInfo: true,
     hot: true,
     inline: true,
-    historyApiFallback: true
+    historyApiFallback: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000'
+      },
+      '/socket.io': {
+        target: 'ws://localhost:3000',
+        ws: true
+      }
+    }
   }
 };
 

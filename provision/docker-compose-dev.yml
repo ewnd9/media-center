@@ -18,6 +18,7 @@ services:
     restart: never
     ports:
       - "3000:3000"
+      - "8080:8080"
     links: []
     environment:
       - NODE_ENV=${NODE_ENV}
