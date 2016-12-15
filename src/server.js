@@ -15,6 +15,7 @@ import ScreenshotsRouter from './routes/screenshots';
 import YoutubeRouter from './routes/youtube';
 import TraktRouter from './routes/trakt';
 import PostersRouter from './routes/posters';
+import DbRouter from './routes/db-router';
 
 import report from './agent';
 
@@ -38,6 +39,7 @@ function createServer({ db, services, config }) {
   app.use('/', ScreenshotsRouter(screenshotPath));
   app.use('/', TraktRouter(services));
   app.use('/', PostersRouter(services));
+  app.use('/', DbRouter(db));
 
   const httpServer = http.createServer(app);
   const io = socketIO(httpServer);

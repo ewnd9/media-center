@@ -83,6 +83,7 @@
     "ohcrash": "^1.0.3",
     "omxplayer": "0.0.1",
     "opensubtitles-universal-api": "^1.1.0",
+    "pouchdb-express-router": "ewnd9/pouchdb-express-router#4d7754b14216555701ec964d4cb6119d427fbb7c",
     "pouchdb-migrate": "^1.1.1",
     "pouchdb-model": "^0.2.0",
     "pouchdb-node": "^6.0.4",
