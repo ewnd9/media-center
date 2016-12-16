@@ -1,9 +1,16 @@
-import Cache from 'node-cache';
-
 export default () => {
-  const cache = new Cache({ stdTTL: process.env.NODE_ENV === 'production' ? 60 * 10 : 0 }); // invalidates in 10 mins
+  const data = {};
+  const isProd = process.env.NODE_ENV === 'production';
+
+  const cache = {
+    get(key) { return isProd ? data[key] : undefined; },
+    set(key, value) { data[key] = value; },
+    del(key) { data[key] = undefined; }
+  };
 
   const update = function update(key, promiseFn) {
+    console.log(`cache update: ${key}`);
+
     return promiseFn().then(data => {
       cache.set(key, data);
       return data;
@@ -12,6 +19,7 @@ export default () => {
 
   const getOrInit = function getOrInit(key, promiseFn) {
     const data = cache.get(key);
+    console.log(`cache get: ${key}, result: ${typeof data}`);
 
     if (data) {
       return Promise.resolve(data);
