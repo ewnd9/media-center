@@ -26,13 +26,17 @@ export const ScreenshotsGallery = React.createClass({
       return (
         <div className={`${styles.imageContainer} clearfix`}>
           {
-            screenshots.map(url => {
-              return (
-                <div key={url} className={styles.screenshot}>
-                  <img src={`${getBaseUrl()}/screenshots/${url}`} />
-                </div>
-              );
-            })
+            screenshots.length === 0 && (
+              <div className={styles.emptyInput}>No screenshots were found</div>
+            ) || (
+              screenshots.map(url => {
+                return (
+                  <div key={url} className={styles.screenshot}>
+                    <img src={`${getBaseUrl()}/screenshots/${url}`} />
+                  </div>
+                );
+              })
+            )
           }
         </div>
       );

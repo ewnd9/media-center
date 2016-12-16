@@ -111,24 +111,28 @@ const MoviesList = React.createClass({
         </div>
         <div className={styles.list}>
           {
-            movies.map(movie => {
-              let body;
+            movies.length === 0 && (
+              <div>No movies were found</div>
+            ) || (
+              movies.map(movie => {
+                let body;
 
-              if (movie.releaseDate === 'true') {
-                body = 'TBA';
-              } else {
-                const date = moment(movie.releaseDate);
-                body = `${date.format('MM.DD.YYYY')} (${date.fromNow()})`;
-              }
+                if (movie.releaseDate === 'true') {
+                  body = 'TBA';
+                } else {
+                  const date = moment(movie.releaseDate);
+                  body = `${date.format('MM.DD.YYYY')} (${date.fromNow()})`;
+                }
 
-              return (
-                <ListItem
+                return (
+                  <ListItem
                   key={movie.imdb}
                   posterUrl={movie.posterUrl}
                   body={body}
                   title={<Link to={`/movies/${movie.imdb}`}>{movie.title}</Link>} />
-              );
-            })
+                );
+              })
+            )
           }
         </div>
       </div>

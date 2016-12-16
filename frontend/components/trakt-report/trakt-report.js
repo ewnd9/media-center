@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './style.css';
 
 import Spinner from '../ui/spinner/spinner';
 import { connect } from 'react-redux';
@@ -70,15 +71,17 @@ const TraktReport = React.createClass({
       return (
         <div>
           {
-            renderReport(
-              groupShowsByAirDatesFlatten(
-                report,
-                episodesSelector,
-                isWatchedSelector,
-                hasFileSelector,
-                formatInterval
+            report.length === 0 &&
+              (<div className={styles.emptyInput}>No shows were found</div>) ||
+              renderReport(
+                groupShowsByAirDatesFlatten(
+                  report,
+                  episodesSelector,
+                  isWatchedSelector,
+                  hasFileSelector,
+                  formatInterval
+                )
               )
-            )
           }
         </div>
       );

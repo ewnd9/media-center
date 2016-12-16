@@ -93,7 +93,13 @@ const MediaList = React.createClass({
 
     return (
       <div className={`${styles.flex} ${styles.imageContainer}`} ref={this.setRef}>
-        {renderedFiles}
+        {
+          renderedFiles.length === 0 && (
+            <div className={styles.emptyInput}>No files were found</div>
+          ) || (
+            renderedFiles
+          )
+        }
       </div>
     );
   },

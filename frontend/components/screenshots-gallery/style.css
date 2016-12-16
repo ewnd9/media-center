@@ -26,3 +26,8 @@
 .screenshot > img {
   width: 100%;
 }
+
+.emptyInput {
+  margin-top: 15px;
+  text-align: center;
+}
