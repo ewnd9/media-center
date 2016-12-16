@@ -196,3 +196,13 @@ TraktService.prototype.findMoviesByReleaseDate = function() {
     .query(releaseDateIndex, { include_docs: true, descending: true })
     .then(res => res.rows.map(row => row.doc));
 };
+
+TraktService.prototype.getAccessToken = function(pin) {
+  const { trakt, services: { settingsService } } = this;
+
+  return trakt
+    .getAccessToken(pin)
+    .then(token => {
+      settingsService.setTraktToken(token);
+    });
+};

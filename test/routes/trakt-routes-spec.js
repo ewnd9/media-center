@@ -15,12 +15,17 @@ test.beforeEach(async t => {
   t.context.app = await createApp({ traktMock: createTrakt(process.env.TRAKT_TOKEN) });
   t.context.request = Agent(t.context.app.app, t.context.app.server);
 
-  t.context.closeNock = nockHook(t, __filename, { dirname: __dirname + '/../fixtures/trakt-routes-spec' });
+  if (t._test.title.indexOf('/api/v1/trakt/pin') === -1) {
+    t.context.closeNock = nockHook(t, __filename, { dirname: __dirname + '/../fixtures/trakt-routes-spec' });
+  }
 });
 
 test.afterEach(t => {
   t.context.app.server.close();
-  t.context.closeNock();
+
+  if (t._test.title.indexOf('/api/v1/trakt/pin') === -1) {
+    t.context.closeNock();
+  }
 });
 
 test.serial('GET /api/v1/trakt/report', async t => {
@@ -244,4 +249,24 @@ test.serial('POST /api/v1/trakt/movies/recommendations/rescan', async t => {
 
   const { body: { movies: movies1 } } = res1;
   t.deepEqual(movies0.map(_ => _.title), movies1.map(_ => _.title));
+});
+
+test.serial('POST /api/v1/trakt/pin', async t => {
+  const { services: { traktService } } = t.context.app;
+  traktService.getAccessToken = sinon.stub().returns(Promise.resolve());
+
+  await t.context.request.post('/api/v1/trakt/pin', { body: { pin: '1' } });
+  t.true(traktService.getAccessToken.args[0][0] === '1');
+});
+
+test.serial('GET /api/v1/trakt/pin', async t => {
+  const { services: { settingsService } } = t.context.app;
+
+  const { body: body0 } = await t.context.request.get('/api/v1/trakt/pin');
+  t.truthy(body0.status === 'empty');
+
+  settingsService.setTraktToken('test');
+
+  const { body: body1 } = await t.context.request.get('/api/v1/trakt/pin');
+  t.truthy(body1.status === 'ok');
 });

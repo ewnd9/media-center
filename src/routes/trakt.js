@@ -17,7 +17,7 @@ import {
 
 import getPosterUrl from '../utils/poster-url';
 
-export default ({ traktService, personsService, tmdbService, recommendationsService }) => {
+export default ({ traktService, personsService, tmdbService, recommendationsService, settingsService }) => {
   const router = Router();
   const cache = new Cache();
 
@@ -260,6 +260,32 @@ export default ({ traktService, personsService, tmdbService, recommendationsServ
         })
         .then(person => res.json({ person }))
         .catch(err => next(err));
+    }
+  });
+
+  router.post({
+    path: '/api/v1/trakt/pin',
+    schema: {
+      response: statusStringResponse
+    },
+    handler: (req, res, next) => {
+      const { pin } = req.body;
+
+      traktService
+        .getAccessToken(pin)
+        .then(() => res.json({ status: 'ok' }))
+        .catch(err => next(err));
+    }
+  });
+
+  router.get({
+    path: '/api/v1/trakt/pin',
+    schema: {
+      response: statusStringResponse
+    },
+    handler: (req, res) => {
+      const token = settingsService.getTraktToken();
+      res.json({ status: typeof token !== 'undefined' ? 'ok' : 'empty' });
     }
   });
 
