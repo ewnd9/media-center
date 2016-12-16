@@ -39,8 +39,11 @@
     - name: copy docker-compose-base-arm.yml
       copy: src=../docker-compose-base-arm.yml dest={{ app_dir }}/docker-compose.yml
 
+    - name: copy docker-compose-base-arm.yml
+      copy: src=../docker-compose-arm-src-volume.yml dest={{ app_dir }}/docker-compose.override.yml
+
     - name: copy rpi-media-center/Dockerfile
-      copy: src=../docker/rpi-media-center/Dockerfile dest={{ app_dir }}/
+      copy: src=../docker/rpi-media-center-arm-src-volume/Dockerfile dest={{ app_dir }}/
 
     - name: copy lib/
       synchronize: src=lib/ dest={{ app_dir }}/lib/ delete=yes recursive=yes

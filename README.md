@@ -42,7 +42,7 @@ Tested with `2016-05-27-raspbian-jessie-lite.img`
 $ cp provision/ansible/example.variables.yml provision/ansible/variables.yml
 
 $ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-update-sshd.yml --ask-pass # default password in rasbpian is "raspberry"
-$ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-docker-arm.yml --ask-become-pass
+$ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-docker-arm-src-volume.yml --ask-become-pass
 $ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-deploy-arm.yml
 $ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-backup.yml
 ```
@@ -50,7 +50,7 @@ $ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-backup.yml
 ### Deploy
 
 ```sh
-$ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-deploy-arm.yml
+$ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-deploy-arm-src-volume.yml
 ```
 
 ## Development

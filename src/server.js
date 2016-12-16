@@ -45,7 +45,7 @@ function createServer({ db, services, config }) {
   const io = socketIO(httpServer);
 
   if (process.env.NODE_ENV !== 'development') {
-    app.use(express.static('public', { maxage: '1y' }));
+    app.use(express.static(path.resolve(__dirname, '..', 'public'), { maxage: '1y' }));
     app.get('*', (req, res) => {
       res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
     });
