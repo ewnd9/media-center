@@ -15,6 +15,8 @@ function SettingsService(config, db) {
   } catch (e) {
     this.settings = {};
   }
+
+  config.trakt.token = this.getTraktToken();
 }
 
 SettingsService.prototype.update = function() {

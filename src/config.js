@@ -23,12 +23,5 @@ export const errorBoardMount = '/error-board';
 
 export const port = process.env.PORT || 3000;
 
-const TRAKT_TOKEN = process.env.TRAKT_TOKEN;
-
-const TRAKT_ID = '412681ab85026009c32dc6e525ba6226ff063aad0c1a374def0c8ee171cf121f';
-const TRAKT_SECRET = '714f0cb219791a0ecffec788fd7818c601397b95b2b3e8f486691366954902fb';
-
-const TMDB_KEY = 'd3350c6d641ee4f16f94a6c0b3b809d1';
-export const tmdbApi = new TmdbApi(TMDB_KEY);
-
-export const trakt = new Trakt(TRAKT_ID, TRAKT_SECRET, TRAKT_TOKEN);
+export const trakt = new Trakt(process.env.TRAKT_ID, process.env.TRAKT_SECRET, null);
+export const tmdbApi = new TmdbApi(process.env.TMDB_KEY);

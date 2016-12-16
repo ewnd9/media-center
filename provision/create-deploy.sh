@@ -6,7 +6,9 @@ cat > provision/$START_SCRIPT << EOF
 export DATA="$DATA_DIR"
 export DB="$DB_DIR"
 export CACHE="$CACHE_DIR"
-export TRAKT_TOKEN="$TRAKT_TOKEN"
+export TRAKT_ID="$TRAKT_ID"
+export TRAKT_SECRET="$TRAKT_SECRET"
+export TMDB_KEY="$TMDB_KEY"
 export ERROR_BOARD_URL="$ERROR_BOARD_URL"
 
 mkdir -p "\$CACHE/minidlna-db"

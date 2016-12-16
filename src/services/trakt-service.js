@@ -204,5 +204,6 @@ TraktService.prototype.getAccessToken = function(pin) {
     .getAccessToken(pin)
     .then(token => {
       settingsService.setTraktToken(token);
+      this.trakt.token = token;
     });
 };

@@ -53,10 +53,6 @@ $ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-backup.yml
 $ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-deploy-arm.yml
 ```
 
-### Trakt auth token
-
-You could exchange a pin code from https://trakt.tv/pin/6495 for it via [scripts/trakt-token.js](scripts/trakt-token.js). Then you need to copy token to `ecosystem.json` as `TRAKT_TOKEN`
-
 ## Development
 
 ```sh

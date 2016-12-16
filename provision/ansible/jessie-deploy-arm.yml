@@ -12,7 +12,9 @@
         DATA_DIR: "{{ data_dir }}"
         DB_DIR: "{{ db_dir }}"
         CACHE_DIR: "{{ cache_dir }}"
-        TRAKT_TOKEN: "{{ trakt_token }}"
+        TRAKT_ID: "{{ trakt_id }}"
+        TRAKT_SECRET: "{{ trakt_secret }}"
+        TMDB_KEY: "{{ tmdb_key }}"
         ERROR_BOARD_URL: "{{ error_board_url }}"
       local_action: shell bash provision/create-deploy.sh
 
