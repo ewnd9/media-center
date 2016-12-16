@@ -182,6 +182,14 @@ export const putPersonFavoriteStatus = id => {
   return put(`/api/v1/trakt/persons/${id}`);
 };
 
+export const postTraktPin = pin => {
+  return post('/api/v1/trakt/pin', { pin });
+};
+
+export const fetchTraktPin = () => {
+  return get('/api/v1/trakt/pin');
+};
+
 function reqToPromise(req, options = {}, url = '') {
   return new Promise((resolve, reject) => {
     req.end((err, { status, body }) => {

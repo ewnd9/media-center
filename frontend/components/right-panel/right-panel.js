@@ -20,6 +20,7 @@ const RightPanel = React.createClass({
     const SCREENSHOTS = 'Screens';
     const MOVIES = 'Movies';
     const YOUTUBE = 'Youtube';
+    const SETTINGS = 'Settings';
 
     const menuLinks = [];
 
@@ -32,6 +33,7 @@ const RightPanel = React.createClass({
     menuLinks.push(createRouterElement('/movies', MOVIES));
     menuLinks.push(createRouterElement('/screenshots', SCREENSHOTS));
     menuLinks.push(createRouterElement('/youtube', YOUTUBE));
+    menuLinks.push(createRouterElement('/settings', SETTINGS));
 
     const Head = (<div className={styles.logo}></div>);
 

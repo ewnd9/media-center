@@ -37,6 +37,7 @@ import * as api from './api';
 import { fetchFiles } from './actions/files-actions';
 import { recievePlayback } from './actions/playback-actions';
 import { changeWidth } from './actions/width-actions';
+import { fetchTraktPin } from './actions/settings-actions';
 import { browserHistory } from 'react-router';
 import Router from './routes';
 
@@ -47,6 +48,17 @@ import {
 
 const socket = io(api.getBaseUrl());
 const store = configureStore({ socket, api });
+
+store
+  .dispatch(fetchTraktPin())
+  .then(() => {
+    const { settings: { hasPin } } = store.getState();
+
+    if (!hasPin) {
+      browserHistory.push('/settings');
+    }
+  })
+  .catch(err => report(err));
 
 const app = (
   <Provider store={store}>

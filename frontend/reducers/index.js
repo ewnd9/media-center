@@ -8,6 +8,7 @@ import modal from './modal-reducer';
 import movies from './movies-reducer';
 import persons from './persons-reducer';
 import width from './width-reducer';
+import settings from './settings-reducer';
 
 import createPlaybackReducer from './playback-reducer';
 
@@ -21,6 +22,7 @@ export default socket => {
     persons,
     width,
     modal,
+    settings,
     playback: createPlaybackReducer(socket)
   });
 

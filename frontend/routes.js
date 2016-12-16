@@ -14,6 +14,8 @@ import MediaList from './components/media-list/media-list';
 import ScreenshotsGallery from './components/screenshots-gallery/screenshots-gallery';
 import YoutubeInput from './components/youtube/youtube';
 
+import Settings from './components/settings/settings';
+
 import withScroll from 'scroll-behavior';
 
 // used in /frontend/components/right-panel/right-panel.js
@@ -51,6 +53,7 @@ export default ({ shell, history }) => {
 
         <Route path="/screenshots" component={ScreenshotsGallery} />
         <Route path="/youtube" component={YoutubeInput} />
+        <Route path="/settings" component={Settings} />
 
         <Redirect from="*" to="/shows" />
       </Route>

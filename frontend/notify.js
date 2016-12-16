@@ -8,5 +8,5 @@ alertify.closeLogOnClick(true);
 
 export default {
   info: message => alertify.log(message),
-  error: message => alertify.error(message instanceof Error ? message.stack && message.stack.split('\n').join('<br />') || message : alertify(message))
+  error: message => alertify.error(message instanceof Error && message.stack && message.stack.split('\n').join('<br />') || message)
 };
