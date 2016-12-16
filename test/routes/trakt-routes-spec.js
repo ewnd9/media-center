@@ -7,6 +7,7 @@ import createTrakt from '../fixtures/create-trakt';
 import { showTitle } from '../fixtures/create-fs';
 import delay from 'delay';
 
+import sinon from 'sinon';
 import tk from 'timekeeper';
 import nockHook from 'nock-hook/ava';
 
@@ -24,6 +25,8 @@ test.afterEach(t => {
 
 test.serial('GET /api/v1/trakt/report', async t => {
   const { services: { traktService }, db: { EpisodeScrobble } } = t.context.app;
+  traktService.renewShowReport = sinon.stub();
+
   await traktService.syncShowsHistory();
 
   let docs;
@@ -39,10 +42,12 @@ test.serial('GET /api/v1/trakt/report', async t => {
 
   await t.context.request.get('/api/v1/trakt/report');
   // rejection on schema mismatch
+  t.true(traktService.renewShowReport.calledOnce);
 });
 
 test.serial('GET /api/v1/trakt/sync/shows', async t => {
-  const { db: { EpisodeScrobble } } = t.context.app;
+  const { db: { EpisodeScrobble }, services: { traktService } } = t.context.app;
+  traktService.renewShowReport = sinon.stub();
 
   const docs0 = await EpisodeScrobble.findAll();
   t.truthy(docs0.length === 0);
@@ -52,6 +57,7 @@ test.serial('GET /api/v1/trakt/sync/shows', async t => {
 
   const docs1 = await EpisodeScrobble.findAll();
   t.truthy(docs1.length > 1500);
+  t.true(traktService.renewShowReport.calledOnce);
 });
 
 test.serial('GET /api/v1/trakt/sync/movies', async t => {

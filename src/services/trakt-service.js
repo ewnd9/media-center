@@ -6,7 +6,7 @@ import * as dvdReleasesApi from '../libs/dvdreleasedates-api/';
 import { lastDateIndex } from '../models/episode-scrobble';
 import { imdbIndex as movieImdbIndex, releaseDateIndex } from '../models/movie';
 
-export const REPORT_CACHE = 'REPORT_CACHE';
+const REPORT_CACHE = 'REPORT_CACHE';
 export default TraktService;
 
 function TraktService(config, db) {
@@ -21,6 +21,7 @@ function TraktService(config, db) {
   this.db = db;
 
   this.search = this.trakt.search.bind(this.trakt);
+  this._getShowReport = this._getShowReport.bind(this);
 }
 
 TraktService.prototype.addToHistory = function() {
@@ -77,6 +78,10 @@ TraktService.prototype.syncShowsHistory = function() {
         .map(row => items.find(item => item._id === row.key));
 
       return EpisodeScrobble.db.bulkDocs(notFound);
+    })
+    .then(res => {
+      this.renewShowReport();
+      return res;
     });
 };
 
@@ -136,6 +141,14 @@ TraktService.prototype.getLastShowScrobbles = function() {
 };
 
 TraktService.prototype.getShowReport = function() {
+  return this.cache.getOrInit(REPORT_CACHE, this._getShowReport);
+};
+
+TraktService.prototype.renewShowReport = function() {
+  return this.cache.renew(REPORT_CACHE, this._getShowReport);
+};
+
+TraktService.prototype._getShowReport = function() {
   const { db: { EpisodeScrobble }, services: { tmdbService } } = this;
 
   return EpisodeScrobble
