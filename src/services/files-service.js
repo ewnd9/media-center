@@ -40,7 +40,8 @@ FilesService.prototype.prefetch = function() {
 };
 
 FilesService.prototype.renewFindFiles = function() {
-  return this.cache.renew(FIND_FILES, this.findFiles);
+  return this.cache.renew(FIND_FS_FILES, this._findFSFiles)
+    .then(() => this.cache.renew(FIND_FILES, this._findFiles));
 };
 
 FilesService.prototype.findFiles = function() {
