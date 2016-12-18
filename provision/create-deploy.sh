@@ -13,5 +13,5 @@ export ERROR_BOARD_URL="$ERROR_BOARD_URL"
 
 mkdir -p "\$CACHE/minidlna-db"
 
-docker-compose up -d --build
+docker-compose up -d --build --force-recreate
 EOF
