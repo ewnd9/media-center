@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 export default SettingsService;
-export const TRAKT_TOKEN = TRAKT_TOKEN;
+export const TRAKT_TOKEN = 'TRAKT_TOKEN';
 
 function SettingsService(config, db) {
   if (!(this instanceof SettingsService)) {

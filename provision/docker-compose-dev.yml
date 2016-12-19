@@ -26,6 +26,7 @@ services:
       - MEDIA_PATH=/data
       - DATA_PATH=/db
       - TRAVIS
+      - TRAKT_TOKEN
     volumes:
       - ${PWD}:/app
     devices:
