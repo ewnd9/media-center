@@ -62,6 +62,13 @@ $ make start &
 $ open "http://localhost:3000/"
 ```
 
+## Tests
+
+```sh
+$ make test
+$ make t=path-to-single-file.js test
+```
+
 ## Credits
 
 Mockup image by [placeit](https://placeit.net/stages/flat-screen-and-ipad-mini-mockup-at-home-a4667?f_devices=tv)

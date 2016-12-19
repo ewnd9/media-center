@@ -1,7 +1,6 @@
 include .env
 export $(shell sed 's/=.*//' .env)
 
-export PORT ?= 3000
 export PLAYER=mock
 
 export TRAKT_ID=412681ab85026009c32dc6e525ba6226ff063aad0c1a374def0c8ee171cf121f
@@ -12,7 +11,7 @@ DEV_COMPOSE = docker-compose -f provision/docker-compose-base-arm.yml -f provisi
 DEV_COMPOSE_RUN = ${DEV_COMPOSE} run --no-deps app
 
 start:
-	@$(DEV_COMPOSE_RUN)
+	@$(DEV_COMPOSE) up
 
 install:
 	@$(DEV_COMPOSE_RUN) yarn install
@@ -20,9 +19,11 @@ install:
 lint:
 	@$(DEV_COMPOSE_RUN) yarn lint
 
+test:
+	@$(DEV_COMPOSE_RUN) yarn test -- $(t)
 test-travis:
 	@$(DEV_COMPOSE_RUN) yarn lint
 	@$(DEV_COMPOSE_RUN) yarn test:cov
 	@$(DEV_COMPOSE_RUN) yarn build:demo
 
-.PHONY: test-travis start install lint
+.PHONY: test-travis start install lint test
