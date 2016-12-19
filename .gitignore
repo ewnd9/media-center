@@ -23,3 +23,5 @@ coverage
 /provision/ansible/variables.yml
 
 /demo/public
+.env*
+!.env.example

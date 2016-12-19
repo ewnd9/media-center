@@ -25,6 +25,7 @@ services:
       - MC_X11_SUPPORT=
       - MEDIA_PATH=/data
       - DATA_PATH=/db
+      - TRAVIS
     volumes:
       - ${PWD}:/app
     devices:

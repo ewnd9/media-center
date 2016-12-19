@@ -19,7 +19,7 @@
     "test": "ava",
     "test:cov": "nyc --reporter=lcov --reporter=text npm test",
     "test:watch": "npm run test -- --watch",
-    "precommit": "npm run lint"
+    "precommit": "make lint"
   },
   "repository": {
     "type": "git",

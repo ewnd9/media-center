@@ -56,9 +56,9 @@ $ ansible-playbook -i <raspberry-ip>, provision/ansible/jessie-deploy-arm-src-vo
 ## Development
 
 ```sh
-$ cp start-dev.example.sh start-dev.sh
-$ ./start-dev.sh run yarn # install deps
-$ ./start-dev.sh --build # start server
+$ cp .env.example .env
+$ make install # install deps
+$ make start &
 $ open "http://localhost:3000/"
 ```
 
