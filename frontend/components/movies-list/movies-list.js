@@ -73,6 +73,7 @@ const MoviesList = React.createClass({
       movies: {
         movies,
         isFetching,
+        isDvdReleaseFetching,
         showForm,
         suggestions,
         suggestionSearchTitle
@@ -96,6 +97,7 @@ const MoviesList = React.createClass({
 
                   <Form
                     fetchSuggestions={fetchSuggestions}
+                    isDvdReleaseFetching={isDvdReleaseFetching}
                     updateSuggestionQuery={updateSuggestionQuery}
                     suggestions={suggestions}
                     suggestionSearchTitle={suggestionSearchTitle}

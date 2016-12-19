@@ -20,6 +20,7 @@ import {
 
 export const schema = t.struct({
   isFetching: t.Boolean,
+  isDvdReleaseFetching: t.Boolean,
   showForm: t.Boolean,
   movie: t.maybe(t.Object),
   movies: t.list(t.Object),
@@ -29,6 +30,7 @@ export const schema = t.struct({
 
 export default createCheckedReducer({
   isFetching: false,
+  isDvdReleaseFetching: false,
   showForm: false,
   movie: null,
   movies: [],
@@ -73,24 +75,28 @@ export default createCheckedReducer({
   },
   [FETCH_DVD_SUGGESTIONS_REQUEST](state) {
     return {
-      ...state
+      ...state,
+      isDvdReleaseFetching: true
     };
   },
   [FETCH_DVD_SUGGESTIONS_SUCCESS](state, action) {
     return {
       ...state,
-      suggestions: action.response.suggestions
+      suggestions: action.response.suggestions,
+      isDvdReleaseFetching: false
     };
   },
   [FETCH_DVD_SUGGESTIONS_FAILURE](state) {
     return {
-      ...state
+      ...state,
+      isDvdReleaseFetching: false
     };
   },
   [UPDATE_SUGGESTION_QUERY](state, action) {
     return {
       ...state,
-      suggestionSearchTitle: action.query
+      suggestionSearchTitle: action.query,
+      isDvdReleaseFetching: true
     };
   },
   [SHOW_FORM](state, action) {

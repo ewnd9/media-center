@@ -34,6 +34,7 @@ const Form = React.createClass({
     fetchSuggestions: t.Function,
     updateSuggestionQuery: t.Function,
     updateMovie: t.Function,
+    isDvdReleaseFetching: t.Boolean,
 
     suggestions: schema.meta.props.suggestions,
     suggestionSearchTitle: schema.meta.props.suggestionSearchTitle
@@ -66,7 +67,8 @@ const Form = React.createClass({
   render() {
     const {
       suggestions,
-      suggestionSearchTitle
+      suggestionSearchTitle,
+      isDvdReleaseFetching
     } = this.props;
 
     const inputProps = {
@@ -77,7 +79,7 @@ const Form = React.createClass({
 
     const theme = {
       containerOpen: styles.containerOpen,
-      input: styles.input,
+      input: `${styles.input} ${isDvdReleaseFetching ? styles.loading : ''}`,
       suggestionsContainer: styles.suggestionsContainer,
       suggestion: styles.suggestion,
       suggestionFocused: styles.suggestionFocused

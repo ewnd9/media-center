@@ -72,7 +72,8 @@ const MediaDialogAutosuggest = React.createClass({
       modal: {
         suggestions,
         suggestionSearchTitle,
-        suggestionIsValid
+        suggestionIsValid,
+        isFetching
       }
     } = this.props;
 
@@ -85,7 +86,7 @@ const MediaDialogAutosuggest = React.createClass({
     const theme = {
       container: styles.container,
       containerOpen: styles.containerOpen,
-      input: `${styles.input} ${suggestionIsValid ? styles.hasSuccess : styles.hasError}`,
+      input: `${styles.input} ${isFetching ? styles.loading : ''} ${suggestionIsValid ? styles.hasSuccess : styles.hasError}`,
       suggestionsContainer: styles.suggestionsContainer,
       suggestion: styles.suggestion,
       suggestionFocused: styles.suggestionFocused

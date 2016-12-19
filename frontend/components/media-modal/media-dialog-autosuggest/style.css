@@ -17,6 +17,12 @@
   outline: none;
 }
 
+.loading {
+  background-image: url('../../../assets/ajax-loader.gif');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
 .containerOpen .input {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
