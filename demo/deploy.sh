@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sudo chmod -R 777 demo/public/media-center
 cd demo/public/media-center
 
 git init
