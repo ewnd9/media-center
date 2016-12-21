@@ -16,14 +16,21 @@ start:
 install:
 	@$(DEV_COMPOSE_RUN) yarn install
 
+build:
+	@$(DEV_COMPOSE_RUN) yarn build
+
 lint:
 	@$(DEV_COMPOSE_RUN) yarn lint
 
 test:
 	@$(DEV_COMPOSE_RUN) yarn test -- $(t)
+
+yarn:
+	@$(DEV_COMPOSE_RUN) yarn $(c)
+
 test-travis:
 	@$(DEV_COMPOSE_RUN) yarn lint
 	@$(DEV_COMPOSE_RUN) yarn test:cov
 	@$(DEV_COMPOSE_RUN) yarn build:demo
 
-.PHONY: test-travis start install lint test
+.PHONY: start install build lint test test-travis
