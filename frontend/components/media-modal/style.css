@@ -20,7 +20,7 @@
 .modal {
   -webkit-overflow-scrolling: touch;
 
-  border: 1px solid #ccc;
+  border: 1px solid var(--greyBorderColor);
   background: var(--backgroundColor);
   border-radius: 4px;
   outline: none;

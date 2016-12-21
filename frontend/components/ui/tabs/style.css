@@ -23,7 +23,7 @@
 
 .rightPanel {
   composes: panel from '../../theme.css';
-  background-color: rgba(79, 92, 121, 1);
+  background-color: var(--bodyBackgroundColor);
 }
 
 .leftPanelMenu {

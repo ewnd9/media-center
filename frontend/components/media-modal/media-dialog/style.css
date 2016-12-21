@@ -1,6 +1,8 @@
+@import '../../variables.css';
+
 .container {
   width: 100%;
-  color: #333;
+  color: var(--darkTextColor);
 }
 
 .container form {
@@ -23,7 +25,7 @@
 
 .select {
   composes: input from '../media-dialog-autosuggest/style.css';
-  background-color: white;
+  background-color: var(--backgroundColor);
   text-align: center;
 }
 

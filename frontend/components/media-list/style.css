@@ -2,11 +2,13 @@
 
 .leftPanel {
   composes: panel from '../theme.css';
+  background-color: var(--bodyBackgroundColor);
 
-  background-color: rgba(79, 92, 121, 1);
-  /*background: linear-gradient(to right, rgba(96,108,136,1) 0%, rgba(63,76,107,1) 100%);*/
-  /*border-right: 1px solid rgba(0,0,0,0.5);*/
-  /*box-shadow: inset -7px 0 10px -7px rgba(0,0,0,0.5);*/
+  /* the beatiful gradient below isn't supported by Raspbian embedded browser */
+
+  /* background: linear-gradient(to right, rgba(96,108,136,1) 0%, rgba(63,76,107,1) 100%); */
+  /* border-right: 1px solid rgba(0,0,0,0.5); */
+  /* box-shadow: inset -7px 0 10px -7px rgba(0,0,0,0.5); */
 }
 
 .imageContainer {

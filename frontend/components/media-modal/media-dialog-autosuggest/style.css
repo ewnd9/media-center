@@ -1,5 +1,7 @@
+@import '../../variables.css';
+
 .container {
-  color: #333;
+  color: var(--darkTextColor);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -9,7 +11,7 @@
 .input {
   width: 100%;
   padding: 10px 20px;
-  border: 1px solid #aaa;
+  border: 1px solid var(--greyBorderColor);
   border-radius: 4px;
 }
 
@@ -29,10 +31,10 @@
 }
 
 .hasError {
-  border-color: red;
+  border-color: var(--red);
 }
 .hasSuccess {
-  border-color: green;
+  border-color: var(--green);
 }
 
 .suggestionsContainer {
@@ -44,8 +46,8 @@
   margin: 0;
   padding: 0;
   list-style-type: none;
-  border: 1px solid #aaa;
-  background-color: #fff;
+  border: 1px solid var(--greyBorderColor);
+  background-color: var(--backgroundColor);
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   z-index: 2;
@@ -60,5 +62,5 @@
 }
 
 .suggestionFocused {
-  background-color: #ddd;
+  background-color: var(--backgroundColorFocus);
 }

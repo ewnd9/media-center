@@ -4,9 +4,13 @@
 @custom-media --mobile-viewport (max-width: 540px);
 
 :root {
+  --bodyBackgroundColor: rgba(79, 92, 121, 1);
   --backgroundColor: #FAFAFA;
+  --backgroundColorFocus: #DDD;
   --greyBorderColor: #CFD8DC;
   --darkTextColor: #333;
+  --green: green;
+  --red: red;
 
   --paddingValue: 20;
 
