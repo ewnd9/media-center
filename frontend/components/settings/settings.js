@@ -54,11 +54,12 @@ const Settings = React.createClass({
                 <input type="text" ref="pin" className="form-control" />
               </div>
 
-              <button type="submit" className="btn btn-default">
+              <button type="submit" className={`btn btn-default ${styles.submitButton}`}>
+                <span className={currentAction === POST_TRAKT_PIN_REQUEST ? styles.hidden : ''}>Submit</span>
                 {
                   currentAction === POST_TRAKT_PIN_REQUEST &&
-                  <InlineSpinner /> ||
-                  'Submit'
+                    <InlineSpinner className={styles.spinner} /> ||
+                    null
                 }
               </button>
             </form>

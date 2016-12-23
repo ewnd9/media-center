@@ -12,8 +12,8 @@ const spinnerStyle = {
   height: 'inherit'
 };
 
-export default () => (
-  <span style={style}>
+export default ({ className }) => (
+  <span style={style} className={className}>
     <Spinner spinnerName="wave" noFadeIn style={spinnerStyle} />
   </span>
 );
