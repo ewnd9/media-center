@@ -39,7 +39,9 @@ export const filesArrayResponseSchema = t.list(t.struct({
       }),
       db: t.maybe(fileSchema),
       watched: t.maybe(t.Boolean),
-      hidden: t.maybe(t.Boolean)
+      hidden: t.maybe(t.Boolean),
+      isTorrent: t.maybe(t.Boolean),
+      torrentProgress: t.maybe(t.Number)
     })
   ),
   dir: t.String,
@@ -165,4 +167,8 @@ export const youtubeRequestSchema = t.struct({ query: t.String });
 
 export const traktPersonResponse = t.struct({
   person: personSchema
+});
+
+export const torrentMagnet = t.struct({
+  magnet: t.String
 });

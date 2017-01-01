@@ -3,6 +3,7 @@ import { exec } from 'child_process';
 
 import storage from './storage';
 import report from './agent';
+import throttle from 'lodash/throttle';
 
 import {
   USER_CLOSE,
@@ -58,19 +59,21 @@ function Bus(services, io) {
     socket.on(USER_CLOSE, () => storage.emit(USER_KEY_PRESS, OMX_KEYS.stop));
   });
 
+  const announceFsUpdate = () => {
+    services
+      .filesService
+      .renewFindFiles()
+      .then(() => io.emit(RELOAD_FILES))
+      .catch(err => report(err));
+  };
+
   chokidar
     .watch(mediaPath, {
       ignored: /\.part$/,
       persistent: true,
       ignoreInitial: true
     })
-    .on('all', () => {
-      services
-        .filesService
-        .renewFindFiles()
-        .then(() => io.emit(RELOAD_FILES))
-        .catch(err => report(err));
-    });
+    .on('all', throttle(announceFsUpdate, 30000));
 
   return storage;
 }

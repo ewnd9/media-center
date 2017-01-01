@@ -49,13 +49,29 @@ FilesService.prototype.findFiles = function() {
 };
 
 FilesService.prototype._findFiles = function() {
+  let dlna;
+
   return Promise
     .all([
-      this.findFSFiles().then(files => mergeFiles(this.models, files)),
+      this.findFSFiles(),
+      this.services.torrentsService.getTorrents(),
       this.findDlnaFiles()
     ])
-    .then(([ files, dlna ]) => {
+    .then(([ files, torrents, _dlna ]) => {
+      dlna = _dlna;
 
+      torrents.forEach(torrentFile => {
+        files.forEach(file => {
+          if (file.canonicalPath === torrentFile.canonicalPath) {
+            file.isTorrent = true;
+            file.torrentProgress = torrentFile.torrentProgress;
+          }
+        });
+      });
+
+      return mergeFiles(this.models, files);
+    })
+    .then(files => {
       files.forEach(file => {
         file.media.forEach(media => {
           const parts = media.fileName.split('.');
@@ -70,7 +86,6 @@ FilesService.prototype._findFiles = function() {
       });
 
       return files;
-
     });
 };
 
