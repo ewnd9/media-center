@@ -1,0 +1,5 @@
+@import '../../variables.css';
+
+.container {
+  padding: var(--padding);
+}
