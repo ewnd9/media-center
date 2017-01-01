@@ -35,7 +35,8 @@
       "babel-register",
       "css-modules-require-hook/preset"
     ],
-    "babel": "inherit"
+    "babel": "inherit",
+    "concurrency": 5
   },
   "nyc": {
     "include": [

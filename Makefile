@@ -13,6 +13,9 @@ DEV_COMPOSE_RUN = ${DEV_COMPOSE} run --no-deps app
 start:
 	@$(DEV_COMPOSE) up
 
+exec:
+	@$(DEV_COMPOSE) exec app /bin/bash
+
 install:
 	@$(DEV_COMPOSE_RUN) yarn install
 
@@ -33,4 +36,4 @@ test-travis:
 	@$(DEV_COMPOSE_RUN) yarn test:cov
 	@$(DEV_COMPOSE_RUN) yarn build:demo
 
-.PHONY: start install build lint test test-travis
+.PHONY: start exec install build lint test test-travis
