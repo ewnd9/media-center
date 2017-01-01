@@ -1,6 +1,7 @@
 import proxyquire from 'proxyquire';
 import mkdirp from 'mkdirp';
 import createTraktService from './create-trakt-service';
+import createTorrentsService from './create-torrents-service';
 
 const generateTmpDir = () => '/tmp/media-center-db-' + Math.random();
 
@@ -20,6 +21,9 @@ export default ({ traktMock = defaultTrackMock, playerServiceMock, marksServiceM
   const servicesMocks = {
     './trakt-service': {
       default: createTraktService
+    },
+    './torrents-service': {
+      default: createTorrentsService
     }
   };
 
