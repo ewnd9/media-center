@@ -190,6 +190,10 @@ export const fetchTraktPin = () => {
   return get('/api/v1/trakt/pin');
 };
 
+export const postTorrentMagnet = magnet => {
+  return post('/api/v1/torrents', { magnet });
+};
+
 function reqToPromise(req, options = {}, url = '') {
   return new Promise((resolve, reject) => {
     req.end((err, { status, body }) => {

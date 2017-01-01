@@ -33,7 +33,12 @@ export default React.createClass({
       deleteFileKeyInProgress
     } = this.props;
 
-    const file = item.fileName || item.dir;
+    let file = item.fileName || item.dir;
+
+    if (item.torrentProgress) {
+      file += ` (Downloaded ${item.torrentProgress | 0}%)`;
+    }
+
     const data = file.split('/');
 
     let title;

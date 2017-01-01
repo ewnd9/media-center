@@ -7,6 +7,7 @@ import { MEDIA_LIST_UNWATCHED } from '../../../constants';
 
 import MediaListPoster from '../media-list-poster/media-list-poster';
 import MediaListItem from '../media-list-item/media-list-item';
+import MediaListTorrentForm from '../media-list-torrent-form/media-list-torrent-form';
 
 import { Link } from 'react-router';
 
@@ -93,6 +94,8 @@ const MediaList = React.createClass({
 
     return (
       <div className={`${styles.flex} ${styles.imageContainer}`} ref={this.setRef}>
+        <MediaListTorrentForm />
+        
         {
           renderedFiles.length === 0 && (
             <div className={styles.emptyInput}>No files were found</div>
