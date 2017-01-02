@@ -95,7 +95,7 @@ const MediaList = React.createClass({
     return (
       <div className={`${styles.flex} ${styles.imageContainer}`} ref={this.setRef}>
         <MediaListTorrentForm />
-        
+
         {
           renderedFiles.length === 0 && (
             <div className={styles.emptyInput}>No files were found</div>
@@ -154,7 +154,8 @@ const MediaList = React.createClass({
       addToHistory,
       addToHistoryKeyInProgress,
       deleteFile,
-      deleteFileKeyInProgress
+      deleteFileKeyInProgress,
+      postServer
     } = this.props;
 
     const child = hasChildren && (
@@ -176,7 +177,8 @@ const MediaList = React.createClass({
                   addToHistory={addToHistory}
                   addToHistoryKeyInProgress={addToHistoryKeyInProgress}
                   deleteFile={deleteFile}
-                  deleteFileKeyInProgress={deleteFileKeyInProgress} />
+                  deleteFileKeyInProgress={deleteFileKeyInProgress}
+                  postServer={postServer} />
               );
             })
         }
