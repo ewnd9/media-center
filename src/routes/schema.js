@@ -41,7 +41,9 @@ export const filesArrayResponseSchema = t.list(t.struct({
       watched: t.maybe(t.Boolean),
       hidden: t.maybe(t.Boolean),
       isTorrent: t.maybe(t.Boolean),
-      torrentProgress: t.maybe(t.Number)
+      isActiveTorrent: t.maybe(t.Boolean),
+      torrentProgress: t.maybe(t.Number),
+      streamUrl: t.maybe(t.String)
     })
   ),
   dir: t.String,
@@ -171,4 +173,8 @@ export const traktPersonResponse = t.struct({
 
 export const torrentMagnet = t.struct({
   magnet: t.String
+});
+
+export const torrentFilePath = t.struct({
+  path: t.String
 });
