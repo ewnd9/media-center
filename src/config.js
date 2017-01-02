@@ -22,6 +22,7 @@ export const errorBoardPath = ensureDirectory(dataPath, 'media-center-error-boar
 export const errorBoardMount = '/error-board';
 
 export const port = process.env.PORT || 3000;
+export const torrentPort = process.env.TORRENT_PORT || 3001;
 
 export const trakt = new Trakt(process.env.TRAKT_ID, process.env.TRAKT_SECRET, process.env.TRAKT_TOKEN);
 export const tmdbApi = new TmdbApi(process.env.TMDB_KEY);

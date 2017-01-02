@@ -32,6 +32,7 @@ services:
     restart: always
     ports:
       - "4000:3000"
+      - "4001:3001"
     volumes:
       - ${DATA}:/data
       - ${DB}:/db
@@ -47,6 +48,7 @@ services:
       - TRAKT_SECRET=${TRAKT_SECRET}
       - TMDB_KEY=${TMDB_KEY}
       - ERROR_BOARD_URL=${ERROR_BOARD_URL}
+      - TORRENT_PORT=4001
     devices:
       - "/dev/vchiq:/dev/vchiq"
       - "/dev/fb0:/dev/fb0"

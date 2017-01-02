@@ -35,7 +35,7 @@ export function mergeFiles(db, videoFiles) {
 
 function parseVideoFiles(db, videoFiles) {
   const media = videoFiles
-    .map(({ canonicalPath, video, isTorrent, torrentProgress }) => {
+    .map(({ canonicalPath, video, isTorrent, isActiveTorrent, torrentProgress, streamUrl }) => {
       const data = video.split('/');
 
       const media = {
@@ -45,7 +45,9 @@ function parseVideoFiles(db, videoFiles) {
         dirName: data[data.length - 2],
         birthtime: fs.statSync(canonicalPath).birthtime,
         isTorrent,
-        torrentProgress
+        isActiveTorrent,
+        torrentProgress,
+        streamUrl
       };
 
       media.recognition = split(media.fileName || media.dirName);

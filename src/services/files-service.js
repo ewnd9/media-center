@@ -64,7 +64,9 @@ FilesService.prototype._findFiles = function() {
         files.forEach(file => {
           if (file.canonicalPath === torrentFile.canonicalPath) {
             file.isTorrent = true;
+            file.isActiveTorrent = torrentFile.isActiveTorrent;
             file.torrentProgress = torrentFile.torrentProgress;
+            file.streamUrl = torrentFile.streamUrl;
           }
         });
       });
@@ -79,7 +81,7 @@ FilesService.prototype._findFiles = function() {
 
           const result = dlna.find(item => item.file === baseName);
 
-          if (result) {
+          if (result && !media.streamUrl) {
             media.streamUrl = result.url;
           }
         });
