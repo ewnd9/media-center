@@ -1,5 +1,7 @@
 'use strict';
 
+process.env.MC_DEMO = true;
+
 const path = require('path');
 const config = require('../webpack.config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');

@@ -31,8 +31,12 @@ const RightPanel = React.createClass({
 
     menuLinks.push(createRouterElement('/shows', TV));
     menuLinks.push(createRouterElement('/movies', MOVIES));
-    menuLinks.push(createRouterElement('/screenshots', SCREENSHOTS));
-    menuLinks.push(createRouterElement('/youtube', YOUTUBE));
+
+    if (!process.env.MC_DEMO) {
+      menuLinks.push(createRouterElement('/screenshots', SCREENSHOTS));
+      menuLinks.push(createRouterElement('/youtube', YOUTUBE));
+    }
+
     menuLinks.push(createRouterElement('/settings', SETTINGS));
 
     const Head = (<div className={styles.logo}></div>);

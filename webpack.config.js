@@ -69,7 +69,8 @@ const config = {
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
         ERROR_BOARD_URL: JSON.stringify(process.env.ERROR_BOARD_URL),
-        APP_ENV: JSON.stringify('browser')
+        APP_ENV: JSON.stringify('browser'),
+        MC_DEMO: JSON.stringify(process.env.MC_DEMO || false)
       },
     }),
     new webpack.ContextReplacementPlugin(/node_modules\/moment\/locale/, /en/),
