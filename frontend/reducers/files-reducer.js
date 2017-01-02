@@ -33,9 +33,11 @@ export default createCheckedReducer({
   deleteFileKeyInProgress: null
 }, {
   [FETCH_FILES_REQUEST](state) {
+    const isFetching = state.files.length === 0;
+
     return {
       ...state,
-      isFetching: true
+      isFetching
     };
   },
   [FETCH_FILES_SUCCESS](state, action) {
