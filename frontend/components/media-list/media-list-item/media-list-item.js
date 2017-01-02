@@ -24,6 +24,9 @@ export default React.createClass({
     const { deleteFile } = this.props;
     deleteFile(file);
   },
+  handlePostServerClick() {
+    this.props.postServer(this.props.file.file);
+  },
   render() {
     const {
       file: item,
@@ -122,6 +125,15 @@ export default React.createClass({
                 </a>
               )
             }
+            {' '}
+            {
+              item.isTorrent && !item.isActiveTorrent && (
+                <a onClick={this.handlePostServerClick}>
+                  [Start Torrent Server]
+                </a>
+              )
+            }
+            {' '}
             { item.streamUrl && (
               <a target="_blank" href={`${item.streamUrl}#${streamUrlParts.join('&')}`}>
                 {' '}[Stream]
