@@ -8,7 +8,7 @@
     "start": "NODE_ENV=development run-p start:dev:*",
     "start:dev:backend": "NODE_ENV=development babel-watch src/index.js",
     "start:dev:frontend": "NODE_ENV=development webpack-dev-server --config webpack.config.js  --host 0.0.0.0",
-    "start:demo": "NODE_ENV=development webpack-dev-server --config demo/webpack.config.js --host 0.0.0.0 --port 3001",
+    "start:demo": "NODE_ENV=development webpack-dev-server --config demo/webpack.config.js --host 0.0.0.0",
     "build": "npm-run-all --parallel build:backend build:frontend",
     "build:backend": "babel -s -d lib src",
     "build:backend:watch": "babel --watch -s -d lib src",

@@ -31,9 +31,12 @@ test:
 yarn:
 	@$(DEV_COMPOSE_RUN) yarn $(c)
 
+start-demo:
+	@$(DEV_COMPOSE) run --no-deps --service-ports app yarn start:demo
+
 test-travis:
 	@$(DEV_COMPOSE_RUN) yarn lint
 	@$(DEV_COMPOSE_RUN) yarn test:cov
 	@$(DEV_COMPOSE_RUN) yarn build:demo
 
-.PHONY: start exec install build lint test test-travis
+.PHONY: start exec install build lint test start-demo test-travis
