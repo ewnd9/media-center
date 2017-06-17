@@ -2,20 +2,20 @@ version: '2'
 services:
   minidlna:
     image: busybox:glibc
-    restart: never
+    restart: "no"
   transmission:
     image: busybox:glibc
-    restart: never
+    restart: "no"
   error-board:
     build:
       context: .
       dockerfile: ./docker/rpi-error-board-dev/Dockerfile
-    restart: never
+    restart: "no"
   app:
     build:
       context: .
       dockerfile: ./docker/rpi-media-center-dev/Dockerfile
-    restart: never
+    restart: "no"
     ports:
       - "3000:3000"
       - "3001:3001"
