@@ -52,7 +52,7 @@ export default ({ filesService, playerService }) => {
       }
 
       playerService
-        .play({ media: req.body.media, uri: req.body.filename, position: req.body.position, traktScrobble: !noScrobble });
+        .play({ media: req.body.media, uri: req.body.filename, position: req.body.media.position, traktScrobble: !noScrobble });
 
       res.json({ status: 'ok' });
     }

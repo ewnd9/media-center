@@ -33,5 +33,5 @@ PostersService.prototype.getPosterStream = function(type, imdbId) {
 
 PostersService.prototype.getPlaceholderPosterStream = function() {
   const filePath = `${this.filePath}/placeholder.jpg`;
-  return fsCache(filePath, () => Promise.resolve('https://placeholdit.imgix.net/~text?txtsize=19&txt=200%C3%97300&w=200&h=300'));
+  return fsCache(filePath, () => Promise.resolve('https://via.placeholder.com/200x300'));
 };

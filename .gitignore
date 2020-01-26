@@ -25,3 +25,5 @@ coverage
 /demo/public
 .env*
 !.env.example
+
+data
