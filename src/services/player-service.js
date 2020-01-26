@@ -1,6 +1,8 @@
 function getPlayer() {
   if (process.env.PLAYER === 'vlc') {
     return require('../players/vlc').default;
+  } else if (process.env.PLAYER === 'mpv') {
+    return require('../players/mpv-player').default;
   } else if (process.env.PLAYER === 'mock') {
     return require('../players/mock-player').default;
   } else {

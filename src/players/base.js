@@ -30,7 +30,7 @@ Player.prototype.play = function({ uri, media, position, traktScrobble }) {
 };
 
 Player.prototype.getFsUri = function(uri) {
-  return this.services.configService.MEDIA_PATH + '/' + uri;
+  return this.services.configService.mediaPath + '/' + uri;
 };
 
 Player.prototype.togglePlay = function() {
@@ -101,9 +101,10 @@ Player.prototype.updatePosition = function(position) {
   this.emitUpdate();
 
   if (positionCount % 10 === 0) {
-    if (this.traktScrobble) {
+    console.log({positionCount});
+    // if (this.traktScrobble) {
       this.services.filesService.updatePosition(this.uri, this.media, position, this.duration);
-    }
+    // }
   }
 
   positionCount = (positionCount + 1) % 10;
